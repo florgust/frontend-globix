@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 
-import './globals.css'; // Importa o arquivo de estilo global, onde o Tailwind está configurado
+import '../styles/globals.css'; // Importa o arquivo de estilo global, onde o Tailwind está configurado
 import { ReactNode } from 'react';
 
 export default function Layout({ children }: { children: ReactNode }) {
