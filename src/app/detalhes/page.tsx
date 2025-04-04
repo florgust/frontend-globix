@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./styles.module.css";
 
-export default function Location() {
+export default function Detalhes() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

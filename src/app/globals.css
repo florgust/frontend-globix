@@ -5,5 +5,5 @@
 
 /* Estilos personalizados */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: inherit; /* A fonte será herdada do Next.js */
 }
