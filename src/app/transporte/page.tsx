@@ -67,6 +67,13 @@ export default function Transporte() {
                     height={40}
                     className={styles.overlayImage}
                   />
+                  <Image
+                    src="/linha-branca.svg"
+                    alt="Linha Branca"
+                    width={60}
+                    height={10}
+                    className={styles.lineImage}
+                  />
                 </div>
                 <textarea
                   className={styles.textArea}
@@ -100,6 +107,51 @@ export default function Transporte() {
                 />
               </div>
             </div>
+
+            {/* Nova seção abaixo */}
+            <div className={styles.routeContainer}>
+              {/* Coluna 1 */}
+              <div className={styles.routeColumn}>
+                <div className={styles.routeItem}>
+                  <Image src="/origem-azul.svg" alt="Origem" width={24} height={24} />
+                  <div>
+                    <h3 className={styles.routeTitle}>Saída da Cidade Origem</h3>
+                    <p>Posto Graal Antares | Uberaba - MG</p>
+                    <p>25/03/25 - 19:30h</p>
+                  </div>
+                </div>
+                <div className={styles.routeItem}>
+                  <Image src="/destino-azul.svg" alt="Destino" width={24} height={24} />
+                  <div>
+                    <h3 className={styles.routeTitle}>Chegada na Cidade Destino</h3>
+                    <p>Rua Rifaina | Rifaina - SP</p>
+                    <p>25/03/25 - 22:00h</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Coluna 2 */}
+              <div className={styles.routeColumn}>
+                <div className={styles.routeItem}>
+                  <Image src="/origem-verde.svg" alt="Destino" width={24} height={24} />
+                  <div>
+                    <h3 className={styles.routeTitle}>Saída da Cidade Destino</h3>
+                    <p>Rua Rifaina | Rifaina - SP</p>
+                    <p>30/03/25 - 12:00h</p>
+                  </div>
+                </div>
+                <div className={styles.routeItem}>
+                  <Image src="/destino-verde.svg" alt="Origem" width={24} height={24} />
+                  <div>
+                    <h3 className={styles.routeTitle}>Chegada na Cidade Origem</h3>
+                    <p>Posto Graal Antares | Uberaba - MG</p>
+                    <p>30/03/25 - 14:00h</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br />
 
             {/* Botões de ação */}
             <div className={styles.actionButtons}>

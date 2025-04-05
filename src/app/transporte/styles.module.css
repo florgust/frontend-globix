@@ -182,20 +182,73 @@
 
   .imageContainer {
     position: relative;
-    width: 80px; /* Largura da imagem base */
-    height: 80px; /* Altura da imagem base */
+    width: 80px; /* Largura do retângulo azul */
+    height: 80px; /* Altura do retângulo azul */
   }
 
   .baseImage {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1; /* Imagem de fundo */
+    z-index: 1; /* Retângulo azul no fundo */
   }
 
   .overlayImage {
     position: absolute;
-    top: 20%; /* Ajuste a posição vertical da sobreposição */
-    left: 20%; /* Ajuste a posição horizontal da sobreposição */
-    z-index: 2; /* Imagem sobreposta */
+    top: 20%; /* Ajuste a posição vertical da imagem do ônibus */
+    left: 6%; /* Ajuste a posição horizontal da imagem do ônibus */
+    width: 60%; /* Tamanho da imagem do ônibus */
+    z-index: 2; /* Imagem do ônibus sobreposta ao retângulo azul */
+    width: 90%;
+  }
+
+  .lineImage {
+    position: absolute;
+    bottom: 17%; /* Ajuste a posição vertical da linha branca */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Garante centralização exata */
+    width: 90%; /* Tamanho da linha branca */
+    z-index: 3; /* Linha branca sobreposta ao retângulo azul */
+  }
+
+  .routeContainer {
+    display: flex;
+    justify-content: flex-start; /* Alinha as colunas à esquerda */
+    margin-left: 2rem; /* Move a seção mais para a direita */
+    gap: 2rem; /* Espaçamento entre as colunas */
+    margin-top: 2rem; /* Espaçamento acima da seção */
+  }
+
+  .routeColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espaçamento entre os itens */
+  }
+
+  .routeColumn:first-child {
+    border-right: 1px solid #d1d5db; /* Linha vertical */
+    padding-right: 2rem; /* Espaçamento interno à direita da linha */
+  }
+
+  .routeColumn:last-child {
+    padding-left: 2rem; /* Espaçamento interno à esquerda da linha */
+  }
+
+  .routeItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem; /* Espaçamento entre o ícone e o texto */
+  }
+
+  .routeTitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1e3a8a; /* Azul */
+  }
+
+  .routeItem p {
+    margin: 0.25rem 0;
+    font-size: 14px;
+    color: #4b5563; /* Cinza escuro */
   }
