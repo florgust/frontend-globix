@@ -1,0 +1,201 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6; /* Cinza claro */
+  }
+  
+  .openModalButton {
+    background-color: #1e3a8a; /* Azul principal */
+    color: #ffffff;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+  
+  .openModalButton:hover {
+    background-color: #374151; /* Azul mais escuro */
+  }
+  
+  .modalOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .modalContent {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+  }
+  
+  .backButton {
+    position: absolute;
+    top: 40px; /* Abaixa o botão um pouco mais */
+    left: 25px; /* Move o botão mais para a direita */
+  }
+  
+  .titleContainer {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .title {
+    font-family: inherit; /* Usa a fonte definida globalmente */
+    font-size: 24px; /* Ajuste o tamanho da fonte */
+    font-weight: bold; /* Deixe o texto em negrito */
+    color: #00ff00; /* Cor do texto (verde) */
+    background-color: #001a80; /* Cor de fundo (azul escuro) */
+    padding: 10px 20px; /* Espaçamento interno */
+    display: inline-block; /* Garante que o fundo se ajuste ao texto */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para destacar */
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: separate; /* Use 'separate' para permitir bordas arredondadas */
+    border-spacing: 0; /* Remove espaçamento entre células */
+    margin-bottom: 1.5rem;
+    border-radius: 4px; /* Arredonda as bordas da tabela */
+    overflow: hidden; /* Garante que o conteúdo respeite o arredondamento */
+  }
+  
+  .tableLabel, .tableValue {
+    font-weight: bold; /* Deixa o texto em negrito */
+    color: #111827; /* Preto */
+    padding: 0.75rem;
+    border: 1px solid #d1d5db; /* Cinza claro */
+  }
+  
+  .table tr:first-child td:first-child {
+    border-top-left-radius: 4px; /* Arredonda o canto superior esquerdo */
+  }
+  
+  .table tr:first-child td:last-child {
+    border-top-right-radius: 4px; /* Arredonda o canto superior direito */
+  }
+  
+  .table tr:last-child td:first-child {
+    border-bottom-left-radius: 4px; /* Arredonda o canto inferior esquerdo */
+  }
+  
+  .table tr:last-child td:last-child {
+    border-bottom-right-radius: 4px; /* Arredonda o canto inferior direito */
+  }
+  
+  .actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .actionButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .actionIcon {
+    background: linear-gradient(135deg, #0F2976, #1C4CDC); /* Gradiente de azul */
+    color: #ffffff; /* Cor do texto ou ícone */
+    padding: 1rem;
+    border-radius: 50%; /* Torna o botão circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    transition: transform 0.2s; /* Animação ao passar o mouse */
+  }
+
+  .actionIcon:hover {
+    transform: scale(1.1); /* Aumenta o botão ao passar o mouse */
+  }
+  
+  .actionLabel {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #4b5563; /* Cinza escuro */
+  }
+
+  .infoContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin: 2rem 0; /* Espaçamento entre o título e os botões de navegação */
+  }
+
+  .infoBox {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .infoHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .infoTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1e3a8a;
+  }
+
+  .infoBox p {
+    margin: 0.25rem 0;
+    font-size: 14px;
+    color: #4b5563;
+  }
+
+  .textArea {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 14px;
+    color: #4b5563;
+    resize: none; /* Impede o redimensionamento */
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    line-height: 1.5;
+  }
+
+  .textArea:focus {
+    outline: none;
+    border-color: #1e3a8a;
+    box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.2);
+  }
+
+  .imageContainer {
+    position: relative;
+    width: 80px; /* Largura da imagem base */
+    height: 80px; /* Altura da imagem base */
+  }
+
+  .baseImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Imagem de fundo */
+  }
+
+  .overlayImage {
+    position: absolute;
+    top: 20%; /* Ajuste a posição vertical da sobreposição */
+    left: 20%; /* Ajuste a posição horizontal da sobreposição */
+    z-index: 2; /* Imagem sobreposta */
+  }
