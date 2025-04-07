@@ -71,6 +71,12 @@
     margin-top: 1rem; /* Adiciona espaçamento superior */
 }
 
+.terms label {
+    display: inline-block;
+    text-align: left; /* Alinha o texto à esquerda */
+    line-height: 1.5; /* Ajusta a altura da linha */
+}
+
 .terms input[type="checkbox"] {
     margin: 0; /* Remove margens padrão do checkbox */
     width: 20px; /* Define o tamanho do checkbox */
@@ -105,14 +111,22 @@
 }
 
 .divider {
-    text-align: center; /* Alinha o texto ao centro */
-    margin: 1rem 0;
+    display: flex;
+    align-items: center; /* Alinha o texto e as linhas verticalmente */
+    justify-content: center; /* Centraliza o conteúdo */
+    gap: 1rem; /* Espaçamento entre o texto e as linhas */
     font-size: 16px; /* Tamanho da fonte */
     font-weight: 500; /* Peso da fonte */
-    line-height: 100%; /* Altura da linha */
-    letter-spacing: 0%; /* Espaçamento entre letras */
-    font-family: 'Quicksand', sans-serif; /* Fonte Quicksand */
-    color: #ffffff; /* Texto branco */
+    color: #ffffff; /* Cor do texto */
+    margin: 1rem 0; /* Espaçamento vertical */
+}
+
+.divider::before,
+.divider::after {
+    content: ''; /* Cria as linhas */
+    flex: 1; /* Faz as linhas ocuparem o espaço disponível */
+    height: 1px; /* Altura das linhas */
+    background-color: #ffffff; /* Cor das linhas */
 }
 
 .loginLink {

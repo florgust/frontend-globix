@@ -42,7 +42,7 @@ const UserForm: React.FC = () => {
                 </label>
             </div>
             <button type="submit" className={styles.button}>Criar Conta</button>
-            <div className={styles.divider}>OU</div>
+            <div className={styles.divider}>ou</div>
             <GoogleAuthButton />
             <p className={styles.loginLink}>
                 Já tem uma conta? <a href="/login">Entrar</a>
