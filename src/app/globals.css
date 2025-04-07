@@ -1,9 +1,10 @@
 /* src/styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Estilos personalizados */
-body {
-  font-family: inherit; /* A fonte será herdada do Next.js */
-}

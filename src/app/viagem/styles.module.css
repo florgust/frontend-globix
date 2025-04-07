@@ -1,0 +1,222 @@
+.container {
+  background-color: #002060;
+  color: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.imageContainer {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.praiaImage {
+  border-radius: 16px;
+}
+
+.imageLabelContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Espaçamento entre o ícone e o texto */
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.imageIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.imageLabel {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  background-color: #ffffff; /* Fundo branco */
+  color: #000000; /* Texto preto para contraste */
+  padding: 2rem;
+  border-radius: 16px; /* Bordas arredondadas */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+  margin-top: -1rem; /* Ajusta o espaçamento para conectar visualmente com a imagem */
+}
+
+.organizers,
+.guests,
+.information {
+  flex: 1;
+}
+
+.information {
+  text-align: center; /* Centraliza o título e os modais */
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem; /* Espaçamento menor abaixo do título */
+}
+
+.organizerList {
+  display: flex;
+  gap: 1rem;
+}
+
+.organizerItem,
+.addOrganizer {
+  text-align: center;
+}
+
+.organizerImage {
+  border-radius: 50%;
+}
+
+.addIcon {
+  font-size: 2rem;
+  color: #ffffff;
+  background-color: #1e3a8a;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.5rem;
+  text-align: center;
+  background-color: #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000000;
+}
+
+.activeTab {
+  background-color: #1e3a8a;
+  color: #ffffff;
+}
+
+.guestList {
+  background-color: #1e3a8a;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.guestItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.guestImage {
+  border-radius: 50%;
+}
+
+.infoBackground {
+  background: linear-gradient(135deg, #0F2976, #1C4CDC); /* Gradiente azul */
+  border-radius: 8px; /* Bordas levemente arredondadas */
+  padding: 1rem; /* Espaçamento interno */
+  display: inline-flex; /* Garante que o fundo se ajuste ao tamanho da imagem */
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem; /* Espaçamento entre a imagem e o texto */
+}
+
+.infoIcons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 itens por linha */
+  gap: 0.5rem; /* Reduz o espaçamento entre os modais */
+  justify-content: center; /* Centraliza os modais horizontalmente */
+  margin-top: 3rem; /* Ajusta o espaçamento acima dos modais */
+}
+
+.infoItem {
+  text-align: center;
+}
+
+.editButtonContainer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.editButton {
+  background-color: #d1d5db;
+  color: #000000;
+  padding: 0.5rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+.closeModalButton {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.closeModalButton:hover {
+  background-color: #374151;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modalText {
+  font-size: 1rem;
+  color: #4b5563;
+}
