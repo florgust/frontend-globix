@@ -1,9 +1,12 @@
 /* src/styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Estilos personalizados */
 body {
-  font-family: 'Arial', sans-serif;
+  @apply font-sans;
+  font-family: 'Quicksand', sans-serif;
 }
