@@ -179,11 +179,11 @@
   .modalOverlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 50;
   }
   
   .modalContent {
@@ -197,13 +197,15 @@
   }
   
   .closeModalButton {
-    background-color: #1e3a8a;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff0000;
     color: #ffffff;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
-    margin-bottom: 1rem;
   }
   
   .closeModalButton:hover {

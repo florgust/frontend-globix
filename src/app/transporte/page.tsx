@@ -5,7 +5,7 @@ import Image from "next/image";
 import styles from "./styles.module.css";
 
 export default function Transporte() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true); // Modal aberto por padrão
 
   // Estados para os campos de descrição
   const [detalhesDescricao, setDetalhesDescricao] = useState(
@@ -17,31 +17,19 @@ export default function Transporte() {
 
   return (
     <div className={styles.container}>
-      {/* Botão para abrir o modal */}
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className={styles.openModalButton}
-      >
-        Transporte
-      </button>
-
       {/* Modal */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             {/* Botão de Voltar */}
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className={styles.backButton}
-            >
-              <Image
-                src="/seta.svg"
-                alt="Voltar"
-                width={40}
-                height={40}
-                className={styles.backIcon}
-              />
-            </button>
+            <Image
+              src="/seta.svg"
+              alt="Voltar"
+              width={40}
+              height={40}
+              className={styles.backIcon}
+              onClick={() => setIsModalOpen(false)} // Fecha o modal ao clicar na imagem
+            />
 
             {/* Título principal */}
             <div className={styles.titleContainer}>

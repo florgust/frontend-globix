@@ -3,10 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Detalhes from "../detalhes/page"; // Importa o componente Detalhes
+import Transporte from "../transporte/page"; // Importa o componente Transporte
 import styles from "./styles.module.css";
 
-export default function ViagemRifaina() {
+export default function Viagem() {
   const [activeTab, setActiveTab] = useState("Convidados"); // Estado para alternar entre as abas
+  const [isDetalhesOpen, setIsDetalhesOpen] = useState(false); // Estado para o modal "Mais Detalhes"
+  const [isTransporteOpen, setIsTransporteOpen] = useState(false); // Estado para o modal "Transporte"
 
   return (
     <div className={styles.container}>
@@ -146,30 +150,32 @@ export default function ViagemRifaina() {
           <h2 className={styles.sectionTitle}>Informações</h2>
           <div className={styles.infoIcons}>
             <div className={styles.infoItem}>
-              <Link href="/detalhes">
-                <div className={styles.infoBackground}>
-                  <Image
-                    src="/detalhes.svg"
-                    alt="Mais Detalhes"
-                    width={50}
-                    height={50}
-                  />
-                </div>
-                <p>Mais Detalhes</p>
-              </Link>
+              <div
+                className={styles.infoBackground}
+                onClick={() => setIsDetalhesOpen(true)} // Abre o modal ao clicar no ícone
+              >
+                <Image
+                  src="/detalhes.svg"
+                  alt="Mais Detalhes"
+                  width={50}
+                  height={50}
+                />
+              </div>
+              <p>Mais Detalhes</p>
             </div>
             <div className={styles.infoItem}>
-              <Link href="/transporte">
-                <div className={styles.infoBackground}>
-                  <Image
-                    src="/transporte.svg"
-                    alt="Transporte"
-                    width={50}
-                    height={50}
-                  />
-                </div>
-                <p>Transporte</p>
-              </Link>
+              <div
+                className={styles.infoBackground}
+                onClick={() => setIsTransporteOpen(true)} // Abre o modal "Transporte"
+              >
+                <Image
+                  src="/transporte.svg"
+                  alt="Transporte"
+                  width={50}
+                  height={50}
+                />
+              </div>
+              <p>Transporte</p>
             </div>
             <div className={styles.infoItem}>
               <div className={styles.infoBackground}>
@@ -201,7 +207,7 @@ export default function ViagemRifaina() {
                   width={50}
                   height={50}
                 />
-              </div>
+              </div>    
               <p>Custos</p>
             </div>
             <div className={styles.infoItem}>
@@ -218,6 +224,20 @@ export default function ViagemRifaina() {
           </div>
         </div>
       </div>
+
+      {/* Modal "Mais Detalhes" */}
+      {isDetalhesOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsDetalhesOpen(false)}>
+          <Detalhes />
+        </div>
+      )}
+
+      {/* Modal "Transporte" */}
+      {isTransporteOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsTransporteOpen(false)}>
+          <Transporte />
+        </div>
+      )}
 
       {/* Botão Editar */}
       <div className={styles.editButtonContainer}>
