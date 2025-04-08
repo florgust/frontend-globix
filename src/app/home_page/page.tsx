@@ -14,7 +14,7 @@ export default function HomePage() {
         
       <div className="flex min-h-screen items-center justify-center bg-blue-500">
 
-        <div className="absolute top-25 left-10 flex space-x-6">
+        <div className="absolute top-40 left-105 flex space-x-6">
           <button className="block mb-180 items-center gap-3 px-16 py-10 bg-gray-200 text-gray-800 rounded-lg shadow-lg hover:bg-gray-300 transition">           
               <Briefcase className="h-12 w-12 text-blue-800" />
               Criar Viagem
@@ -43,6 +43,8 @@ export default function HomePage() {
                           className="w-[61rem] h-[29.875rem] mx-auto rounded-lg "
                           />
                       </div>
+
+                     
                     </CarouselItem>
                   ))}
                 </CarouselContent>
