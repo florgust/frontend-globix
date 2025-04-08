@@ -16,29 +16,8 @@ export default function Viagem() {
     <div className={styles.container}>
       {/* Cabeçalho */}
       <header className={styles.header}>
-        <h1 className={styles.title}>Viagem Rifaina</h1>
+        <h1 className={`${styles.title} ${styles.sectionTitle}`}>Viagem Rifaina</h1>
       </header>
-
-      {/* Imagem da Praia */}
-      <div className={styles.imageContainer}>
-        <Image
-          src="/praia.jpg"
-          alt="Praia"
-          width={1200}
-          height={400}
-          className={styles.praiaImage}
-        />
-        <div className={styles.imageLabelContainer}>
-          <Image
-            src="/praia-icon.svg" /* Ícone representando praia */
-            alt="Ícone de Praia"
-            width={24}
-            height={24}
-            className={styles.imageIcon}
-          />
-          <span className={styles.imageLabel}>Praia</span>
-        </div>
-      </div>
 
       {/* Conteúdo Principal */}
       <div className={styles.mainContent}>
@@ -48,7 +27,7 @@ export default function Viagem() {
           <div className={styles.organizerList}>
             <div className={styles.organizerItem}>
               <Image
-                src="/organizador1.jpg"
+                src="/images/usuario.svg"
                 alt="Mauro Borges"
                 width={60}
                 height={60}
@@ -57,8 +36,10 @@ export default function Viagem() {
               <p>Mauro Borges</p>
             </div>
             <div className={styles.addOrganizer}>
-              <div className={styles.addIcon}>+</div>
-              <p>Adicionar Organizador</p>
+              <button className={styles.addOrganizerButton}>
+                <div className={styles.addIcon}>+</div>
+                <p>Adicionar Organizador</p>
+              </button>
             </div>
           </div>
         </div>
@@ -88,7 +69,7 @@ export default function Viagem() {
               <>
                 <div className={styles.guestItem}>
                   <Image
-                    src="/convidado1.jpg"
+                    src="/images/usuario.svg"
                     alt="Luan Glor Fustavo"
                     width={40}
                     height={40}
@@ -98,7 +79,7 @@ export default function Viagem() {
                 </div>
                 <div className={styles.guestItem}>
                   <Image
-                    src="/convidado2.jpg"
+                    src="/images/usuario.svg"
                     alt="Arthur Ramos da Silva"
                     width={40}
                     height={40}
@@ -108,7 +89,7 @@ export default function Viagem() {
                 </div>
                 <div className={styles.guestItem}>
                   <Image
-                    src="/convidado3.jpg"
+                    src="/images/usuario.svg"
                     alt="Bárbara Cabo"
                     width={40}
                     height={40}
@@ -122,23 +103,55 @@ export default function Viagem() {
               <>
                 <div className={styles.guestItem}>
                   <Image
-                    src="/solicitacao1.jpg"
+                    src="/images/usuario.svg"
                     alt="Solicitação 1"
                     width={40}
                     height={40}
                     className={styles.guestImage}
                   />
                   <p>Solicitação 1</p>
+                  <div className={styles.actionButtons}>
+                    <Image
+                      src="/botao_aceitar.svg"
+                      alt="Aceitar"
+                      width={30}
+                      height={30}
+                      className={styles.actionButton}
+                    />
+                    <Image
+                      src="/botao_negar.svg"
+                      alt="Negar"
+                      width={30}
+                      height={30}
+                      className={styles.actionButton}
+                    />
+                  </div>
                 </div>
                 <div className={styles.guestItem}>
                   <Image
-                    src="/solicitacao2.jpg"
+                    src="/images/usuario.svg"
                     alt="Solicitação 2"
                     width={40}
                     height={40}
                     className={styles.guestImage}
                   />
                   <p>Solicitação 2</p>
+                  <div className={styles.actionButtons}>
+                    <Image
+                      src="/botao_aceitar.svg"
+                      alt="Aceitar"
+                      width={30}
+                      height={30}
+                      className={styles.actionButton}
+                    />
+                    <Image
+                      src="/botao_negar.svg"
+                      alt="Negar"
+                      width={30}
+                      height={30}
+                      className={styles.actionButton}
+                    />
+                  </div>
                 </div>
               </>
             )}
@@ -223,6 +236,11 @@ export default function Viagem() {
             </div>
           </div>
         </div>
+
+        {/* Botão Editar */}
+        <div className={styles.editButtonContainer}>
+          <button className={styles.editButton}>Editar</button>
+        </div>
       </div>
 
       {/* Modal "Mais Detalhes" */}
@@ -238,11 +256,6 @@ export default function Viagem() {
           <Transporte />
         </div>
       )}
-
-      {/* Botão Editar */}
-      <div className={styles.editButtonContainer}>
-        <button className={styles.editButton}>Editar</button>
-      </div>
     </div>
   );
 }

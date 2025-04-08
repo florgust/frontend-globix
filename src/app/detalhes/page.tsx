@@ -7,7 +7,6 @@ import styles from "./styles.module.css";
 
 export default function Detalhes() {
   const [modalContent, setModalContent] = useState("detalhes"); // Estado para controlar o conteúdo do modal
-  const [isTransporteOpen, setIsTransporteOpen] = useState(false); // Estado para o modal "Transporte"
 
   return (
     <div className={styles.container}>
@@ -69,7 +68,10 @@ export default function Detalhes() {
                 ].map((button, index) => (
                   <button
                     key={index}
-                    onClick={() => setModalContent(button.id)} // Atualiza o conteúdo do modal
+                    onClick={() => {
+                      console.log(`Botão clicado: ${button.id}`); // Adicione este log
+                      setModalContent(button.id);
+                    }}
                     className={styles.actionButton}
                   >
                     <div className={styles.actionIcon}>
@@ -89,7 +91,8 @@ export default function Detalhes() {
 
           {/* Conteúdo do modal "Transporte" */}
           {modalContent === "transporte" && (
-            <div>
+            <div className={styles.transporteContainer}>
+              <h2 className={styles.modalTitle}>Detalhes do Transporte</h2>
               <Transporte /> {/* Renderiza o componente Transporte */}
             </div>
           )}

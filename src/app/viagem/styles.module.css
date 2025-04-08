@@ -3,27 +3,26 @@
     color: #ffffff;
     padding: 2rem;
     border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Garante que a altura mínima seja igual à altura da janela */
   }
   
   .header {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem; /* Adiciona espaçamento abaixo do cabeçalho */
   }
   
   .title {
     font-size: 2rem;
     font-weight: bold;
-    color: #ffffff;
+    color: #0F2976;
   }
   
   .imageContainer {
     position: relative;
     text-align: center;
     margin-bottom: 2rem;
-  }
-  
-  .praiaImage {
-    border-radius: 16px;
   }
   
   .imageLabelContainer {
@@ -50,6 +49,7 @@
   }
   
   .mainContent {
+    flex: 1;
     display: flex;
     justify-content: space-between;
     gap: 2rem;
@@ -58,10 +58,46 @@
     padding: 2rem;
     border-radius: 16px; /* Bordas arredondadas */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
-    margin-top: -1rem; /* Ajusta o espaçamento para conectar visualmente com a imagem */
+    margin: 0 auto; /* Centraliza a div horizontalmente */
+    position: relative; /* Necessário para posicionamento absoluto dos filhos */
   }
   
-  .organizers,
+  .editButtonContainer {
+    position: absolute; /* Posiciona o botão de forma absoluta */
+    bottom: 1rem; /* Distância do canto inferior */
+    left: 1rem; /* Distância do canto esquerdo */
+  }
+  
+  .editButton {
+    background-color: #D9D9D9; /* Cor de fundo azul */
+    color: #0F2976; /* Cor do texto branco */
+    font-weight: bold;
+    border: none;
+    border-radius: 26px; /* Bordas arredondadas */
+    padding: 0.5rem 1rem; /* Espaçamento interno */
+    font-size: 1rem; /* Tamanho da fonte */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transição suave para hover */
+  }
+  
+  .editButton:hover {
+    background-color: #0F2976; /* Cor de fundo ao passar o mouse */
+    color: #ffffff;
+  }
+  
+  .organizers {
+    display: flex;
+    flex-direction: column; /* Empilha o título e os organizadores verticalmente */
+    align-items: center; /* Centraliza o título e os organizadores horizontalmente */
+    text-align: center; /* Garante que o texto fique centralizado */
+  }
+  
+  .organizers h2 {
+    color: #0F2976; /* Define a cor do texto */
+    font-weight: bold;
+    margin-bottom: 1rem; /* Adiciona espaço abaixo do título */
+  }
+  
   .guests,
   .information {
     flex: 1;
@@ -72,8 +108,12 @@
   }
   
   .sectionTitle {
-    font-size: 1.5rem;
-    margin-bottom: 1rem; /* Espaçamento menor abaixo do título */
+    background-color: #D9D9D9; /* Fundo cinza claro */
+    padding: 0.5rem 1rem; /* Espaçamento interno */
+    display: inline-block; /* Ajusta o fundo ao tamanho do texto */
+    color: #0F2976; /* Cor do texto */
+    font-weight: bold; /* Texto em negrito */
+    border-radius: 26px; /* Bordas arredondadas */
   }
   
   .organizerList {
@@ -83,7 +123,11 @@
   
   .organizerItem,
   .addOrganizer {
-    text-align: center;
+    display: flex;
+    flex-direction: column; /* Empilha os itens verticalmente */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
+    text-align: center; /* Centraliza o texto */
   }
   
   .organizerImage {
@@ -92,14 +136,30 @@
   
   .addIcon {
     font-size: 2rem;
-    color: #ffffff;
-    background-color: #1e3a8a;
-    border-radius: 50%;
+    color: #0F2976; /* Cor do ícone */
+    background-color: #D9D9D9; /* Cor de fundo alterada */
+    border-radius: 50%; /* Mantém o formato circular */
     width: 60px;
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .addOrganizerButton {
+    background: none; /* Remove o fundo padrão do botão */
+    border: none; /* Remove a borda padrão do botão */
+    cursor: pointer; /* Mostra o cursor de clique */
+    display: flex;
+    flex-direction: column; /* Empilha os itens verticalmente */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
+    text-align: center; /* Centraliza o texto */
+    padding: 0; /* Remove o padding padrão do botão */
+  }
+
+  .addOrganizerButton:hover .addIcon {
+    background-color: #bfbfbf; /* Altera a cor de fundo ao passar o mouse */
   }
   
   .tabs {
@@ -113,20 +173,41 @@
     padding: 0.5rem;
     text-align: center;
     background-color: #d1d5db;
-    border-radius: 8px;
+    border-radius: 26px;
     cursor: pointer;
-    color: #000000;
+    color: #0F2976; /* Define a cor do texto das abas */
+    font-weight: bold;
   }
   
   .activeTab {
     background-color: #1e3a8a;
-    color: #ffffff;
+    font-weight: bold;
+    color: #ffffff; /* Cor do texto quando a aba está ativa */
   }
   
   .guestList {
-    background-color: #1e3a8a;
+    background: linear-gradient(to bottom, #0F2976, #1C4CDC); /* Gradiente azul */
     padding: 1rem;
     border-radius: 8px;
+    color: #ffffff; /* Garante que o texto fique legível */
+    max-height: 300px; /* Define uma altura máxima para a lista */
+    overflow-y: auto; /* Adiciona rolagem vertical */
+    scrollbar-width: thin; /* Estiliza a largura da barra de rolagem (para navegadores compatíveis) */
+    scrollbar-color: #1C4CDC #0F2976; /* Cor da barra de rolagem (para navegadores compatíveis) */
+  }
+
+  /* Estilização da barra de rolagem para navegadores baseados em WebKit */
+  .guestList::-webkit-scrollbar {
+    width: 8px; /* Largura da barra de rolagem */
+  }
+
+  .guestList::-webkit-scrollbar-thumb {
+    background-color: #1C4CDC; /* Cor do "polegar" da barra de rolagem */
+    border-radius: 4px; /* Bordas arredondadas */
+  }
+
+  .guestList::-webkit-scrollbar-track {
+    background-color: #0F2976; /* Cor do fundo da barra de rolagem */
   }
   
   .guestItem {
@@ -134,6 +215,11 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
+    background-color: #ffffff; /* Fundo branco */
+    padding: 1rem; /* Espaçamento interno */
+    border-radius: 26px; /* Bordas arredondadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+    color: #000000; /* Garante que o texto fique legível */
   }
   
   .guestImage {
@@ -141,8 +227,8 @@
   }
   
   .infoBackground {
-    background: linear-gradient(135deg, #0F2976, #1C4CDC); /* Gradiente azul */
-    border-radius: 8px; /* Bordas levemente arredondadas */
+    background: linear-gradient(to bottom, #0F2976, #1C4CDC); /* Gradiente azul */
+    border-radius: 26px; /* Bordas levemente arredondadas */
     padding: 1rem; /* Espaçamento interno */
     display: inline-flex; /* Garante que o fundo se ajuste ao tamanho da imagem */
     align-items: center;
@@ -160,20 +246,6 @@
   
   .infoItem {
     text-align: center;
-  }
-  
-  .editButtonContainer {
-    text-align: center;
-    margin-top: 2rem;
-  }
-  
-  .editButton {
-    background-color: #d1d5db;
-    color: #000000;
-    padding: 0.5rem 2rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
   }
   
   .modalOverlay {
@@ -221,4 +293,21 @@
   .modalText {
     font-size: 1rem;
     color: #4b5563;
+  }
+
+  .actionButtons {
+    display: flex;
+    gap: 8px;
+    margin-left: auto; /* Alinha os botões à direita */
+  }
+
+  .actionButton {
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .organizers h2,
+  .information h2 {
+    color: #0F2976; /* Define a cor do texto */
+    font-weight: bold;
   }
