@@ -11,7 +11,7 @@ export default function Home() {
           Bem-vindo ao mundo estilizado com Tailwind CSS!
         </p>
         <button className="mt-6 px-6 py-3 bg-white text-purple-600 font-semibold rounded-lg shadow-lg hover:bg-purple-100 transition duration-300">
-          Clique Aqui
+          Clique Aqui 
         </button>
       </div>
     </div>
