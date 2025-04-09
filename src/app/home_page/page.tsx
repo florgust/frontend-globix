@@ -2,6 +2,8 @@ import React from "react";
 import { Briefcase } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import Sidebar, { SidebarItem } from "../../components/ui/sidebar";
+import { LifeBuoy, Receipt, Boxes, Package, UserCircle, BarChart3, LayoutDashboard, Settings } from "lucide-react";
 
   const carrosselImages = [
     "/images/rifaina-capa.svg",
@@ -13,6 +15,60 @@ export default function HomePage() {
     return (
         
       <div className="flex min-h-screen items-center justify-center bg-blue-500">
+
+        <Sidebar>
+          <SidebarItem
+            icon={<LayoutDashboard size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<LifeBuoy size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<Receipt size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<Boxes size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<Package size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<UserCircle size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<BarChart3 size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          <SidebarItem
+            icon={<Settings size={20} />}
+            text="Dashboard"
+            alert
+            active={true}
+          />
+          
+
+        </Sidebar>
+
 
         <div className="absolute top-40 left-105 flex space-x-6">
           <button className="block mb-180 items-center gap-3 px-16 py-10 bg-gray-200 text-gray-800 rounded-lg shadow-lg hover:bg-gray-300 transition">           
