@@ -94,7 +94,7 @@ const TransportModal = () => {
                 <p className="text-sm">Chegue 15 minutos antes</p>
               </div>
               </div>
-              <div className="mt-4 flex items-start w-full">
+              <div className="mt-15 flex">
               <img
                 src="/destino-verde.svg"
                 alt="Destino"
