@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const Modal = () => {
+const DetailsModal = () => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-start">
       <div
@@ -128,4 +128,4 @@ const Modal = () => {
   );
 };
 
-export default Modal;
+export default DetailsModal;
