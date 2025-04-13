@@ -86,12 +86,12 @@ export default function Header() {
 
         {/* Botões */}
         <div className="flex gap-6">
-          <button className="bg-[#C8FFB2] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#b3f9a1] active:scale-95 transition w-24">
+          <a href='/login' className="bg-[#C8FFB2] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#b3f9a1] active:scale-95 transition w-24">
             Login
-          </button>
-          <button className="bg-[#FFFDFD] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#f2f2f2] active:scale-95 transition w-24">
+          </a>
+          <a href='/register' className="bg-[#FFFDFD] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#f2f2f2] active:scale-95 transition w-24">
             Cadastro
-          </button>
+          </a>
         </div>
       </div>
     </header>

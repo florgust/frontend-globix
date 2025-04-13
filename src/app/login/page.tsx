@@ -43,7 +43,7 @@ export default function LoginPage() {
 
                     <div className="flex justify-between items-center mb-6">
                         <Checkbox label="Lembrar conta" checked={remember} onChange={() => setRemember(!remember)} />
-                        <a href="#" className="text-white text-xs hover:text-gray-300">Esqueceu a senha?</a>
+                        <a href="/initial" className="text-white text-xs hover:text-gray-300">Esqueceu a senha?</a>
                     </div>
 
                     <button

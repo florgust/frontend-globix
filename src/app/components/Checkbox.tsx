@@ -1,7 +1,7 @@
 interface CheckboxProps {
-    label: string;
-    checked: boolean;
-    onChange: () => void;
+    readonly label: string;
+    readonly checked: boolean;
+    readonly onChange: () => void;
   }
   
   export function Checkbox({ label, checked, onChange }: CheckboxProps) {
