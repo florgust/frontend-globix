@@ -26,6 +26,8 @@ export default function Sidebar({ children } : { children: React.ReactNode }) {
           </button>
         </div>
 
+        <div className="border-t border-[#092064] border-2 my-4"></div>
+
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
@@ -59,7 +61,7 @@ export function SidebarItem({ icon, text, active, alert }: { icon: React.ReactNo
   return (
     <li
       className={`
-        relative flex items-center py-2 px-3 my-1
+        relative flex items-center py-3 px-4 my-1
         font-medium rounded-md cursor-pointer
         transition-colors group
         ${
@@ -67,7 +69,7 @@ export function SidebarItem({ icon, text, active, alert }: { icon: React.ReactNo
             ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
             : "hover:bg-indigo-50 text-gray-600"
         }
-    `}
+      `}
     >
       {icon}
       <span 

@@ -3,7 +3,16 @@ import { Briefcase } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Sidebar, { SidebarItem } from "../../components/ui/sidebar";
-import { LifeBuoy, Receipt, Boxes, Package, UserCircle, BarChart3, LayoutDashboard, Settings } from "lucide-react";
+import { House, Receipt,  Boxes, Package, UserCircle, BarChart3, LayoutDashboard, LogOut } from "lucide-react";
+
+
+const minhasViagens = "/images/minhas-viagens.svg";
+const user = "/images/user.svg";
+const message = "/images/message.svg";
+const setting = "/images/setting.svg";
+const mapa = "/images/mapa.svg";
+const about = "/images/about.svg";
+const community = "/images/comunidade.svg";
 
   const carrosselImages = [
     "/images/rifaina-capa.svg",
@@ -14,85 +23,84 @@ import { LifeBuoy, Receipt, Boxes, Package, UserCircle, BarChart3, LayoutDashboa
 export default function HomePage() {
     return (
         
-      <div className="flex min-h-screen items-center justify-center bg-blue-500">
+      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
 
         <Sidebar>
           <SidebarItem
-            icon={<LayoutDashboard size={20} />}
-            text="Dashboard"
+            icon={<House size={20} />}
+            text="Página Principal"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<LifeBuoy size={20} />}
-            text="Dashboard"
+            icon={<img src={minhasViagens} alt="House Icon" className="h-6 w-6" />}
+            text="Minhas Viagens"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<Receipt size={20} />}
-            text="Dashboard"
+            icon={<img src={community} alt="House Icon" className="h-6 w-6" />}
+            text="Comunidade"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<Boxes size={20} />}
-            text="Dashboard"
+            icon={<img src={user} alt="House Icon" className="h-6 w-6" />}
+            text="Perfil"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<Package size={20} />}
-            text="Dashboard"
+            icon={<img src={message} alt="House Icon" className="h-6 w-6" />}
+            text="Mensagens"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<UserCircle size={20} />}
-            text="Dashboard"
+            icon={<img src={setting} alt="House Icon" className="h-6 w-6" />}
+            text="Configurações"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<BarChart3 size={20} />}
-            text="Dashboard"
+            icon={<img src={about} alt="House Icon" className="h-6 w-6" />}
+            text="Sobre"
             alert
             active={true}
           />
           <SidebarItem
-            icon={<Settings size={20} />}
-            text="Dashboard"
+            icon={<LogOut size={20} />}
+            text="Sair"
             alert
             active={true}
           />
-          
 
         </Sidebar>
 
 
         <div className="absolute top-40 left-105 flex space-x-6">
-          <button className="block mb-180 items-center gap-3 px-16 py-10 bg-gray-200 text-gray-800 rounded-lg shadow-lg hover:bg-gray-300 transition">           
+          <button className="block mb-180 items-center gap-3 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
               <Briefcase className="h-12 w-12 text-blue-800" />
               Criar Viagem
           </button>
               
-          <button className="block mb-180 items-center gap-3 px-16 py-10 bg-green-200 text-gray-800 rounded-lg shadow-lg hover:bg-green-300 transition">           
+          <button className="block mb-180 items-center gap-3 px-16 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
               <UserRoundPlus className="h-12 w-12 text-blue-800" />
               Participar de Viagem
           </button>
         </div>
 
   
-        <div className="text-center mt-20">
-            <h1 className="text-6xl mb-10 font-extrabold text-white drop-shadow-lg">
-                Viagens Disponíveis para Você
-            </h1>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl">
+          <h1 className="text-6xl mb-10 font-extrabold text-white drop-shadow-lg">
+            Viagens Disponíveis para Você
+          </h1>
 
             <Carousel className="flex flex-col items-center">
                 <CarouselContent>
                   {carrosselImages.map((image, index) => (
                     <CarouselItem key={index}>
-                      <div className="bg-gradient-to-b from-blue-700 via-blue-600 to-blue-400 w-[75rem] h-[34rem] mx-auto rounded-lg flex items-center justify-center">
+                      <div className="bg-gradient-to-b from-[#0F2976] to-[#194DE8] w-[75rem] h-[34rem] mx-auto rounded-lg flex items-center justify-center">
                         <img
                           src={image}
                           alt={`Imagem ${index + 1}`}
@@ -105,8 +113,8 @@ export default function HomePage() {
                   ))}
                 </CarouselContent>
 
-                <CarouselPrevious className="absolute left-260 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
-                <CarouselNext className="absolute right-260 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
+                <CarouselPrevious className="absolute top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
+                <CarouselNext className="absolute top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
             </Carousel>
         </div>
       </div>
