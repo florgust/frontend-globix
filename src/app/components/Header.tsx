@@ -46,9 +46,9 @@ export default function Header() {
             >
               Viagens
               <Image
-                src="/images-initial/icone-down.png" 
+                src="/images-initial/icone-down.png"
                 alt="Ícone de seta para baixo"
-                width={10} 
+                width={10}
                 height={12}
               />
             </button>
@@ -70,7 +70,7 @@ export default function Header() {
               <Image
                 src="/images-initial/icone-down.png"
                 alt="Ícone de seta para baixo"
-                width={10} 
+                width={10}
                 height={12}
                 className="hover:font-bold"
               />
@@ -85,11 +85,11 @@ export default function Header() {
         </nav>
 
         {/* Botões */}
-        <div className="flex gap-6">
-          <a href='/login' className="bg-[#C8FFB2] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#b3f9a1] active:scale-95 transition w-24">
+        <div className="flex justify-center items-center gap-6">
+          <a href='/login' className="flex justify-center items-center bg-[#C8FFB2] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#b3f9a1] active:scale-95 transition w-24 h-12">
             Login
           </a>
-          <a href='/register' className="bg-[#FFFDFD] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#f2f2f2] active:scale-95 transition w-24">
+          <a href='/register' className="flex justify-center items-center bg-[#FFFDFD] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#f2f2f2] active:scale-95 transition w-24 h-12">
             Cadastro
           </a>
         </div>
