@@ -2,20 +2,14 @@ import { InputHTMLAttributes, useState } from 'react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  required?: boolean;
   errorMessage?: string;
 }
 
-export function Input({ type = 'text', required = false, errorMessage = 'Este campo é obrigatório.', ...props }: InputProps) {
+export function Input({ type = 'text', errorMessage = '', ...props }: InputProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isTouched, setIsTouched] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
-  };
-
-  const handleBlur = () => {
-    setIsTouched(true);
   };
 
   return (
@@ -23,10 +17,8 @@ export function Input({ type = 'text', required = false, errorMessage = 'Este ca
       <input
         type={type === 'password' && isPasswordVisible ? 'text' : type}
         {...props}
-        required={required}
-        onBlur={handleBlur}
         className={`w-full py-2 px-4 pr-10 rounded-lg bg-white text-black placeholder:text-gray-400 focus:outline-none ${
-          isTouched && required && !props.value ? 'border-red-500 border' : ''
+          errorMessage ? 'border-red-500 border' : ''
         }`}
       />
       {type === 'email' && <Mail className="absolute right-3 top-2.5 h-5 w-5 text-gray-500" />}
@@ -38,7 +30,7 @@ export function Input({ type = 'text', required = false, errorMessage = 'Este ca
           {isPasswordVisible ? <EyeOff /> : <Eye />}
         </div>
       )}
-      {isTouched && required && !props.value && (
+      {errorMessage && (
         <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
       )}
     </div>

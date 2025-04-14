@@ -5,12 +5,63 @@ import { Checkbox } from '../components/Checkbox';
 import { GoogleButton } from '../components/GoogleButton';
 import { AuthCard } from '../components/AuthCard';
 import { ImageCarousel } from '../components/ImageCarousel';
+import { SuccessAlert } from '../components/SuccessAlert';
 
 import { useState } from 'react';
 import Image from 'next/image';
 
 export default function LoginPage() {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+
+    const [inputErrors, setInputErrors] = useState({
+        email: '',
+        password: '',
+    });
+
     const [remember, setRemember] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+
+        // Limpa o erro do campo correspondente ao digitar
+        setInputErrors({
+            ...inputErrors,
+            [name]: '',
+        });
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Validação dos campos
+        const newInputErrors = {
+            email: !formData.email ? 'O e-mail não pode estar vazio.' : '',
+            password: !formData.password ? 'A senha não pode estar vazia.' : '',
+        };
+
+        setInputErrors(newInputErrors);
+
+        // Verifica se há erros
+        if (Object.values(newInputErrors).some((error) => error !== '')) {
+            return; // Interrompe o envio se houver erros
+        }
+
+        // Simulação de login bem-sucedido
+        setSuccessMessage('Login realizado com sucesso!');
+
+        // Redirecionar após 2 segundos
+        setTimeout(() => {
+            window.location.href = '/dashboard';
+        }, 2000);
+    };
 
     return (
         <main className="flex h-screen">
@@ -30,15 +81,31 @@ export default function LoginPage() {
                 <h1 className="text-white text-xl font-semibold mb-1">Bem-vindo!</h1>
                 <p className="text-white text-base mb-6">Faça login para continuar.</p>
 
-                <form className="flex flex-col gap-4 w-full max-w-sm">
+                <form className="flex flex-col gap-4 w-full max-w-sm" onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="email" className="text-white text-sm mb-1 block">E-mail</label>
-                        <Input id="email" type="email" placeholder="Digite seu e-mail" />
+                        <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="Digite seu e-mail"
+                            value={formData.email}
+                            onChange={handleChange}
+                            errorMessage={inputErrors.email} // Passa a mensagem de erro
+                        />
                     </div>
 
                     <div className="mb-4">
                         <label htmlFor="password" className="text-white text-sm mb-1 block">Senha</label>
-                        <Input id="password" type="password" placeholder="Digite sua senha" />
+                        <Input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="Digite sua senha"
+                            value={formData.password}
+                            onChange={handleChange}
+                            errorMessage={inputErrors.password} // Passa a mensagem de erro
+                        />
                     </div>
 
                     <div className="flex justify-between items-center mb-6">
@@ -62,6 +129,14 @@ export default function LoginPage() {
                     </p>
                 </form>
             </AuthCard>
+
+            {/* SuccessAlert */}
+            {successMessage && (
+                <SuccessAlert
+                    message={successMessage}
+                    onClose={() => setSuccessMessage('')}
+                />
+            )}
         </main>
     );
 }

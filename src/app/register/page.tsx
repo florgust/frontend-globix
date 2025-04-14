@@ -145,7 +145,6 @@ export default function RegisterPage() {
                             placeholder="Digite seu nome completo"
                             value={formData.username}
                             onChange={handleChange}
-                            required
                             errorMessage={inputErrors.username}
                         />
                     </div>
@@ -159,7 +158,6 @@ export default function RegisterPage() {
                             placeholder="Digite seu e-mail"
                             value={formData.email}
                             onChange={handleChange}
-                            required
                             errorMessage={inputErrors.email}
                         />
                     </div>
@@ -173,7 +171,6 @@ export default function RegisterPage() {
                             placeholder="Digite sua senha"
                             value={formData.password}
                             onChange={handleChange}
-                            required
                             errorMessage={inputErrors.password}
                         />
                     </div>
@@ -187,7 +184,6 @@ export default function RegisterPage() {
                             placeholder="Confirme sua senha"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            required
                             errorMessage={inputErrors.confirmPassword}
                         />
                     </div>
