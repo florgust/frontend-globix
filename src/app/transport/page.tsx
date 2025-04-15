@@ -46,7 +46,7 @@ const TransportModal = () => {
               alt="Linha Branca"
               className="absolute left-22 top-[18.4rem] w-[7rem] h-[1rem]"
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col ml-[-2rem] z-[-1]">
               <div className="bg-[#EAF2FF] p-2 rounded-lg shadow-md mt-5 w-[16rem] whitespace-nowrap">
                 <div className="ml-4 text-left">
                   <h3 className="text-[1.25rem] font-bold">Detalhes</h3>
@@ -86,7 +86,7 @@ const TransportModal = () => {
               alt="Lembrete"
               className="absolute left-3 w-[6rem] h-[10rem]"
             />
-            <div className="flex flex-col">
+            <div className="flex flex-col ml-[-2rem] z-[-1]">
               <div className="flex items-center bg-[#EAF2FF] p-2 rounded-lg shadow-md w-[16rem] mt-8">
                 <div className="ml-4 text-left">
                   <h3 className="text-[1.25rem] font-bold">Lembrete</h3>
@@ -175,6 +175,11 @@ const TransportModal = () => {
             <span className="text-[0.857rem] text-[#292D32] mt-2 ml-6">Alerta</span>
           </div>
         </div>
+
+        {/* Linha preta vertical */}
+        <div
+          className="absolute bg-black w-[12rem] h-[0.0625rem] top-[29.5rem] left-[26.7rem] rotate-90"
+        ></div>
       </div>
     </div>
   );
