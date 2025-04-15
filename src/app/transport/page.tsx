@@ -60,7 +60,7 @@ const TransportModal = () => {
                 <div className="text-left flex-grow">
                   <p className="text-[1.25rem] font-bold">Saída da Cidade Origem</p>
                   <p className="text-[1.125rem]">Posto Graal Antares | Uberaba - MG</p>
-                  <p className="text-[1.125rem]">25/03/25 - 19:30h</p>
+                  <p className="text-[1.125rem] font-bold">25/03/25 - 19:30h</p>
                 </div>
               </div>
               <div className="absolute left-25 top-[6rem] mt-95 flex items-start">
@@ -68,7 +68,7 @@ const TransportModal = () => {
                 <div className="text-left flex-grow">
                   <p className="text-[1.25rem] font-bold">Chegada na Cidade Destino</p>
                   <p className="text-[1.125rem]">Rua Rifaina | Rifaina - SP</p>
-                  <p className="text-[1.125rem]">25/03/25 - 22:00h</p>
+                  <p className="text-[1.125rem] font-bold">25/03/25 - 22:00h</p>
                 </div>
               </div>
             </div>
@@ -91,31 +91,31 @@ const TransportModal = () => {
                 <div className="ml-4 text-left">
                   <h3 className="text-[1.25rem] font-bold">Lembrete</h3>
                   <p className="text-[1.125rem]">Ticket: 1654155261</p>
-                  <p className="text-[1.125rem]">Chegue 15 minutos antes</p>
+                  <p className="text-[1.125rem] font-bold">Chegue 15 minutos antes</p>
                 </div>
               </div>
               <div className="absolute left-1 top-[6rem] mt-25 flex items-start">
-                <img
-                  src="/destino-verde.svg"
-                  alt="Destino"
-                  className="w-[3rem] h-[3rem] mr-4 flex-shrink-0"
-                />
-                <div className="text-left flex-grow">
-                  <p className="text-[1.25rem] font-bold">Saída da Cidade Destino</p>
-                  <p className="text-[1.125rem]">Rua Rifaina | Rifaina - SP</p>
-                  <p className="text-[1.125rem]">30/03/25 - 12:00h</p>
-                </div>
-              </div>
-              <div className="absolute left-1 top-[6rem] mt-50 flex items-start">
                 <img
                   src="/origem-verde.svg"
                   alt="Origem"
                   className="w-[3rem] h-[3rem] mr-4 flex-shrink-0"
                 />
                 <div className="text-left flex-grow">
+                  <p className="text-[1.25rem] font-bold">Saída da Cidade Destino</p>
+                  <p className="text-[1.125rem]">Rua Rifaina | Rifaina - SP</p>
+                  <p className="text-[1.125rem] font-bold">30/03/25 - 12:00h</p>
+                </div>
+              </div>
+              <div className="absolute left-1 top-[6rem] mt-50 flex items-start">
+                <img
+                  src="/destino-verde.svg"
+                  alt="Destino"
+                  className="w-[3rem] h-[3rem] mr-4 flex-shrink-0"
+                />
+                <div className="text-left flex-grow">
                   <p className="text-[1.25rem] font-bold">Chegada na Cidade Origem</p>
                   <p className="text-[1.125rem]">Posto Graal Antares | Uberaba - MG</p>
-                  <p className="text-[1.125rem]">30/03/25 - 14:00h</p>
+                  <p className="text-[1.125rem] font-bold">30/03/25 - 14:00h</p>
                 </div>
               </div>
             </div>
@@ -127,12 +127,12 @@ const TransportModal = () => {
           <div className="flex flex-col items-center">
             <div className="hover:scale-110 transition-transform cursor-pointer w-[5.625rem] h-[5.625rem] rounded-full flex items-center justify-center bg-gradient-to-b from-[#0F2976] to-[#1C4CDC]">
               <img
-                src="transporte.svg"
-                alt="Transporte"
+                src="detalhes.svg"
+                alt="Detalhes"
                 className="w-[3.75rem] h-[3.75rem]"
               />
             </div>
-            <span className="text-[0.857rem] text-[#292D32] mt-2">Transporte</span>
+            <span className="text-[0.857rem] text-[#292D32] mt-2">Mais Detalhes</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="hover:scale-110 transition-transform cursor-pointer ml-5 w-[5.625rem] h-[5.625rem] rounded-full flex items-center justify-center bg-gradient-to-b from-[#0F2976] to-[#1C4CDC]">
