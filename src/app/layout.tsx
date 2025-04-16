@@ -8,12 +8,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
       <body className="text-gray-900">
-
-        {/* Gambiarra, mudar depois */}
-        <header className="bg-blue-800 text-white p-4">
-          
-        </header>
-
         {/* Conteúdo da Página */}
         <main className="min-h-screen">{children}</main>
 

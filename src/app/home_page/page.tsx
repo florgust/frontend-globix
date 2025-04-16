@@ -2,9 +2,8 @@ import React from "react";
 import { Briefcase } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import Sidebar, { SidebarItem } from "../../components/ui/sidebar";
-import { House, Receipt,  Boxes, Package, UserCircle, BarChart3, LayoutDashboard, LogOut } from "lucide-react";
 
+import SidebarMenu from "../../components/ui/SidebarMenu";
 
 const minhasViagens = "/images/minhas-viagens.svg";
 const user = "/images/user.svg";
@@ -15,68 +14,16 @@ const about = "/images/about.svg";
 const community = "/images/comunidade.svg";
 
   const carrosselImages = [
-    "/images/rifaina-capa.svg",
-    "/images/carrossel.png",
-    "/images/marco.jpg",
+    "/images/carousel/rifaina-capa.svg",
+    "/images/carousel/carrossel.png",
+    "/images/carousel/carrossel2.jpg",
   ];
 
 export default function HomePage() {
     return (
         
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-
-        <Sidebar>
-          <SidebarItem
-            icon={<House size={20} />}
-            text="Página Principal"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<img src={minhasViagens} alt="House Icon" className="h-6 w-6" />}
-            text="Minhas Viagens"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<img src={community} alt="House Icon" className="h-6 w-6" />}
-            text="Comunidade"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<img src={user} alt="House Icon" className="h-6 w-6" />}
-            text="Perfil"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<img src={message} alt="House Icon" className="h-6 w-6" />}
-            text="Mensagens"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<img src={setting} alt="House Icon" className="h-6 w-6" />}
-            text="Configurações"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<img src={about} alt="House Icon" className="h-6 w-6" />}
-            text="Sobre"
-            alert
-            active={true}
-          />
-          <SidebarItem
-            icon={<LogOut size={20} />}
-            text="Sair"
-            alert
-            active={true}
-          />
-
-        </Sidebar>
-
+        <SidebarMenu />
 
         <div className="absolute top-40 left-105 flex space-x-6">
           <button className="block mb-180 items-center gap-3 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
@@ -96,7 +43,7 @@ export default function HomePage() {
             Viagens Disponíveis para Você
           </h1>
 
-            <Carousel className="flex flex-col items-center">
+            {/* <Carousel className="flex flex-col items-center">
                 <CarouselContent>
                   {carrosselImages.map((image, index) => (
                     <CarouselItem key={index}>
@@ -115,7 +62,8 @@ export default function HomePage() {
 
                 <CarouselPrevious className="absolute top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
                 <CarouselNext className="absolute top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
-            </Carousel>
+            </Carousel> */}
+
         </div>
       </div>
     );
