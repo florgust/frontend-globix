@@ -1,8 +1,10 @@
+"use client";
 import React from "react";
-import { Briefcase, UserRoundPlus } from "lucide-react";
+import { Briefcase, UserRoundPlus, X } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import Header from "@/components/ui/header";
+import Modal from "@/components/ui/modal";
 
 const viagens = [
   {
@@ -38,21 +40,41 @@ const viagens = [
 ];
 
 export default function HomePage() {
+  const [openModal, setOpenModal] = React.useState(false);
+
+
     return (
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
         <SidebarMenu />
         <Header/>
         
         <div className="absolute top-40 left-105 flex space-x-6">
-          <button className="block mb-180 items-center gap-3 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
-              <Briefcase className="h-12 w-12 text-blue-800" />
-              Criar Viagem
+          <button 
+            className="block mb-180 items-center gap-3 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
+            <Briefcase className="h-12 w-12 text-blue-800" />
+            Criar Viagem
           </button>
-              
-          <button className="block mb-180 items-center gap-3 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
-              <UserRoundPlus className="h-12 w-12 text-blue-800" />
-              Participar de Viagem
+
+          <button 
+            onClick={() => setOpenModal(true)}
+            className="block mb-180 items-center gap-3 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
+            <UserRoundPlus className="h-12 w-12 text-blue-800" />
+            Participar de Viagem
           </button>
+
+          <Modal isOpen={openModal}>
+            <h1 className="text-[#0F2976] text-4xl mb-3 text-center mb-10">Insira o código da Viagem que você <br/> quer participar</h1>
+            <input
+              type="text"
+              placeholder="Insira o código da viagem"
+              className=" w-[30rem] h-[6rem] p-2 rounded-full bg-[#0F2976] focus:outline-none text-white placeholder-gray-200 text-2xl text-center"
+            />
+            <button onClick={ () => {setOpenModal(false)}}>
+              <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F]"/>
+            </button>
+
+          </Modal>
+
         </div>
   
         <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl">
