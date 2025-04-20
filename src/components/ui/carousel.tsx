@@ -4,7 +4,7 @@ import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ChevronRight, ChevronLeft, ArrowRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -31,6 +31,8 @@ type CarouselContextProps = {
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
+const rightArrow = "/images/Back.svg"
+const leftArrow = "/images/Next.svg"
 
 function useCarousel() {
   const context = React.useContext(CarouselContext)
@@ -185,7 +187,7 @@ function CarouselPrevious({
       variant={variant}
       size={size}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute size-8",
         orientation === "horizontal"
           ? "top-1/2 -left-12 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -195,8 +197,8 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeft />
-      <span className="sr-only">Previous slide</span>
+      <ChevronLeft className="text-white"/>
+      <span className="sr-only">Anterior</span>
     </Button>
   )
 }
@@ -215,7 +217,7 @@ function CarouselNext({
       variant={variant}
       size={size}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute size-8",
         orientation === "horizontal"
           ? "top-1/2 -right-12 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -225,10 +227,58 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRight />
-      <span className="sr-only">Next slide</span>
+      <ChevronRight className=""/>
+      <span className="sr-only">Próximo</span>
     </Button>
-  )
+  )}
+
+function PreviousCarousel ({
+  className,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { scrollPrev, canScrollPrev } = useCarousel();
+
+  return (
+    <Button
+      data-slot="carousel-previous"
+      className={className}
+      disabled={!canScrollPrev}
+      onClick={scrollPrev}
+      {...props}
+    >
+      <img
+      src={rightArrow}
+      alt="Previous"
+      className="w-[3.5rem]"
+      />
+      <span className="sr-only">Previous</span>
+    </Button>
+  );
+}
+
+function NextCarousel ({
+  className,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { scrollNext, canScrollNext } = useCarousel();
+
+  return (
+    <Button
+      data-slot="carousel-next"
+      className={className}
+      disabled={!canScrollNext}
+      onClick={scrollNext}
+      {...props}
+    >
+      
+    <img
+    src={leftArrow}
+    alt="Next"
+    className="w-[3.5rem]"
+/>
+      <span className="sr-only">Next</span>
+    </Button>
+  );
 }
 
 export {
@@ -238,4 +288,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  NextCarousel, 
+  PreviousCarousel
 }

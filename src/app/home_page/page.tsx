@@ -1,69 +1,98 @@
 import React from "react";
-import { Briefcase } from "lucide-react";
-import { UserRoundPlus } from "lucide-react";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-
+import { Briefcase, UserRoundPlus } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
 import SidebarMenu from "../../components/ui/SidebarMenu";
+import Header from "@/components/ui/header";
 
-const minhasViagens = "/images/minhas-viagens.svg";
-const user = "/images/user.svg";
-const message = "/images/message.svg";
-const setting = "/images/setting.svg";
-const mapa = "/images/mapa.svg";
-const about = "/images/about.svg";
-const community = "/images/comunidade.svg";
-
-  const carrosselImages = [
-    "/images/carousel/rifaina-capa.svg",
-    "/images/carousel/carrossel.png",
-    "/images/carousel/carrossel2.jpg",
-  ];
+const viagens = [
+  {
+    id: 1,
+    titulo: "Rifaina - SP",
+    diaViagem: "22/04/2025",
+    cidadeDestino: "Rifaina",
+    organizador: "Bárbara",
+    tipoTransporte: "Micro-ônibus",
+    duracao: "2 dias",
+    imagem: "/images/carousel/rifaina-capa.png"
+  },
+  {
+    id: 2,
+    titulo: "Viagem para o Rio de Janeiro",
+    diaViagem: "20/05/2025",
+    cidadeDestino: "Rio de Janeiro",
+    organizador: "Patrick e Arthur",
+    tipoTransporte: "Carro",
+    duracao: "5 dias",
+    imagem: "/images/carousel/carrossel.png"
+  },
+  {
+    id: 3,
+    titulo: "Viagem para o Nordeste",
+    diaViagem: "02/10/2025",
+    cidadeDestino: "Recife - PE",
+    organizador: "Luan",
+    tipoTransporte: "Avião",
+    duracao: "7 dias",
+    imagem: "/images/carousel/carrossel2.jpg"
+  }
+];
 
 export default function HomePage() {
     return (
-        
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
         <SidebarMenu />
-
+        <Header/>
+        
         <div className="absolute top-40 left-105 flex space-x-6">
           <button className="block mb-180 items-center gap-3 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
               <Briefcase className="h-12 w-12 text-blue-800" />
               Criar Viagem
           </button>
               
-          <button className="block mb-180 items-center gap-3 px-16 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
+          <button className="block mb-180 items-center gap-3 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
               <UserRoundPlus className="h-12 w-12 text-blue-800" />
               Participar de Viagem
           </button>
         </div>
-
   
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl">
+        <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl">
           <h1 className="text-6xl mb-10 font-extrabold text-white drop-shadow-lg">
             Viagens Disponíveis para Você
           </h1>
-
-            {/* <Carousel className="flex flex-col items-center">
-                <CarouselContent>
-                  {carrosselImages.map((image, index) => (
-                    <CarouselItem key={index}>
-                      <div className="bg-gradient-to-b from-[#0F2976] to-[#194DE8] w-[75rem] h-[34rem] mx-auto rounded-lg flex items-center justify-center">
+          
+            <Carousel className="flex flex-col items-center w-full max-w-[75rem] mx-auto">
+                <CarouselContent >
+                  {viagens.map((viagem) => (
+                    <CarouselItem key={viagem.id}>
+                      <div className="relative bg-gradient-to-b from-[#0F2976] to-[#194DE8] w-full h-[25rem] mx-auto rounded-lg flex items-center justify-center">
                         <img
-                          src={image}
-                          alt={`Imagem ${index + 1}`}
-                          className="w-[61rem] h-[29.875rem] mx-auto rounded-lg "
+                          src={viagem.imagem}
+                          alt={viagem.titulo}
+                          className="w-[55rem] h-[20.875rem] mx-auto rounded-lg"
                           />
+                        <div className="w-[55rem] absolute top-40 left-18 bottom-8 bg-white bg-opacity-50 text-white flex flex-col opacity-0 hover:opacity-85 transition-opacity rounded-lg p-4">
+                          <h1 className="text-[#0F2976] text-3xl font-bold mb-3">{viagem.titulo}</h1>
+                          <p className="text-black">Dia da Viagem: {viagem.diaViagem}</p>
+                          <p className="text-black">Organizador: {viagem.organizador}</p>
+                          <p className="text-black">Tipo de Transporte: {viagem.tipoTransporte}</p>
+                          <p className="text-black mb-2">Duração: {viagem.duracao}</p>
+                          
+                          <button className="flex justify-center items-center w-30 h-5 bg-[#102976] text-white rounded-lg mt-2 ">Mais detalhes</button>
+                          <button className="absolute right-3 top-18 w-45 h-10 bg-[#3978EA] text-white text-2xl rounded-full mt-2 pl-5 pb-1">Quero Viajar</button>
+                          <button className="absolute right-40 top-15 w-[5rem] h-[5rem] bg-[#0F2976] rounded-full flex items-center justify-center">
+                            <UserRoundPlus className="pl-2 h-[4rem] w-[4rem] text-white" />
+                          </button>                    
+                          </div>
                       </div>
-
-                     
                     </CarouselItem>
                   ))}
                 </CarouselContent>
 
-                <CarouselPrevious className="absolute top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
-                <CarouselNext className="absolute top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition" />
-            </Carousel> */}
-
+                <PreviousCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition mr-235">
+                </PreviousCarousel>
+                <NextCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition ml-235">
+                </NextCarousel>
+            </Carousel>
         </div>
       </div>
     );

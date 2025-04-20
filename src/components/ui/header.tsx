@@ -12,7 +12,7 @@ export default function Header() {
                         <input
                             type="text"
                             placeholder="Pesquisar"
-                            className="w-80  p-2 pl-12 rounded-md bg-[#111315] focus:outline-none text-white placeholder-gray-200"
+                            className="w-80 p-2 pl-12 rounded-md bg-[#111315] focus:outline-none text-white placeholder-gray-200"
                         />
                         <Search
                             size={20}

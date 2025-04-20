@@ -125,20 +125,12 @@
   --sidebar-accent-foreground: 240 4.8% 95.9%;
   --sidebar-border: 240 3.7% 15.9%;
   --sidebar-ring: 217.2 91.2% 59.8%;
-
-  /* Adicionando as cores personalizadas
-  --custom-blue-light: #1C4CDC;
-  --custom-blue-dark: #0F2976; */
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-/* tentando adicionar um gradiente de fundo customizado, seguindo o design system
-  .bg-custom-gradient {
-    background: linear-gradient(to bottom, var(--custom-blue-light), var(--custom-blue-dark));
-  } */
 
   body {
     @apply bg-background text-foreground;

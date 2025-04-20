@@ -12,28 +12,27 @@ export default function Sidebar({ children } : { children: React.ReactNode }) {
     <aside className="h-screen">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
       <div className="p-4 pb-2 flex items-center justify-between">
-      
-      <button 
-        onClick={() => setExpanded((curr) => !curr)} >
-        <img
-              src={user}
-              className={`rounded-lg transition-all w-10 h-10 ${
-                expanded ? "mr-30" : "mr-0"
-                }`}
-              alt=""
-            />
-      </button>
-      {expanded && (
-  <button
-    onClick={() => setExpanded((curr) => !curr)}
-    className="p-1.5 rounded-lg bg-[#092064] hover:bg-blue-700"
-  >
-    <Bell color="white" />
-  </button>
-)}
-        </div>
+        <button 
+          onClick={() => setExpanded((curr) => !curr)} >
+          <img
+                src={user}
+                className={`rounded-lg transition-all w-10 h-10 my-4 ${
+                  expanded ? "mr-30" : "mr-0"
+                  }`}
+                alt=""
+              />
+        </button>
+        {expanded && (
+        <button
+          onClick={() => setExpanded((curr) => !curr)}
+          className="p-1.5 rounded-lg bg-[#092064] hover:bg-blue-700"
+        >
+          <Bell color="white" />
+        </button>
+        )}
+      </div>
 
-        <div className="border-t border-[#092064] border-2 my-4"></div>
+        <div className="border-t border-[#092064] border-2 mb-10 mt-2"></div>
 
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 ">{children}</ul>
