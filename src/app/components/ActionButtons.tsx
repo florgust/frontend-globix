@@ -16,7 +16,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, onClick }) => 
             >
                 <Image src={icon} alt={label} width={36} height={36} />
             </div>
-            <p className="text-[#292D32] mt-2 text-center text-[0.875rem]">{label}</p>
+            <p className="text-[#292D32] mt-2 text-center text-[0.875rem] whitespace-nowrap">{label}</p>
         </div>
     );
 };
