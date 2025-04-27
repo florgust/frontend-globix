@@ -50,7 +50,7 @@ export default function DetailsPage() {
                 {/* Parte Central - Convidados e Solicitações */}
                 <div className="w-[30rem] p-6 flex-col items-center mt-8">
                     <TabSwitcher
-                        tabs={['Convidados', 'Solicitações']}
+                        tabs={['Participantes', 'Solicitações']}
                         activeTab={activeTab}
                         onTabChange={setActiveTab}
                     />
