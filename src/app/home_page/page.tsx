@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Briefcase, UserRoundPlus, X } from "lucide-react";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
+import { Carousel, CarouselContent, CarouselItem, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import Header from "@/components/ui/header";
 import Modal from "@/components/ui/modal";
@@ -15,7 +15,7 @@ const viagens = [
     organizador: "Bárbara",
     tipoTransporte: "Micro-ônibus",
     duracao: "2 dias",
-    imagem: "/images/carousel/rifaina-capa.png"
+    imagem: "/images-home_page/carousel/rifaina-capa.png"
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const viagens = [
     organizador: "Patrick e Arthur",
     tipoTransporte: "Carro",
     duracao: "5 dias",
-    imagem: "/images/carousel/carrossel.png"
+    imagem: "/images-home_page/carousel/carrossel.png"
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const viagens = [
     organizador: "Luan",
     tipoTransporte: "Avião",
     duracao: "7 dias",
-    imagem: "/images/carousel/carrossel2.jpg"
+    imagem: "/images-home_page/carousel/carrossel2.jpg"
   }
 ];
 
@@ -50,15 +50,15 @@ export default function HomePage() {
         
         <div className="absolute top-40 left-105 flex space-x-6">
           <button 
-            className="block mb-180 items-center gap-3 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
-            <Briefcase className="h-12 w-12 text-blue-800" />
+            className="mb-180 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
+            <Briefcase className="h-12 w-12 text-[#0F2976]" />
             Criar Viagem
           </button>
 
           <button 
             onClick={() => setOpenModal(true)}
-            className="block mb-180 items-center gap-3 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
-            <UserRoundPlus className="h-12 w-12 text-blue-800" />
+            className="mb-180 ml-10 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
+            <UserRoundPlus className="h-12 w-12 text-[#0F2976]" />
             Participar de Viagem
           </button>
 
@@ -72,7 +72,6 @@ export default function HomePage() {
             <button onClick={ () => {setOpenModal(false)}}>
               <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F]"/>
             </button>
-
           </Modal>
 
         </div>
