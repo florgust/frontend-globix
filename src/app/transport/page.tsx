@@ -2,7 +2,7 @@
 
 import React from "react";
 
-const TransportModal = () => {
+const AlertModal = () => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-start">
       <div
@@ -185,4 +185,4 @@ const TransportModal = () => {
   );
 };
 
-export default TransportModal;
+export default AlertModal;
