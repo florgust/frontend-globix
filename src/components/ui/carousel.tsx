@@ -31,8 +31,8 @@ type CarouselContextProps = {
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
-const rightArrow = "/images/Back.svg"
-const leftArrow = "/images/Next.svg"
+const rightArrow = "/images-home_page/Back.svg"
+const leftArrow = "/images-home_page/Next.svg"
 
 function useCarousel() {
   const context = React.useContext(CarouselContext)

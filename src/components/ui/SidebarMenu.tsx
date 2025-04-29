@@ -3,12 +3,12 @@ import Sidebar, { SidebarItem } from "./sidebar";
 import { House, LogOut } from "lucide-react";
 // import { useRouter } from "next/router";
 
-const minhasViagens = "/images/sidebar-menu/my-travels.svg";
-const user = "/images/sidebar-menu/user.svg";
-const message = "/images/sidebar-menu/message.svg";
-const setting = "/images/sidebar-menu/setting.svg";
-const about = "/images/sidebar-menu/about.svg";
-const community = "/images/sidebar-menu/comunity.svg";
+const minhasViagens = "/images-home_page/sidebar-menu/my-travels.svg";
+const user = "/images-home_page/sidebar-menu/user.svg";
+const message = "/images-home_page/sidebar-menu/message.svg";
+const setting = "/images-home_page/sidebar-menu/setting.svg";
+const about = "/images-home_page/sidebar-menu/about.svg";
+const community = "/images-home_page/sidebar-menu/comunity.svg";
 
 const menuItems = [
     { icon: <House size={20} />, text: "Página Principal", active: true },
