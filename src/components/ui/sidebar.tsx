@@ -3,7 +3,7 @@ import { BellDot, Bell } from "lucide-react";
 import { useContext, createContext, useState } from "react"
 
 const SidebarContext = createContext({expanded: true})
-const user = "/images/carousel/carrossel.png";
+const user = "/images-home_page/carousel/carrossel.png";
 
 export default function Sidebar({ children } : { children: React.ReactNode }) {
   const [expanded, setExpanded] = useState(true)

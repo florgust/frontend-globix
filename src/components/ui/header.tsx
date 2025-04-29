@@ -1,7 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 
-const logo = "images/logo-globix.png";
+const logo = "images-home_page/logo-globix.png";
 
 export default function Header() {
     return (
