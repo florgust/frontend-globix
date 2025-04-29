@@ -3,7 +3,7 @@ import React from "react";
 import { Briefcase, UserRoundPlus, X } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
 import SidebarMenu from "../../components/ui/SidebarMenu";
-import Header from "@/components/ui/header";
+import { HeaderPages } from "@/components/ui/header";
 import Modal from "@/components/ui/modal";
 
 const viagens = [
@@ -46,7 +46,7 @@ export default function HomePage() {
     return (
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
         <SidebarMenu />
-        <Header/>
+        <HeaderPages/>
         
         <div className="absolute top-40 left-105 flex space-x-6">
           <button 
@@ -98,9 +98,9 @@ export default function HomePage() {
                           <p className="text-black">Tipo de Transporte: {viagem.tipoTransporte}</p>
                           <p className="text-black mb-2">Duração: {viagem.duracao}</p>
                           
-                          <button className="flex justify-center items-center w-30 h-5 bg-[#102976] text-white rounded-lg mt-2 ">Mais detalhes</button>
-                          <button className="absolute right-3 top-18 w-45 h-10 bg-[#3978EA] text-white text-2xl rounded-full mt-2 pl-5 pb-1">Quero Viajar</button>
-                          <button className="absolute right-40 top-15 w-[5rem] h-[5rem] bg-[#0F2976] rounded-full flex items-center justify-center">
+                          <button className="flex justify-center items-center w-30 h-5 bg-[#102976] text-white rounded-lg mt-2 cursor-pointer">Mais detalhes</button>
+                          <button className="absolute right-3 top-18 w-45 h-10 bg-[#3978EA] text-white text-2xl rounded-full mt-2 pl-5 pb-1 cursor-pointer">Quero Viajar</button>
+                          <button className="absolute right-40 top-15 w-[5rem] h-[5rem] bg-[#0F2976] rounded-full flex items-center justify-center cursor-pointer">
                             <UserRoundPlus className="pl-2 h-[4rem] w-[4rem] text-white" />
                           </button>                    
                           </div>
