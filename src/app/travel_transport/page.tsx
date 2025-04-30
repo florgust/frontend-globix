@@ -7,96 +7,77 @@ import Modal from "@/components/ui/modal";
 
 
 export default function TravelTransport() {
-  const [openModal, setOpenModal] = React.useState(false);
-
+    const [openModal, setOpenModal] = React.useState(false);
 
     return (
-      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-        <SidebarMenu />
-        <Header/>
-        
-        <h1
-            className="absolute w-[34.5rem] h-[3.125rem] top-[8.625rem] left-[17.1875rem] text-white font-quicksand font-bold text-[2.5rem] leading-[1] tracking-[0px] text-center"
-        >
-            Criar Viagem - TRANSPORTE
-        </h1>
+        <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
+            <SidebarMenu />
 
-        <div
-            className="absolute w-[70.6875rem] top-[12.625rem] left-[17.1875rem] border-2 border-[#092064]"
-        ></div>
+            <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+                <Header />
 
-        <div
-            className="absolute w-[55.5rem] h-[24rem] top-[18rem] left-[20.9375rem] border-[0.125rem] border-[#00FF4D] rounded-[3.125rem]"
-        >
-            <div
-              className="absolute w-[40.875rem] h-[6.25rem] top-[2rem] left-[7rem] text-center"
-            >
-            <h2 
-              className="text-white font-quicksand font-bold text-[2.5rem] leading-[1] tracking-[0] text-center"
-            >
-              Qual será o transporte utilizado <br></br> na viagem?
-            </h2>
+                <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem - Transporte</h1>
+                <div className='flex flex-col items-center w-9/10 border border-2 border-[#092064] mt-3 mb-20' />
 
+                <div className="flex flex-col items-center w-3/5 h-2/5 mt-8 p-4 border-2 border-[#00FF4D] rounded-4xl shadow-lg">
 
+                    <h1 className="text-white font-quicksand font-bold text-[2.5rem] leading-[1] tracking-[0] text-center mt-5">Qual será o Transporte utilizado <br/> na Viagem?</h1>
+
+                    <div className="flex items-center justify-center space-x-6 mt-auto mb-10">
+
+                        <Modal isOpen={openModal}>
+                            <h1 className="text-[#0F2976] text-4xl mb-3 text-center mb-10">Insira a descrição do Transporte:</h1>
+                            <textarea
+                                placeholder="Insira mais detalhes sobre o transporte, como: Empresa do transporte, Identificação do transporte e Número da passagem."
+                                className="w-[38rem] h-[12rem] pl-10 pr-10 pt-5 bg-[#0F2976] text-white placeholder-gray-300 rounded-[4.375rem] placeholder:text-2xl placeholder:leading-8 rounded-[4.375rem] resize-none"
+                                style={{ fontSize: "1.5rem" }} // Tamanho inicial da fonte
+                                onInput={(e) => {
+                                const target = e.target as HTMLTextAreaElement;
+                                target.style.fontSize = "1.5rem"; // Aumenta a fonte quando o usuário digita
+                                }}
+                            />
+                            <button onClick={() => { setOpenModal(false); }}>
+                                <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F] cursor-pointer" />
+                            </button>
+                        </Modal>
+
+                        <div
+                            className="flex space-x-6"
+                        >
+                            {["avião", "ônibus", "carro", "trem", "navio", "outro"].map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col items-center"
+                                    onClick={() => {
+                                        setOpenModal(true);
+                                        const selectedOption = item; // Guarda o nome da opção na variável
+                                    }}
+                                >
+                                    <div className="hover:scale-110 transition-transform cursor-pointer w-[6.125rem] h-[6.125rem] bg-white rounded-full flex items-center justify-center">
+                                        <img
+                                            src={`/images-travel_transport/${item}.svg`}
+                                            alt={item.charAt(0).toUpperCase() + item.slice(1)}
+                                            className="w-[4.375rem] h-[4.375rem]"
+                                        />
+                                    </div>
+                                    <span className="text-white mt-2">
+                                        {item.charAt(0).toUpperCase() + item.slice(1)}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className='w-full flex flex-col items-center justify-center mt-auto mb-30'>
+                    <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20"/>
+
+                    <button className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-2/4 h-20 text-3xl cursor-pointer">
+                        Próximo
+                    </button>
+                    
+                </div>
             </div>
-            
         </div>
-
-        <div
-            className="cursor-pointer absolute w-[52.5rem] h-[4.741rem] top-[47rem] left-[23.75rem] border-[0.03125rem] border-[#C4C4C4] rounded-[0.5rem] p-[0.625rem] gap-[0.625rem] bg-[#00FF4D] z-10"
-        >
-            <h2 className="text-center text-[#0F2976] font-quicksand font-bold text-[2.5rem] leading-[1.2] tracking-[0]">
-              Próximo
-            </h2>
-        </div>
-
-        <div
-            className="absolute w-[52.5rem] h-[4.741rem] top-[47.5rem] left-[24.25rem] border-[0.03125rem] border-[#C4C4C4] rounded-[0.5rem] bg-[#FFFFFF] z-0"
-        ></div>
-
-        <div className="absolute top-40 left-105 flex space-x-6">
-
-            <Modal isOpen={openModal}>
-            <h1 className="text-[#0F2976] text-4xl mb-3 text-center mb-10">Insira a descrição do Transporte:</h1>
-            <input
-              type="text"
-              placeholder="Insira mais detalhes sobre o transporte, como: Empresa do transporte, Identificação do transporte e Número da passagem."
-              className="w-[38rem] h-[12rem] p-2 bg-[#0F2976] text-white placeholder-gray-200 rounded-[4.375rem] resize-none"
-            />
-            <button onClick={() => { setOpenModal(false); }}>
-              <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F]" />
-            </button>
-            </Modal>
-
-            <div
-            className="absolute top-[19rem] flex space-x-6"
-            >
-            {["avião", "ônibus", "carro", "trem", "navio", "outro"].map((item, index) => (
-              <div
-              key={index}
-              className="flex flex-col items-center"
-              onClick={() => {
-              setOpenModal(true);
-                const selectedOption = item; // Guarda o nome da opção na variável
-              }}
-              >
-              <div className="hover:scale-110 transition-transform cursor-pointer w-[6.125rem] h-[6.125rem] bg-white rounded-full flex items-center justify-center">
-              <img
-              src={`/images-travel_transport/${item}.svg`}
-              alt={item.charAt(0).toUpperCase() + item.slice(1)}
-              className="w-[4.375rem] h-[4.375rem]"
-              />
-              </div>
-              <span className="text-white mt-2">
-              {item.charAt(0).toUpperCase() + item.slice(1)}
-              </span>
-              </div>
-            ))}
-            </div>
-
-        </div>
-
-      </div>
     );
-  }
-  
+}
