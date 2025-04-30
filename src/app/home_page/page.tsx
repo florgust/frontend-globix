@@ -50,14 +50,14 @@ export default function HomePage() {
         
         <div className="absolute top-40 left-105 flex space-x-6">
           <button 
-            className="mb-180 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
+            className="mb-180 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition cursor-pointer">           
             <Briefcase className="h-12 w-12 text-[#0F2976]" />
             Criar Viagem
           </button>
 
           <button 
             onClick={() => setOpenModal(true)}
-            className="mb-180 ml-10 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
+            className="mb-180 ml-10 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition cursor-pointer">           
             <UserRoundPlus className="h-12 w-12 text-[#0F2976]" />
             Participar de Viagem
           </button>
@@ -70,7 +70,7 @@ export default function HomePage() {
               className=" w-[30rem] h-[6rem] p-2 rounded-full bg-[#0F2976] focus:outline-none text-white placeholder-gray-200 text-2xl text-center"
             />
             <button onClick={ () => {setOpenModal(false)}}>
-              <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F]"/>
+              <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F] cursor-pointer"/>
             </button>
           </Modal>
 
@@ -109,9 +109,9 @@ export default function HomePage() {
                   ))}
                 </CarouselContent>
 
-                <PreviousCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition mr-235">
+                <PreviousCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition mr-235 cursor-pointer">
                 </PreviousCarousel>
-                <NextCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition ml-235">
+                <NextCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition ml-235 cursor-pointer">
                 </NextCarousel>
             </Carousel>
         </div>

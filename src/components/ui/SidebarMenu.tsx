@@ -35,7 +35,7 @@ export default function SidebarMenu() {
            active={item.active}
         //   active={router.pathname === item.path} // Verifica se a rota atual corresponde ao item
         />
-       {item.spacer && <div className="my-20" />}
+       {item.spacer && <div className="my-50" />}
         </React.Fragment>
       ))}
     </Sidebar>

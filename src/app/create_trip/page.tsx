@@ -23,9 +23,8 @@ export default function CreateTripPage() {
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-            <div className="flex flex-col h-auto">
                 <SidebarMenu />
-            </div>
+
             <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <HeaderPages />
                 <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem</h1>
@@ -134,7 +133,7 @@ export default function CreateTripPage() {
                                 {/* Botão de aumentar */}
                                 <button
                                     onClick={() => setCount((prev) => prev + 1)}
-                                    className="flex items-center justify-center w-12 h-12 mt-10 bg-[#00FF4D] text-white font-bold rounded-full hover:bg-green-600"
+                                    className="flex items-center justify-center w-12 h-12 mt-10 bg-[#00FF4D] text-white font-bold rounded-full cursor-pointer hover:bg-green-600"
                                 >
                                     <Plus className='w-10 h-10 text-[#0F2976]' />
                                 </button>
@@ -156,7 +155,7 @@ export default function CreateTripPage() {
                                     <Button
                                         variant={"outline"}
                                         className={cn(
-                                            "w-[280px] h-15 justify-start text-left text-1xl font-normal bg-[#A7FF84] rounded-tr-2xl rounded-br-2xl",
+                                            "w-[280px] h-15 justify-start text-left text-1xl font-normal bg-[#A7FF84] rounded-tr-2xl rounded-br-2xl text-[#0F2976]",
                                             !dataInicial && "text-muted-foreground"
                                         )}
                                     >
@@ -183,7 +182,7 @@ export default function CreateTripPage() {
                                     <Button
                                         variant={"outline"}
                                         className={cn(
-                                            "w-[280px] h-15 justify-start text-left text-1xl font-normal bg-[#A7FF84] rounded-tr-2xl rounded-br-2xl",
+                                            "w-[280px] h-15 justify-start text-left text-1xl font-normal bg-[#A7FF84] rounded-tr-2xl rounded-br-2xl text-[#0F2976]",
                                             !dataFinal && "text-muted-foreground"
                                         )}
                                     >
@@ -210,7 +209,7 @@ export default function CreateTripPage() {
 
                             <label
                                 htmlFor="file-upload" 
-                                className="absolute mt-20 text-[#0F2976] font-bold text-2xl cursor-pointer"
+                                className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer"
                             >
                                 Insira foto da Viagem
                             </label>
@@ -226,13 +225,13 @@ export default function CreateTripPage() {
                 <div className='w-full flex flex-col items-center justify-center mt-15 mt-15'>
                 <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-3/5 h-20 ">
                 </button>
-                    <button className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-3/5 h-20 text-3xl">
+                    <button className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-3/5 h-20 text-3xl cursor-pointer">
                         Próximo
                     </button>
                     
                 </div>
 
-                <div className='flex flex-col items-center mt-15' />
+                <div className='flex flex-col items-center mt-20' />
             </div>
         </div>
     )
