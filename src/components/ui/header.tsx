@@ -8,7 +8,7 @@ export default function Header() {
         <header className="w-full">
             <div className="bg-[#102976] p-5">
                 <div className="flex items-center space-x-2">
-                <div className="relative w-full max-w-md pl-10 ">
+                    <div className="relative w-full max-w-md pl-10 ">
                         <input
                             type="text"
                             placeholder="Pesquisar"

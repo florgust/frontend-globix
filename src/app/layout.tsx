@@ -11,11 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <body className="text-gray-900">
 
         {/* Conteúdo da Página */}
-        <main className="min-h-screen">{children}</main>
-        {/* Rodapé */}
-        <footer className="bg-blue-600 text-white text-center p-4 mt-4">
-          <p>&copy; 2025 - Todos os direitos reservados</p>
-        </footer>
+        <main className="min-h-screen">{children}</main>            
       </body>
     </html>
   );
