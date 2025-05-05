@@ -1,21 +1,38 @@
-import * as React from "react"
-
-import { cn } from "@/lib/utils"
-
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
-  return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-export { Input }
+import { InputHTMLAttributes, useState } from 'react';
+ import { Eye, EyeOff, Mail } from 'lucide-react';
+ 
+ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+   errorMessage?: string;
+ }
+ 
+ export function Input({ type = 'text', errorMessage = '', ...props }: InputProps) {
+   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+ 
+   const togglePasswordVisibility = () => {
+     setIsPasswordVisible(!isPasswordVisible);
+   };
+ 
+   return (
+     <div className="relative">
+       <input
+         type={type === 'password' && isPasswordVisible ? 'text' : type}
+         {...props}
+         className={`w-full py-2 px-4 pr-10 rounded-lg bg-white text-black placeholder:text-gray-400 focus:outline-none ${
+           errorMessage ? 'border-red-500 border' : ''
+         }`}
+       />
+       {type === 'email' && <Mail className="absolute right-3 top-2.5 h-5 w-5 text-gray-500" />}
+       {type === 'password' && (
+         <div
+           className="absolute right-3 top-2.5 h-5 w-5 text-gray-500 cursor-pointer"
+           onClick={togglePasswordVisibility}
+         >
+           {isPasswordVisible ? <EyeOff /> : <Eye />}
+         </div>
+       )}
+       {errorMessage && (
+         <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+       )}
+     </div>
+   );
+ }

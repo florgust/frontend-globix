@@ -3,7 +3,7 @@ import React from "react";
 import { Briefcase, UserRoundPlus, X } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
 import SidebarMenu from "../../components/ui/SidebarMenu";
-import Header from "@/components/ui/header";
+import { HeaderPages } from "@/components/ui/header";
 import Modal from "@/components/ui/modal";
 
 const viagens = [
@@ -46,18 +46,18 @@ export default function HomePage() {
     return (
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
         <SidebarMenu />
-        <Header/>
+        <HeaderPages/>
         
         <div className="absolute top-40 left-105 flex space-x-6">
           <button 
-            className="mb-180 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition">           
+            className="mb-180 px-16 py-10 bg-[#F0F9FF] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-gray-300 transition cursor-pointer">           
             <Briefcase className="h-12 w-12 text-[#0F2976]" />
             Criar Viagem
           </button>
 
           <button 
             onClick={() => setOpenModal(true)}
-            className="mb-180 ml-10 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition">           
+            className="mb-180 ml-10 px-10 py-10 bg-[#B0FAC6] text-[#6C6C6C] rounded-lg shadow-lg hover:bg-green-300 transition cursor-pointer">           
             <UserRoundPlus className="h-12 w-12 text-[#0F2976]" />
             Participar de Viagem
           </button>
@@ -70,7 +70,7 @@ export default function HomePage() {
               className=" w-[30rem] h-[6rem] p-2 rounded-full bg-[#0F2976] focus:outline-none text-white placeholder-gray-200 text-2xl text-center"
             />
             <button onClick={ () => {setOpenModal(false)}}>
-              <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F]"/>
+              <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F] cursor-pointer"/>
             </button>
           </Modal>
 
@@ -98,9 +98,9 @@ export default function HomePage() {
                           <p className="text-black">Tipo de Transporte: {viagem.tipoTransporte}</p>
                           <p className="text-black mb-2">Duração: {viagem.duracao}</p>
                           
-                          <button className="flex justify-center items-center w-30 h-5 bg-[#102976] text-white rounded-lg mt-2 ">Mais detalhes</button>
-                          <button className="absolute right-3 top-18 w-45 h-10 bg-[#3978EA] text-white text-2xl rounded-full mt-2 pl-5 pb-1">Quero Viajar</button>
-                          <button className="absolute right-40 top-15 w-[5rem] h-[5rem] bg-[#0F2976] rounded-full flex items-center justify-center">
+                          <button className="flex justify-center items-center w-30 h-5 bg-[#102976] text-white rounded-lg mt-2 cursor-pointer">Mais detalhes</button>
+                          <button className="absolute right-3 top-18 w-45 h-10 bg-[#3978EA] text-white text-2xl rounded-full mt-2 pl-5 pb-1 cursor-pointer">Quero Viajar</button>
+                          <button className="absolute right-40 top-15 w-[5rem] h-[5rem] bg-[#0F2976] rounded-full flex items-center justify-center cursor-pointer">
                             <UserRoundPlus className="pl-2 h-[4rem] w-[4rem] text-white" />
                           </button>                    
                           </div>
@@ -109,9 +109,9 @@ export default function HomePage() {
                   ))}
                 </CarouselContent>
 
-                <PreviousCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition mr-235">
+                <PreviousCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition mr-235 cursor-pointer">
                 </PreviousCarousel>
-                <NextCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition ml-235">
+                <NextCarousel className="absolute top-1/2 transform -translate-y-1/2 p-2 transition ml-235 cursor-pointer">
                 </NextCarousel>
             </Carousel>
         </div>
