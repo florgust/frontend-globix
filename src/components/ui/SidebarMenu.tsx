@@ -10,12 +10,6 @@ const message = "/images-home_page/sidebar-menu/message.svg";
 const setting = "/images-home_page/sidebar-menu/setting.svg";
 const about = "/images-home_page/sidebar-menu/about.svg";
 const community = "/images-home_page/sidebar-menu/comunity.svg";
-const minhasViagens = "/images-home_page/sidebar-menu/my-travels.svg";
-const user = "/images-home_page/sidebar-menu/user.svg";
-const message = "/images-home_page/sidebar-menu/message.svg";
-const setting = "/images-home_page/sidebar-menu/setting.svg";
-const about = "/images-home_page/sidebar-menu/about.svg";
-const community = "/images-home_page/sidebar-menu/comunity.svg";
 
 const menuItems = [
   { icon: <House size={20} />, text: "Página Principal", path: "/home_page" },
