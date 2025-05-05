@@ -3,7 +3,7 @@ import React from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import Header from "@/components/ui/header";
 
-export default function TravelTransport() {
+export default function TripTransport() {
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
             <SidebarMenu />
@@ -14,7 +14,7 @@ export default function TravelTransport() {
                 <div className="relative flex items-center justify-center w-full">
                     <div className="absolute top-19 flex items-center justify-center w-[6rem] h-[6rem] bg-green-500 rounded-full z-10">
                         <img
-                            src="/images-travel_successful/certo.svg"
+                            src="/images-trip_successful/certo.svg"
                             alt="Success Icon"
                             className="w-[8.3925rem] h-[8.3925rem]"
                         />

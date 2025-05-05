@@ -6,7 +6,7 @@ import Header from "@/components/ui/header";
 import Modal from "@/components/ui/modal";
 
 
-export default function TravelTransport() {
+export default function TripTransport() {
     const [openModal, setOpenModal] = React.useState(false);
 
     return (
@@ -55,7 +55,7 @@ export default function TravelTransport() {
                                 >
                                     <div className="hover:scale-110 transition-transform cursor-pointer w-[6.125rem] h-[6.125rem] bg-white rounded-full flex items-center justify-center">
                                         <img
-                                            src={`/images-travel_transport/${item}.svg`}
+                                            src={`/images-trip_transport/${item}.svg`}
                                             alt={item.charAt(0).toUpperCase() + item.slice(1)}
                                             className="w-[4.375rem] h-[4.375rem]"
                                         />
