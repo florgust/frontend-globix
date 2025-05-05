@@ -31,23 +31,43 @@ export default function TripTransport() {
 
                     <div className="w-full mt-6 text-[#111315] ml-85 font-bold text-[1rem]">
                         <div className="flex items-center mb-2">
-                            <span className="mr-2 text-lg">🌍</span>
+                            <img
+                                src="/images-trip_successful/globo.svg"
+                                alt="Globo"
+                                className="mr-2 w-6 h-6"
+                            />
                             <span>Viagem Rifaina</span>
                         </div>
                         <div className="flex items-center mb-2">
-                            <span className="mr-2 text-lg">📅</span>
+                            <img
+                                src="/images-trip_successful/calendario.svg"
+                                alt="Calendario"
+                                className="mr-2 w-6 h-6"
+                            />
                             <span>De 01/07/2025 até 05/07/2025</span>
                         </div>
                         <div className="flex items-center mb-2">
-                            <span className="mr-2 text-lg">👤</span>
+                            <img
+                                src="/images-trip_successful/organizador.svg"
+                                alt="Organizador"
+                                className="mr-2 w-6 h-6"
+                            />
                             <span>Organizador: Mauro Borges</span>
                         </div>
                         <div className="flex items-center mb-2">
-                            <span className="mr-2 text-lg">🌐</span>
+                            <img
+                                src="/images-trip_successful/globo2.svg"
+                                alt="Globo 2"
+                                className="mr-2 w-6 h-6"
+                            />
                             <span>Tipo: Pública</span>
                         </div>
                         <div className="flex items-center mb-2">
-                            <span className="mr-2 text-lg">👥</span>
+                            <img
+                                src="/images-trip_successful/pessoas.svg"
+                                alt="Pessoas"
+                                className="mr-2 w-6 h-6"
+                            />
                             <span>Vagas disponíveis: 10</span>
                         </div>
                     </div>
