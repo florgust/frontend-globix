@@ -106,7 +106,7 @@ const Page = () => {
             setRoleFilter={setRoleFilter}
           />
         </div>
-        <hr className="mt-2 mb-6 w-[92%] border-t-2 border-[#092064] mx-auto" />
+        <hr className="mt-2 mb-6 w-[92%] border-t-3 border-[#092064] mx-auto" />
 
         {/* Trip List */}
         <div className="px-60 h-[calc(100vh-250px)] overflow-y-auto scrollbar-thin">
