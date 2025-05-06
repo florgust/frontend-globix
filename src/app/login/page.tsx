@@ -1,16 +1,20 @@
 'use client';
 
-import { Input } from '../components/Input';
-import { Checkbox } from '../components/Checkbox';
-import { GoogleButton } from '../components/GoogleButton';
-import { AuthCard } from '../components/AuthCard';
-import { ImageCarousel } from '../components/ImageCarousel';
-import { SuccessAlert } from '../components/SuccessAlert';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/Checkbox';
+import { GoogleButton } from '@/components/ui/GoogleButton';
+import { AuthCard } from '@/components/ui/AuthCard';
+import { ImageCarousel } from '@/components/ui/ImageCarousel';
+import { SuccessAlert } from '@/components/ui/SuccessAlert';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; 
 import Image from 'next/image';
 
+
 export default function LoginPage() {
+    const router = useRouter();
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -59,7 +63,7 @@ export default function LoginPage() {
 
         // Redirecionar após 2 segundos
         setTimeout(() => {
-            window.location.href = '/dashboard';
+            router.push('/home_page'); // Redireciona para /home_page
         }, 2000);
     };
 
