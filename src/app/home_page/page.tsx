@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Carousel, CarouselContent, CarouselItem, NextCarousel, PreviousCarousel } from "@/components/ui/carousel"
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
-import Modal from "@/components/ui/modal";
+import {Modal} from "@/components/ui/modal";
 
 const viagens = [
   {
