@@ -3,12 +3,13 @@ import React from "react";
 import { Briefcase, UserRoundPlus, X } from "lucide-react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
-import Modal from "@/components/ui/modal";
+import { Modal } from "@/components/ui/modal";
+import { useRouter } from "next/navigation";
 
 
 export default function TravelTransport() {
     const [openModal, setOpenModal] = React.useState(false);
-
+    const router = useRouter();
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
             <SidebarMenu />
@@ -73,7 +74,7 @@ export default function TravelTransport() {
                     <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20"/>
 
                     <button 
-                    onClick={() => alert("Viagem salva com sucesso!")}
+                    onClick={() => router.push("/create_trip_successful")}
                     className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-2/4 h-20 text-3xl cursor-pointer">
                         Salvar
                     </button>

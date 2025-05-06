@@ -3,7 +3,7 @@ import React from "react";
 import { Briefcase, UserRoundPlus, X } from "lucide-react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
-import Modal from "@/components/ui/modal";
+import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation"; // Importa o useRouter
 
 
