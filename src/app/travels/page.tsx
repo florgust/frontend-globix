@@ -46,7 +46,7 @@ export default function DetailsPage() {
             },
             {
                 id_usuario: 2,
-                nome: "Lucas Silva",
+                nome: "Lucas Silva Souza",
                 email: "lucas@email.com.br",
                 tipo: "Participante",
             },
