@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Briefcase, UserRoundPlus, X } from "lucide-react";
+import { X } from "lucide-react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { Modal } from "@/components/ui/modal";
@@ -51,7 +51,6 @@ export default function TravelTransport() {
                                     className="flex flex-col items-center"
                                     onClick={() => {
                                         setOpenModal(true);
-                                        const selectedOption = item; // Guarda o nome da opção na variável
                                     }}
                                 >
                                     <div className="hover:scale-110 transition-transform cursor-pointer w-[6.125rem] h-[6.125rem] bg-white rounded-full flex items-center justify-center">

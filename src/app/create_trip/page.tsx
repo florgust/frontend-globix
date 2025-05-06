@@ -3,7 +3,6 @@ import { HeaderPages } from '@/components/ui/header';
 import SidebarMenu from '@/components/ui/SidebarMenu';
 import React, { useState } from 'react';
 import { Earth, EarthLock, ImagePlus, Minus, Plus } from 'lucide-react';
-import { Calendar as CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation"; // Importa o useRouter
 import DatePickerHtml from '@/components/ui/DatePickerHtml';
 
