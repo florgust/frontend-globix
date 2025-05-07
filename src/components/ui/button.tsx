@@ -79,6 +79,7 @@ const IconButton: React.FC<IconButtonProps> = ({ icon, size = "lg", className, .
     >
       {icon}
     </button>
+    
   );
 };
 
