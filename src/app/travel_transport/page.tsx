@@ -1,42 +1,82 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { Modal } from "@/components/ui/modal";
 import { X } from "lucide-react";
+import api from "@/utils/axios";
 
 export default function TravelTransport() {
     const [openModal, setOpenModal] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null); // Transporte atualmente selecionado
+    const [description, setDescription] = useState(""); // Descrição do transporte selecionado
     const [confirmedOption, setConfirmedOption] = useState<string | null>(null); // Transporte confirmado
-    const [description, setDescription] = useState("");
-    const [isSaveEnabled, setIsSaveEnabled] = useState(false); // Habilita o botão "Salvar"
     const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({}); // Armazena as descrições de cada transporte
     const [placeholders, setPlaceholders] = useState({
-        avião: "Informe os detalhes do voo, incluindo: Nome da companhia aérea, número do voo, terminal e portão de embarque, e qualquer informação adicional relevante.",
-        ônibus: "Informe os detalhes do ônibus, incluindo: Nome da empresa de transporte, número da passagem, e informações adicionais, como número do assento.",
-        carro: "Informe os detalhes do carro, incluindo: Modelo, marca, placa, cor, nome do locatário ou proprietário, e informações adicionais, como seguro ou condições de devolução (se for alugado).",
-        trem: "Informe os detalhes do trem, incluindo: Nome da companhia ferroviária, número do bilhete, número do vagão e assento, e informações adicionais, como classe de viagem.",
-        navio: "Informe os detalhes do navio, incluindo: Nome da companhia marítima, número da cabine, e informações adicionais, como serviços inclusos.",
+        avião: "Informe informações importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
+        ônibus: "Informe informações importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
+        carro: "Informe informações importantes sobre o carro, como: Modelo, marca, cor, capacidade de passageiros e condições gerais do veículo.",
+        trem: "Informe informações importantes sobre o transporte ferroviário, como: Nome da companhia ferroviária, tipo de trem e serviços disponíveis.",
+        navio: "Informe informações importantes sobre o transporte marítimo, como: Nome da companhia marítima, tipo de embarcação e comodidades disponíveis.",
     });
 
-    const handleSaveAndExit = () => {
-        if (description.trim().length > 0 && selectedOption) {
-            setDescriptions((prev) => ({
-                ...prev,
-                [selectedOption]: description, // Salva a descrição do transporte selecionado
-            }));
-            setConfirmedOption(selectedOption); // Confirma o transporte selecionado
-            setOpenModal(false);
-            setIsSaveEnabled(true); // Habilita o botão "Salvar"
-            setDescription(""); // Limpa o campo de descrição ao sair
+    // Função para buscar transporte do back-end
+    const fetchTransporte = async () => {
+        try {
+            const response = await api.get('/transportes');
+            const transporte = response.data;
+
+            if (transporte) {
+                setConfirmedOption(transporte.tipoTransporte);
+                setDescriptions({ [transporte.tipoTransporte]: transporte.descricao });
+            }
+        } catch (error) {
+            console.error("Erro ao buscar transporte:", error);
         }
     };
+
+    // Função para salvar transporte no back-end
+    const handleFinalSave = async () => {
+        if (!confirmedOption || !descriptions[confirmedOption]) {
+            alert("Selecione um transporte e preencha a descrição antes de salvar.");
+            return;
+        }
+
+        try {
+            const payload = {
+                viagemId: 1, // Substitua pelo ID da viagem correspondente
+                tipoTransporte: confirmedOption,
+                descricao: descriptions[confirmedOption],
+            };
+
+            await api.post('/transporte', payload);
+
+            alert("Transporte salvo com sucesso!");
+        } catch (error) {
+            console.error("Erro ao salvar o transporte:", error);
+            alert("Ocorreu um erro ao salvar o transporte. Tente novamente.");
+        }
+    };
+
+    useEffect(() => {
+        fetchTransporte(); // Busca o transporte ao carregar a página
+    }, []);
 
     const handleTransportClick = (item: string) => {
         setSelectedOption(item); // Define o transporte selecionado
         setDescription(descriptions[item] || ""); // Carrega a descrição salva, se existir
         setOpenModal(true); // Abre o modal
+    };
+
+    const handleSaveAndExit = () => {
+        if (selectedOption) {
+            // Atualiza o estado para manter apenas a descrição do transporte selecionado
+            setDescriptions({
+                [selectedOption]: description, // Salva apenas a descrição do transporte selecionado
+            });
+            setConfirmedOption(selectedOption); // Confirma o transporte selecionado
+            setOpenModal(false); // Fecha o modal
+        }
     };
 
     const handleCloseModal = () => {
@@ -64,7 +104,7 @@ export default function TravelTransport() {
                             <div className="flex flex-col items-center justify-center h-full">
                                 <h1 className="text-[#0F2976] text-4xl mb-3 text-center mb-10">Insira a descrição do Transporte:</h1>
                                 <textarea
-                                    placeholder={selectedOption ? placeholders[selectedOption] : ""}
+                                    placeholder={selectedOption ? placeholders[selectedOption as keyof typeof placeholders] : ""}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className="w-[38rem] h-[12rem] pl-10 pr-10 pt-5 bg-[#0F2976] text-white placeholder-gray-300 rounded-[4.375rem] placeholder:text-2xl placeholder:leading-8 resize-none"
@@ -74,8 +114,8 @@ export default function TravelTransport() {
                                     onClick={handleSaveAndExit}
                                     disabled={description.trim().length === 0}
                                     className={`mt-5 font-bold text-xl px-6 py-3 rounded-lg ${description.trim().length > 0
-                                            ? "bg-[#00FF4D] text-[#0F2976] cursor-pointer"
-                                            : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                                        ? "bg-[#00FF4D] text-[#0F2976] cursor-pointer"
+                                        : "bg-gray-400 text-gray-700 cursor-not-allowed"
                                         }`}
                                 >
                                     Salvar e Sair
@@ -115,11 +155,11 @@ export default function TravelTransport() {
                 <div className="w-full flex flex-col items-center justify-center mt-auto mb-30">
                     <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
                     <button
-                        onClick={() => alert("Viagem salva com sucesso!")}
-                        disabled={!isSaveEnabled || !confirmedOption || !descriptions[confirmedOption]}
-                        className={`absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-2/4 h-20 text-3xl cursor-pointer ${!isSaveEnabled || !confirmedOption || !descriptions[confirmedOption]
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
+                        onClick={handleFinalSave}
+                        disabled={!confirmedOption || !descriptions[confirmedOption]}
+                        className={`absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-2/4 h-20 text-3xl ${!confirmedOption || !descriptions[confirmedOption]
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
                             }`}
                     >
                         Salvar
