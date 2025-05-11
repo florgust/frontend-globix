@@ -17,9 +17,22 @@ export default function Profile() {
     
                     <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Meu perfil</h1>
 
-                    <div className="w-11/12 bg-gradient-to-b from-[#FFFFFF] via-[#CFE0FD] to-[#4182F9] rounded-lg shadow-lg p-4 mt-6 justify-between items-center"></div>
+                    <div className="w-11/12 bg-[#0F2976] rounded-lg shadow-lg p-8 mt-6 border-1 border-[#FFFFFF]">
+                    <div className="bg-gradient-to-b from-[#CFE0FD] to-[#4182F9] mb-3 h-24 -m-8 rounded-t-lg">
+                        <img
+                            src=""
+                            alt=""
+                            className="w-full h-full object-cover rounded-t-lg"
+                        />
 
-                    <div className="w-11/12 bg-[#0F2976] rounded-lg shadow-lg p-8 mt-6">
+                        <div className="hover:scale-110 cursor-pointer transition-transform absolute top-66 left-451 w-[1.4rem] h-[1.4rem] rounded-full bg-[#FFFFFD] flex items-center justify-center overflow-hidden">
+                                <img
+                                    src="/images-profile_edit/lapis.svg"
+                                    alt="Adicionar"
+                                    className="w-4 h-4"
+                                />
+                        </div>
+                    </div>
                         <div className="flex items-center mb-6">
                             <div className="w-16 h-16 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden relative">
                                 <img
@@ -29,7 +42,7 @@ export default function Profile() {
                                 />
                             </div>
 
-                            <div className="hover:scale-110 cursor-pointer transition-transform absolute top-64 left-87 w-[1.4rem] h-[1.4rem] rounded-full bg-[#FFFFFD] flex items-center justify-center overflow-hidden">
+                            <div className="hover:scale-110 cursor-pointer transition-transform absolute top-83 left-87 w-[1.4rem] h-[1.4rem] rounded-full bg-[#FFFFFD] flex items-center justify-center overflow-hidden">
                                 <img
                                     src="/images-profile_edit/mais.svg"
                                     alt="Adicionar"
@@ -37,11 +50,9 @@ export default function Profile() {
                                 />
                             </div>
                             
-                            
-                            
                             <div className="ml-4">
                                 <h2 className="text-white text-xl font-bold">Mauro Borges</h2>
-                                <p className="text-gray-300">mauro@iftm.edu.br</p>
+                                <p className="text-gray-300 opacity-40">mauro@iftm.edu.br</p>
                             </div>
                         </div>
 
@@ -105,7 +116,7 @@ export default function Profile() {
                                     </div>
                                 </div>
                             </div>
-                            <button className="mt-4 p-2 bg-[#D6D6D6] text-[#000000] rounded-[0.5rem] cursor-pointer hover:scale-110 transition-transform">
+                            <button className="mt-4 p-2 bg-[#D6D6D6] bg-opacity-10 rounded-[0.5rem] cursor-pointer hover:scale-110 transition-transform text-[#4182F9]">
                                 Adicionar Endereço de Email
                             </button>
                         </div>
@@ -114,7 +125,6 @@ export default function Profile() {
                             <button className="px-6 py-2 bg-[#86EE60] text-[#0F2976] rounded cursor-pointer hover:scale-110 transition-transform">Salvar</button>
                         </div>
                     </div>
-
                 </div>
             </div>
     )
