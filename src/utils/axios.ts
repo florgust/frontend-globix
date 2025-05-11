@@ -7,4 +7,5 @@ const api = axios.create({
     },
 });
 
+export { axios }; // Exporta o axios base para uso de isAxiosError
 export default api;
