@@ -12,7 +12,7 @@ export default function TravelTransport() {
     const [description, setDescription] = useState(""); // Descrição do transporte selecionado
     const [confirmedOption, setConfirmedOption] = useState<string | null>(null); // Transporte confirmado
     const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({}); // Armazena as descrições de cada transporte
-    const [placeholders, setPlaceholders] = useState({
+    const [placeholders] = useState({
         avião: "Informe informações importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
         ônibus: "Informe informações importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
         carro: "Informe informações importantes sobre o carro, como: Modelo, marca, cor, capacidade de passageiros e condições gerais do veículo.",
