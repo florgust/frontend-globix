@@ -65,13 +65,13 @@ const IconButton: React.FC<IconButtonProps> = ({ icon, size = "lg", className, .
   const sizeClasses = {
     sm: "w-8 h-8",
     md: "w-10 h-10",
-    lg: "w-16 h-16",
+    lg: "w-25 h-25",
   };
 
   return (
     <button
       className={cn(
-        "flex items-center justify-center rounded-md bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] text-[#00FF4D]",
+        "flex items-center justify-center rounded-3xl bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] text-[#00FF4D] shadow-lg hover:shadow-lg transition duration-300 ease-in-out",
         sizeClasses[size],
         className
       )}
