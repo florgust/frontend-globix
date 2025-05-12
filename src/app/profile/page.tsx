@@ -27,12 +27,12 @@ export default function Profile() {
                                     alt="Profile"
                                     className="w-40 h-40 rounded-full object-cover object-center"
                                 />
-                                <div className="ml-6 text-white">
+                                <div className="ml-6 text-[#FFFFFF]">
                                     <h2 className="text-2xl font-bold">Mauro Borges</h2>
-                                    <p className="text-sm opacity-70">mauro@iftm.edu.br</p>
+                                    <p className="text-sm opacity-50">mauro@iftm.edu.br</p>
                                 </div>
                             </div>
-                            <button className="bg-[#00FF4D] text-[#0F2976] px-6 py-2 rounded-md shadow-md hover:scale-105 transition-transform cursor-pointer">
+                            <button className="bg-[#00FF4D] text-[#0F2976] px-6 py-2 rounded-md shadow-md hover:scale-105 transition-transform cursor-pointer text-[1.1rem]">
                                 Editar Perfil
                             </button>
                         </div>
