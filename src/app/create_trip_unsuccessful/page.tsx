@@ -39,10 +39,10 @@ export default function TripTransport() {
 
                     <div className="flex justify-center mt-6 space-x-4 gap-5">
                         <button className="w-48 h-14 bg-[#0F2976] rounded-lg cursor-pointer hover:scale-110">
-                            <span className="font-bold text-lg text-[#00FF4DCC]">Tentar novamente</span>
+                            <a href="create_trip" className="font-bold text-lg text-[#00FF4DCC]">Tentar novamente</a>
                         </button>
                         <button className="w-48 h-14 bg-[#FFFFFF] border-2 border-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
-                            <span className="font-bold text-lg text-[#092064]">Voltar ao início</span>
+                            <a href="home_page" className="font-bold text-lg text-[#092064]">Voltar ao início</a>
                         </button>
                     </div>
 
