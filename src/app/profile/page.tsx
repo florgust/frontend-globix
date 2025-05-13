@@ -5,8 +5,6 @@ import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation";
-import MyTrips from "../my_trips/page";
-import Page from "@/app/my_trips/page";
 
 
 export default function Profile() {
@@ -38,9 +36,7 @@ export default function Profile() {
                         </div>
 
                         <div>
-                            <Page>
-                                {/* Aqui você pode passar props ou filtrar o conteúdo da página */}
-                            </Page>
+                            
                         </div>
                     </div>
                 </div>
