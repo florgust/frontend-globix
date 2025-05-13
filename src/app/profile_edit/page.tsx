@@ -18,35 +18,12 @@ export default function Profile() {
                     <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Meu perfil</h1>
 
                     <div className="w-11/12 bg-[#0F2976] rounded-lg shadow-lg p-8 mt-6 border-1 border-[#FFFFFF]">
-                    <div className="bg-gradient-to-b from-[#CFE0FD] to-[#4182F9] mb-3 h-24 -m-8 rounded-t-lg">
-                        <img
-                            src=""
-                            alt=""
-                            className="w-full h-full object-cover rounded-t-lg"
-                        />
-
-                        <div className="hover:scale-110 cursor-pointer transition-transform absolute top-66 left-451 w-[1.4rem] h-[1.4rem] rounded-full bg-[#FFFFFD] flex items-center justify-center overflow-hidden">
-                                <img
-                                    src="/images-profile_edit/lapis.svg"
-                                    alt="Adicionar"
-                                    className="w-4 h-4"
-                                />
-                        </div>
-                    </div>
                         <div className="flex items-center mb-6">
                             <div className="w-16 h-16 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden relative">
                                 <img
                                     src="/images-profile/mauro.svg"
                                     alt="Profile"
                                     className="w-full h-full object-cover"
-                                />
-                            </div>
-
-                            <div className="hover:scale-110 cursor-pointer transition-transform absolute top-83 left-87 w-[1.4rem] h-[1.4rem] rounded-full bg-[#FFFFFD] flex items-center justify-center overflow-hidden">
-                                <img
-                                    src="/images-profile_edit/mais.svg"
-                                    alt="Adicionar"
-                                    className="w-4 h-4"
                                 />
                             </div>
                             
