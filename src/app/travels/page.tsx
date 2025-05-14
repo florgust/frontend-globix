@@ -143,7 +143,7 @@ export default function DetailsPage() {
                             <div className="flex relative flex-col items-center h-full w-1/4">
                                 <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold text-2xl font-bold mb-10">Organizadores</h2>
 
-                                <div className="grid grid-cols-2 gap-4 overflow-x-auto h-80">
+                                <div className="grid grid-cols-2 gap-4 overflow-x-auto h-60">
                                     {imagens.map((imagem, index) => (
                                         <div key={index} className="flex flex-col items-center">
                                             <img
@@ -313,6 +313,12 @@ export default function DetailsPage() {
                                         <p className="text-sm text-gray-500 mt-2">Avisos</p>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className='w-1/7 text-[#0F2976] absolute bottom-15'>
+                                <button className='w-full text-2xl font-bold text-center text-[#0F2976] bg-[#D9D9D9] rounded-full px-4 py-2 mt-4'>
+                                    Editar
+                                </button>
                             </div>
                         </div>
                     </div>
