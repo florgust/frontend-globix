@@ -50,30 +50,6 @@ export default function Profile() {
                                     className="rounded-[0.5rem] w-full p-2 rounded bg-[#F9F9F9] text-[#1E1E1E] border border-gray-500"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-[#FFFFFD] mb-2">Gênero</label>
-                                <select className="rounded-[0.5rem] w-full p-2 rounded bg-[#F9F9F9] text-[#1E1E1E] border border-gray-500">
-                                    <option>Seu gênero</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-[#FFFFFD] mb-2">País</label>
-                                <select className="rounded-[0.5rem] w-full p-2 rounded bg-[#F9F9F9] text-[#1E1E1E] border border-gray-500">
-                                    <option>Seu país</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-[#FFFFFD] mb-2">Linguagem</label>
-                                <select className="rounded-[0.5rem] w-full p-2 rounded bg-[#F9F9F9] text-[#1E1E1E] border border-gray-500">
-                                    <option>Linguagem</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-[#FFFFFD] mb-2">Fuso Horário</label>
-                                <select className="rounded-[0.5rem] w-full p-2 rounded bg-[#F9F9F9] text-[#1E1E1E] border border-gray-500">
-                                    <option>Fuso Horário</option>
-                                </select>
-                            </div>
                         </div>
 
                         <div className="mt-6">

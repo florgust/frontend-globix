@@ -30,9 +30,9 @@ export default function Profile() {
                                     <p className="text-sm opacity-50">mauro@iftm.edu.br</p>
                                 </div>
                             </div>
-                            <button className="bg-[#00FF4D] text-[#0F2976] px-6 py-2 rounded-md shadow-md hover:scale-105 transition-transform cursor-pointer text-[1.1rem]">
+                            <a href="/profile_edit" className="bg-[#00FF4D] text-[#0F2976] px-6 py-2 rounded-md shadow-md hover:scale-105 transition-transform cursor-pointer text-[1.1rem]">
                                 Editar Perfil
-                            </button>
+                            </a>
                         </div>
 
                         <div>
