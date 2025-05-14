@@ -3,8 +3,8 @@
 import SidebarMenu from '@/components/ui/SidebarMenu';
 import { UserList, RequestList } from '@/components/ui/UserList';
 import { IconButton } from '@/components/ui/button';
-import { Modal, PromoteOrganizerModal } from '@/components/ui/modal';
-import { List, Plus, X } from 'lucide-react';
+import { PromoteOrganizerModal } from '@/components/ui/modal';
+import { List, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 export default function DetailsPage() {
