@@ -3,13 +3,14 @@
 import SidebarMenu from '@/components/ui/SidebarMenu';
 import { UserList, RequestList } from '@/components/ui/UserList';
 import { IconButton } from '@/components/ui/button';
-import { PromoteOrganizerModal } from '@/components/ui/modal';
+import { PromoteOrganizerModal, ModalEditTrip } from '@/components/ui/modal';
 import { List, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 export default function DetailsPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const detalhesViagem = {
         viagem: {
@@ -116,6 +117,12 @@ export default function DetailsPage() {
     const handleDeny = (id: number) => {
         setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id_usuario !== id)); // Remove das solicitações
     };
+
+    const handleEdit = (option: string) => {
+        console.log(`Opção selecionada para edição: ${option}`);
+        setIsEditModalOpen(false);
+    };
+
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
             <SidebarMenu />
@@ -180,7 +187,7 @@ export default function DetailsPage() {
                                             if (!imagens.includes(`/images-home_page/carousel/${id}.png`)) {
                                                 setImagens([...imagens, `/images-home_page/carousel/${id}.png`]);
                                             }
-                                            setIsModalOpen(false); // Fecha o modal
+                                            setIsModalOpen(false);
                                         }}
                                         onRemove={(id) => {
                                             setImagens(imagens.filter((img) => img !== `/images-home_page/carousel/${id}.png`));
@@ -226,8 +233,8 @@ export default function DetailsPage() {
                                 {activeButton === "convidados" && (
                                     <div
                                         style={{
-                                            scrollbarWidth: "thin", // Para navegadores compatíveis
-                                            scrollbarColor: "#fffff #0F2976", // Cor do polegar e do fundo
+                                            scrollbarWidth: "thin",
+                                            scrollbarColor: "#fffff #0F2976",
                                         }}
                                         className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
                                     >
@@ -238,8 +245,8 @@ export default function DetailsPage() {
                                 {activeButton === "solicitacoes" && (
                                     <div
                                         style={{
-                                            scrollbarWidth: "thin", // Para navegadores compatíveis
-                                            scrollbarColor: "#fffff #0F2976", // Cor do polegar e do fundo
+                                            scrollbarWidth: "thin",
+                                            scrollbarColor: "#fffff #0F2976",
                                         }}
                                         className="w-3/5 p-4 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
                                     >
@@ -269,7 +276,7 @@ export default function DetailsPage() {
 
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconTransport.png"
+                                            icon={<img src="\images-travel\Icons\IconGreenTransport.png"
                                                 className="w-20 h-20" />}
                                             onClick={() => alert("Botão clicado!")}
                                         />
@@ -279,7 +286,7 @@ export default function DetailsPage() {
 
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconItinerary.png"
+                                            icon={<img src="\images-travel\Icons\IconGreenItinerary.png"
                                                 className="w-w-20 h-20" />}
                                             onClick={() => alert("Botão clicado!")}
                                         />
@@ -290,7 +297,7 @@ export default function DetailsPage() {
                                 <div className="flex gap-4 mt-5">
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconBudget.png"
+                                            icon={<img src="\images-travel\Icons\IconGreenBudget.png"
                                                 className="w-20 h-20" />}
                                             onClick={() => alert("Botão clicado!")}
                                         />
@@ -316,9 +323,19 @@ export default function DetailsPage() {
                             </div>
 
                             <div className='w-1/7 text-[#0F2976] absolute bottom-15'>
-                                <button className='w-full text-2xl font-bold text-center text-[#0F2976] bg-[#D9D9D9] rounded-full px-4 py-2 mt-4'>
+                                <button
+                                    className='w-full text-2xl font-bold text-center text-[#0F2976] bg-[#D9D9D9] rounded-full px-4 py-2 mt-4 hover:shadow-xl transition-shadow duration-300'
+                                    onClick={() => setIsEditModalOpen(true)}
+                                >
                                     Editar
                                 </button>
+
+                                {/* Modal para edição */}
+                                <ModalEditTrip
+                                    isOpen={isEditModalOpen}
+                                    onClose={() => setIsEditModalOpen(false)}
+                                    onEdit={handleEdit}
+                                />
                             </div>
                         </div>
                     </div>
