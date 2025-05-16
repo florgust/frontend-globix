@@ -100,7 +100,7 @@ function Modal({ isOpen, children }: { isOpen: boolean; children: React.ReactNod
     return null;
 }
 
-function ModalEditTrip({ isOpen, onClose, onEdit }: ModalEditTripProps) {
+function ModalEditTrip({ isOpen, onClose }: ModalEditTripProps) {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
     const options = [
