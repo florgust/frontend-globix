@@ -1,10 +1,12 @@
 import React from "react";
-import { X } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 
 interface User {
     id_usuario: number;
     nome: string;
     email: string;
+    tipo: string;
+    foto: string;
 }
 
 interface PromoteOrganizerModalProps {
@@ -18,14 +20,22 @@ interface PromoteOrganizerModalProps {
 function PromoteOrganizerModal({ isOpen, onClose, usuarios, onPromote, onRemove }: PromoteOrganizerModalProps) {
     if (!isOpen) return null;
     return (
-        <div 
+        <div
             style={{ backgroundColor: "rgba(41, 45, 50, 0.6)" }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         >
-            
-            <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-6xl h-[80vh] p-8 relative">
 
-                <div className="relative w-full h-20">
+            <div className="flex-col bg-white rounded-lg shadow-lg w-[90%] max-w-6xl h-[80vh] p-10 relative justify-center items-center">
+                {/* Close Button */}
+
+                <button
+                    onClick={onClose}
+                    className="relative absolute text-gray-500 hover:text-gray-700"
+                >
+                    <ChevronLeft className="w-15 h-15" />
+                </button>
+
+                <div className="w-full flex flex-col items-center justify-center h-20 relative">
                     <div className="absolute mt-3  w-2/5 h-15 p-4 bg-[#1C4CDC]"></div>
                     <div className="absolute h-15 ml-12 w-2/5 h-15 p-4 bg-[#0F2976]">
                         <h1 className="text-4xl font-bold text-center text-[#00FF4D]">
@@ -34,44 +44,64 @@ function PromoteOrganizerModal({ isOpen, onClose, usuarios, onPromote, onRemove 
                     </div>
                 </div>
 
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                <div
+                    className="bg-[#D1E1FE] p-6 rounded-lg shadow-md w-4/5 h-3/5 mx-auto "
                 >
-                    <X className="w-8 h-8" />
-                </button>
+                    {/* User List */}
+                    <div className="flex flex-col mt-6 p-4">
+                        {usuarios.map((usuario, idx) => {
+                            const isFirst = idx === 0;
+                            const isLast = idx === usuarios.length - 1;
+                            let borderRadius = "";
+                            if (isFirst) borderRadius = "rounded-t-lg";
+                            if (isLast) borderRadius += " rounded-b-lg";
 
-                {/* User List */}
-                <div className="flex flex-col gap-4 mt-6">
-                    {usuarios.map((usuario) => (
-                        <div
-                            key={usuario.id_usuario}
-                            className="flex items-center justify-between border-b pb-2"
-                        >
-                            <div>
-                                <p className="font-bold">{usuario.nome}</p>
-                                <p className="text-sm text-gray-500">{usuario.email}</p>
-                            </div>
-                            <div className="flex gap-2">
-                                {/* Promote Button */}
-                                <button
-                                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                                    onClick={() => onPromote(usuario.id_usuario)}
+                            // Supondo que usuario.tipo pode ser: "Normal", "OrganizadorPromovido", "Organizador"
+                            return (
+                                <div
+                                    key={usuario.id_usuario}
+                                    className={`flex items-center border bg-white w-full ${borderRadius}`}
                                 >
-                                    Promover
-                                </button>
+                                    <div className="flex items-center h-15 ml-2 flex-1 min-w-0">
+                                        <img
+                                            src={`https://ui-avatars.com/api/?name=${usuario.nome}&background=0D8ABC&color=fff`}
+                                            alt={usuario.nome}
+                                            className="w-12 h-12 rounded-full mr-4"
+                                        />
+                                        <div className="flex flex-col min-w-0">
+                                            <p className="font-bold truncate">{usuario.nome}</p>
+                                            <p className="text-sm text-gray-500 truncate">{usuario.email}</p>
+                                        </div>
+                                        
+                                    </div>
 
-                                {/* Remove Button */}
-                                <button
-                                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                                    onClick={() => onRemove(usuario.id_usuario)}
-                                >
-                                    Remover
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                                    <div className="flex items-center w-1/3 justify-start">
+                                        <p className="text-md text-left">{usuario.tipo}</p>
+                                    </div>
+
+                                    <div className="flex gap-2 pr-2 min-w-[120px] justify-end">
+                                        {usuario.tipo === "Participante" && (
+                                            <button
+                                                className="px-3 py-2 bg-[#0F2976] text-white rounded-full hover:bg-blue-900"
+                                                onClick={() => onPromote(usuario.id_usuario)}
+                                            >
+                                                promover
+                                            </button>
+                                        )}
+                                        {usuario.tipo === "OrganizadorPromovido" && (
+                                            <button
+                                                className="px-4 py-2 bg-[#76120F] text-white rounded-full hover:bg-red-800"
+                                                onClick={() => onRemove(usuario.id_usuario)}
+                                            >
+                                                remover
+                                            </button>
+                                        )}
+                                        {/* Se for "Organizador", não mostra botão */}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         </div>

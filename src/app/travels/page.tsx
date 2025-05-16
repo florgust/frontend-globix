@@ -48,9 +48,9 @@ export default function DetailsPage() {
             },
             {
                 id_usuario: 2,
-                nome: "Lucas Silva",
+                nome: "Lucas Silva",        
                 email: "lucas@email.com.br",
-                tipo: "Participante",
+                tipo: "OrganizadorPromovido",
                 foto: "/images-travel/images-user/user_patrick.png",
             },
             {
