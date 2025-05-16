@@ -3,7 +3,10 @@
 import SidebarMenu from '@/components/ui/SidebarMenu';
 import { UserList, RequestList } from '@/components/ui/UserList';
 import { IconButton } from '@/components/ui/button';
-import { PromoteOrganizerModal, ModalEditTrip } from '@/components/ui/modal';
+import ModalPromoteOrganizer from "@/components/ui/modals/ModalPromoteOrganizer";
+import ModalEditTrip from "@/components/ui/modals/ModalEditTrip";
+import ModalMoreDetails from "@/components/ui/modals/ModalMoreDetails";
+
 import { List, Plus } from 'lucide-react';
 import { useState } from 'react';
 
@@ -11,6 +14,7 @@ export default function DetailsPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isMoreDetailsOpen, setIsMoreDetailsOpen] = useState(false);
 
     const detalhesViagem = {
         viagem: {
@@ -179,7 +183,7 @@ export default function DetailsPage() {
                                         </button>
                                     )}
 
-                                    <PromoteOrganizerModal
+                                    <ModalPromoteOrganizer
                                         isOpen={isModalOpen}
                                         onClose={() => setIsModalOpen(false)}
                                         usuarios={detalhesViagem.usuario}
@@ -266,12 +270,20 @@ export default function DetailsPage() {
                                 <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold text-2xl font-bold mb-10">Informações</h2>
 
                                 <div className="flex gap-4">
-                                    <div className="flex flex-col items-center">
-                                        <IconButton
-                                            icon={<List className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                    <div>
+                                        <div className="flex flex-col items-center">
+                                            <IconButton
+                                                icon={<List className="w-20 h-20" />}
+                                                onClick={() => setIsMoreDetailsOpen(true)}
+                                            />
+                                            <p className="text-sm text-gray-500 mt-4">Mais Detalhes</p>
+                                        </div>
+
+                                        {/* Modal de Mais Detalhes */}
+                                        <ModalMoreDetails
+                                            isOpen={isMoreDetailsOpen}
+                                            onClose={() => setIsMoreDetailsOpen(false)}
                                         />
-                                        <p className="text-sm text-gray-500 mt-4">Mais Detalhes</p>
                                     </div>
 
                                     <div className="flex flex-col items-center">
@@ -324,7 +336,7 @@ export default function DetailsPage() {
 
                             <div className='w-1/7 text-[#0F2976] absolute bottom-15'>
                                 <button
-                                    className='w-full text-2xl font-bold text-center text-[#0F2976] bg-[#D9D9D9] rounded-full px-4 py-2 mt-4 hover:shadow-xl transition-shadow duration-300'
+                                    className='w-full text-2xl font-bold text-center text-[#0F2976] bg-[#D9D9D9] rounded-full px-4 py-2 mt-4 shadow-xl'
                                     onClick={() => setIsEditModalOpen(true)}
                                 >
                                     Editar
