@@ -26,7 +26,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose }) 
 
                     {/* Título "Mais Detalhes" */}
                     <div className="relative">
-                        <h2 className="text-3xl font-bold text-[#00FF4D] bg-[#0F2976] px-8 py-2 relative z-10">
+                        <h2 className="text-4xl font-bold text-[#00FF4D] bg-[#0F2976] px-14 py-2 relative z-10">
                             Mais Detalhes
                         </h2>
                         <div className="absolute top-2 left-2 w-full h-full bg-[#1C4CDC] z-0"></div>

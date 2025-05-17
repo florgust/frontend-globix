@@ -6,6 +6,7 @@ import { IconButton } from '@/components/ui/button';
 import ModalPromoteOrganizer from "@/components/ui/modals/ModalPromoteOrganizer";
 import ModalEditTrip from "@/components/ui/modals/ModalEditTrip";
 import ModalMoreDetails from "@/components/ui/modals/ModalMoreDetails";
+import ModalTransport from "@/components/ui/modals/ModalTransport";
 
 import { List, Plus } from 'lucide-react';
 import { useState } from 'react';
@@ -15,6 +16,7 @@ export default function DetailsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isMoreDetailsOpen, setIsMoreDetailsOpen] = useState(false);
+    const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
 
     const detalhesViagem = {
         viagem: {
@@ -288,12 +290,16 @@ export default function DetailsPage() {
 
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconGreenTransport.png"
-                                                className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                            icon={<img src="/images-travel/Icons/IconGreenTransport.png" className="w-20 h-20" />}
+                                            onClick={() => setIsTransportModalOpen(true)} // Abre o modal
                                         />
                                         <p className="text-sm text-gray-500 mt-4">Transporte</p>
 
+                                        {/* Modal de Transporte */}
+                                        <ModalTransport
+                                            isOpen={isTransportModalOpen}
+                                            onClose={() => setIsTransportModalOpen(false)} // Fecha o modal
+                                        />
                                     </div>
 
                                     <div className="flex flex-col items-center">
