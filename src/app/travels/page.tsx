@@ -3,7 +3,11 @@
 import SidebarMenu from '@/components/ui/SidebarMenu';
 import { UserList, RequestList } from '@/components/ui/UserList';
 import { IconButton } from '@/components/ui/button';
-import { ModalItinerary, PromoteOrganizerModal } from '@/components/ui/modal';
+import ModalEditTrip from '@/components/ui/modals/ModalEditTrip';
+import { ModalItinerary } from '@/components/ui/modals/ModalItinerary';
+import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
+import { ModalPromoteOrganizer } from '@/components/ui/modals/ModalPromoteOrganizer';
+import ModalTransport from '@/components/ui/modals/ModalTransport';
 import { List, Plus } from 'lucide-react';
 import { useState } from 'react';
 
@@ -24,6 +28,29 @@ export default function DetailsPage() {
             method: "POST",
         });
     }
+
+    const handleEdit = (option: string) => {
+        console.log(`Opção selecionada para edição: ${option}`);
+        setIsEditModalOpen(false);
+    };
+
+    const handleAccept = async (id: number) => {
+        await fetch(`/api/viagens/aceitar-solicitacao`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id_usuario: id, id_viagem: detalhesViagem.viagem.id_viagem }),
+        });
+
+        const usuarioAceito = solicitacoes.find((solicitacao) => solicitacao.id_usuario === id);
+        if (usuarioAceito) {
+            setConvidados([...convidados, usuarioAceito]);
+            setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id_usuario !== id));
+        }
+    };
+
+    const handleDeny = (id: number) => {
+        setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id_usuario !== id)); // Remove das solicitações
+    };
 
     const detalhesViagem = {
         viagem: {
@@ -62,7 +89,7 @@ export default function DetailsPage() {
             },
             {
                 id_usuario: 2,
-                nome: "Lucas Silva",
+                nome: "Lucas Silva Souza",
                 email: "lucas@email.com.br",
                 tipo: "OrganizadorPromovido",
                 foto: "/images-travel/images-user/user_patrick.png",
@@ -341,27 +368,11 @@ export default function DetailsPage() {
     ]);
 
     const [activeButton, setActiveButton] = useState("convidados");
-
     const [convidados, setConvidados] = useState(detalhesViagem.usuario);
     const [solicitacoes, setSolicitacoes] = useState(detalhesViagem.solicitacoes);
-
-    const handleAccept = async (id: number) => {
-        await fetch(`/api/viagens/aceitar-solicitacao`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id_usuario: id, id_viagem: detalhesViagem.viagem.id_viagem }),
-        });
-
-        const usuarioAceito = solicitacoes.find((solicitacao) => solicitacao.id_usuario === id);
-        if (usuarioAceito) {
-            setConvidados([...convidados, usuarioAceito]);
-            setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id_usuario !== id));
-        }
-    };
-
-    const handleDeny = (id: number) => {
-        setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id_usuario !== id)); // Remove das solicitações
-    };
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isMoreDetailsOpen, setIsMoreDetailsOpen] = useState(false);
+    const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
@@ -409,7 +420,7 @@ export default function DetailsPage() {
                                         <div className='flex flex-col w-full items-center'>
                                             <button
                                                 onClick={() => setIsModalOpen(true)}
-                                                className="w-19 shadow-md h-19 flex items-center justify-center bg-gray-200 rounded-full text-gray-500 hover:bg-gray-300"
+                                                className="w-19 shadow-md h-19 flex items-center justify-center bg-gray-200 rounded-full text-gray-500 hover:bg-gray-300 cursor-pointer"
                                             >
                                                 <Plus className='w-12 h-12 text-[#0F2976]' />
 
@@ -418,7 +429,7 @@ export default function DetailsPage() {
                                         </div>
                                     )}
 
-                                    <PromoteOrganizerModal
+                                    <ModalPromoteOrganizer
                                         isOpen={isModalOpen}
                                         onClose={() => setIsModalOpen(false)}
                                         usuarios={detalhesViagem.usuario}
@@ -461,9 +472,9 @@ export default function DetailsPage() {
                                     {/* Botões */}
                                     <div className="relative flex w-full">
                                         <button
-                                            className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${activeButton === "convidados"
-                                                ? "text-white"
-                                                : "text-[#0F2976]"
+                                            className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300  ${activeButton === "convidados"
+                                                ? "text-white "
+                                                : "text-[#0F2976] cursor-pointer"
                                                 }`}
                                             onClick={() => setActiveButton("convidados")}
                                         >
@@ -472,7 +483,7 @@ export default function DetailsPage() {
                                         <button
                                             className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${activeButton === "solicitacoes"
                                                 ? "text-white"
-                                                : "text-[#0F2976]"
+                                                : "text-[#0F2976] cursor-pointer"
                                                 }`}
                                             onClick={() => setActiveButton("solicitacoes")}
                                         >
@@ -485,8 +496,8 @@ export default function DetailsPage() {
                                 {activeButton === "convidados" && (
                                     <div
                                         style={{
-                                            scrollbarWidth: "thin", // Para navegadores compatíveis
-                                            scrollbarColor: "#fffff #0F2976", // Cor do polegar e do fundo
+                                            scrollbarWidth: "thin",
+                                            scrollbarColor: "#fffff #0F2976",
                                         }}
                                         className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
                                     >
@@ -497,8 +508,8 @@ export default function DetailsPage() {
                                 {activeButton === "solicitacoes" && (
                                     <div
                                         style={{
-                                            scrollbarWidth: "thin", // Para navegadores compatíveis
-                                            scrollbarColor: "#fffff #0F2976", // Cor do polegar e do fundo
+                                            scrollbarWidth: "thin",
+                                            scrollbarColor: "#fffff #0F2976",
                                         }}
                                         className="w-3/5 p-4 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
                                     >
@@ -518,27 +529,39 @@ export default function DetailsPage() {
                                 <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold text-2xl font-bold mb-10">Informações</h2>
 
                                 <div className="flex gap-4">
-                                    <div className="flex flex-col items-center">
-                                        <IconButton
-                                            icon={<List className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                    <div>
+                                        <div className="flex flex-col items-center">
+                                            <IconButton
+                                                icon={<List className="w-20 h-20" />}
+                                                onClick={() => setIsMoreDetailsOpen(true)}
+                                            />
+                                            <p className="text-sm text-gray-500 mt-4">Mais Detalhes</p>
+                                        </div>
+
+                                        {/* Modal de Mais Detalhes */}
+                                        <ModalMoreDetails
+                                            isOpen={isMoreDetailsOpen}
+                                            onClose={() => setIsMoreDetailsOpen(false)}
                                         />
-                                        <p className="text-sm text-gray-500 mt-4">Mais Detalhes</p>
                                     </div>
 
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconTransport.png"
-                                                className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                            icon={<img src="/images-travel/Icons/IconGreenTransport.png" className="w-20 h-20" />}
+                                            onClick={() => setIsTransportModalOpen(true)} // Abre o modal
                                         />
                                         <p className="text-sm text-gray-500 mt-4">Transporte</p>
 
+                                        {/* Modal de Transporte */}
+                                        <ModalTransport
+                                            isOpen={isTransportModalOpen}
+                                            onClose={() => setIsTransportModalOpen(false)} // Fecha o modal
+                                        />
                                     </div>
 
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconItinerary.png"
+                                            icon={<img src="\images-travel\Icons\IconGreenItinerary.png"
                                                 className="w-w-20 h-20" />}
                                             onClick={() => setIsItineraryOpen(true)}
                                         />
@@ -549,7 +572,7 @@ export default function DetailsPage() {
                                 <div className="flex gap-4 mt-5">
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconBudget.png"
+                                            icon={<img src="\images-travel\Icons\IconGreenBudget.png"
                                                 className="w-20 h-20" />}
                                             onClick={() => alert("Botão clicado!")}
                                         />
@@ -582,12 +605,21 @@ export default function DetailsPage() {
 
                         </div>
                         <div className='w-full flex justify-between mt-8'>
-                            <button className='text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300'>
+                            <button className='text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer'
+                                    onClick={() => setIsEditModalOpen(true)}
+                            >
                                 Editar
                             </button>
-                            <button className='text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800'>
+                            
+                            <button className='text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer'>
                                 Encerrar Viagem
                             </button>
+
+                            <ModalEditTrip
+                                isOpen={isEditModalOpen}
+                                onClose={() => setIsEditModalOpen(false)}
+                                onEdit={handleEdit}
+                            /> 
                         </div>
                     </div>
                 </div>

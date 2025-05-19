@@ -74,13 +74,13 @@ const RequestList: React.FC<RequestListProps> = ({ solicitacoes, onAccept, onDen
           {/* Botões de aceitar e negar */}
           <div className="flex gap-2">
             <button
-              className="bg-green-500 rounded-full p-2 hover:bg-green-600"
+              className="bg-green-500 rounded-full p-2 hover:bg-green-600 cursor-pointer"
               onClick={() => onAccept(solicitacao.id_usuario)}
             >
               <Check className="text-white w-5 h-5 "/>
             </button>
             <button
-              className="bg-red-400 rounded-full p-2 hover:bg-red-600"
+              className="bg-red-400 rounded-full p-2 hover:bg-red-600 cursor-pointer"
               onClick={() => onDeny(solicitacao.id_usuario)}
             >
               <X className="text-white w-5 h-5 "/>

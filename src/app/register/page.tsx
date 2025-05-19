@@ -10,7 +10,7 @@ import { SuccessAlert } from '@/components/ui/SuccessAlert';
 
 import { useState } from 'react';
 import Image from 'next/image';
-import axios from 'axios';
+import api, { axios } from "@/utils/axios";
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -82,7 +82,7 @@ export default function RegisterPage() {
         };
 
         try {
-            const response = await axios.post('https://globix-afaea8fe15ce.herokuapp.com/usuario', payload, {
+            const response = await api.post('https://globix-afaea8fe15ce.herokuapp.com/usuario', payload, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

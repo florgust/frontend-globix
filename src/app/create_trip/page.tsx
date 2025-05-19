@@ -2,20 +2,49 @@
 import { HeaderPages } from '@/components/ui/header';
 import SidebarMenu from '@/components/ui/SidebarMenu';
 import React, { useState } from 'react';
-import { Earth, EarthLock, ImagePlus, Minus, Plus } from 'lucide-react';
-import { Calendar as CalendarIcon } from "lucide-react";
+import { ImagePlus, Minus, Plus } from 'lucide-react';
 import { useRouter } from "next/navigation"; // Importa o useRouter
 import DatePickerHtml from '@/components/ui/DatePickerHtml';
-
+import api from "@/utils/axios"; // Importa o axios configurado
 
 export default function CreateTripPage() {
     const [selectedOption, setSelectedOption] = useState("public");
     const [count, setCount] = useState(0);
+    const [tripName, setTripName] = useState("");
+    const [tripDescription, setTripDescription] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const router = useRouter();
+
+    const handleCreateTrip = async () => {
+        if (!tripName || !tripDescription || !startDate || !endDate || count <= 0) {
+            alert("Preencha todos os campos obrigatórios antes de prosseguir.");
+            return;
+        }
+
+        const payload = {
+            nome: tripName,
+            descricao: tripDescription,
+            dataInicio: startDate,
+            dataFim: endDate,
+            criadorId: 1, // Substitua pelo ID do criador autenticado
+            tipo: selectedOption === "public" ? "publica" : "privada",
+            quantidadeParticipante: count,
+        };
+
+        try {
+            await api.post('/viagem', payload);
+            alert("Viagem criada com sucesso!");
+            router.push("/travel_location"); // Redireciona para a próxima página
+        } catch (error) {
+            console.error("Erro ao criar viagem:", error);
+            alert("Ocorreu um erro ao criar a viagem. Tente novamente.");
+        }
+    };
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-                <SidebarMenu />
+            <SidebarMenu />
 
             <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <HeaderPages />
@@ -35,19 +64,23 @@ export default function CreateTripPage() {
                             type="text"
                             id="nome-viagem"
                             placeholder="Digite o nome da viagem"
+                            value={tripName}
+                            onChange={(e) => setTripName(e.target.value)}
                             className="w-full h-20 px-4 pt-7 py-2 mt-5 rounded-xl bg-white outline-none"
                         />
 
                         <label
-                            htmlFor="nome-viagem"
+                            htmlFor="descricao-viagem"
                             className="absolute left-4 top-32 text-[#3B4449] text-1xl font-bold"
                         >
                             Descrição da Viagem <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
-                            id="nome-viagem"
-                            placeholder="Digite o nome da viagem"
+                            id="descricao-viagem"
+                            placeholder="Digite a descrição da viagem"
+                            value={tripDescription}
+                            onChange={(e) => setTripDescription(e.target.value)}
                             className="w-full h-20 px-4 pt-7 py-2 mt-5 rounded-xl bg-white outline-none"
                         />
 
@@ -55,7 +88,6 @@ export default function CreateTripPage() {
                             <h1 className='font-bold text-3xl text-left text-white mt-5 pl-2'>A Viagem será pública ou privada? <span className="text-red-500">*</span></h1>
 
                             <div className="flex mt-4">
-
                                 <label className="flex items-center">
                                     <input
                                         type="radio"
@@ -68,11 +100,6 @@ export default function CreateTripPage() {
                                         className={`px-10 py-4 rounded-tl-3xl rounded-bl-3xl font-medium cursor-pointer ${selectedOption === "public" ? "bg-[#0F2976] text-[#00FF4D]" : "bg-white text-[#0F2976]"
                                             }`}
                                     >
-                                        {selectedOption === "public" ? (
-                                            <Earth className="flex inline-block mr-2 w-5 h-5" />
-                                        ) : (
-                                            <span className="w-5 h-5 inline-block" />
-                                        )}
                                         Pública
                                     </span>
                                 </label>
@@ -90,39 +117,24 @@ export default function CreateTripPage() {
                                             }`}
                                     >
                                         Privada
-                                        {selectedOption === "private" ? (
-                                            <EarthLock className="flex inline-block ml-2 w-5 h-5" />
-                                        ) : (
-                                            <span className="w-5 h-5 inline-block" />
-                                        )}
                                     </span>
                                 </label>
                             </div>
-
                         </div>
 
                         <div className="flex items-center justify-between w-full mt-15">
                             <h1 className='font-bold text-3xl text-left text-white mt-5 pl-2'>Quantas vagas disponíveis <span className="text-red-500">*</span></h1>
 
                             <div className="flex justify-center gap-4">
-                                {/* Botão de diminuir */}
                                 <button
-                                    onClick={() => setCount((prev) => Math.max(prev - 1, 0))} // Evita valores negativos
+                                    onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
                                     className="flex items-center justify-center w-12 h-12 mt-10 bg-[#00FF4D] text-white text-4xl font-bold rounded-full cursor-pointer hover:bg-green-600"
                                 >
                                     <Minus className='w-10 h-10 text-[#0F2976]' />
                                 </button>
 
-                                {/* Valor do contador */}
                                 <span className="text-8xl text-white font-bold">{count}</span>
 
-                                <img
-                                    src='../images-home_page/walking.png'
-                                    className='w-15 h-15 mt-8'
-                                >
-                                </img>
-
-                                {/* Botão de aumentar */}
                                 <button
                                     onClick={() => setCount((prev) => prev + 1)}
                                     className="flex items-center justify-center w-12 h-12 mt-10 bg-[#00FF4D] text-white font-bold rounded-full cursor-pointer hover:bg-green-600"
@@ -130,29 +142,25 @@ export default function CreateTripPage() {
                                     <Plus className='w-10 h-10 text-[#0F2976]' />
                                 </button>
                             </div>
-
                         </div>
-
-                        <div className="w-[25%] ml-auto border-t border-1 border-white justify-beetween"></div>
 
                         <h1 className="font-bold text-3xl text-left text-white mt-15 pl-5 w-full">
                             Qual será a Data Inicial e a Data Final da Viagem <span className="text-red-500">*</span></h1>
 
                         <div className="flex mt-10 h-15">
-
                             <p className='flex items-center justify-center bg-white w-30 rounded-tl-2xl rounded-bl-2xl font-bold text-[#3B4449] ml-5'>Data de Inicio</p>
-                            <DatePickerHtml />
+                            <DatePickerHtml onChange={(date) => setStartDate(date)} />
                             <p className='flex items-center justify-center bg-white w-30 rounded-tl-2xl rounded-bl-2xl font-bold text-[#3B4449] ml-150'>Data Final</p>
-                            <DatePickerHtml />
+                            <DatePickerHtml onChange={(date) => setEndDate(date)} />
                         </div>
 
                         <div className="w-full flex flex-col relative items-center justify-center mt-15">
                             <div className='absolute bg-white w-3/5 h-40 rounded-md'></div>
 
-                            <ImagePlus className='absolute w-25 h-25 mb-12'/>
+                            <ImagePlus className='absolute w-25 h-25 mb-12' />
 
                             <label
-                                htmlFor="file-upload" 
+                                htmlFor="file-upload"
                                 className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer"
                             >
                                 Insira foto da Viagem
@@ -167,14 +175,12 @@ export default function CreateTripPage() {
                 </div>
 
                 <div className='w-full flex flex-col items-center justify-center mt-15 mt-15'>
-                <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-3/5 h-20 ">
-                </button>
-                    <button 
-                    onClick={() => router.push("/travel_location")}
-                    className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-3/5 h-20 text-3xl cursor-pointer">
+                    <button
+                        onClick={handleCreateTrip}
+                        className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-3/5 h-20 text-3xl cursor-pointer"
+                    >
                         Próximo
                     </button>
-                    
                 </div>
 
                 <div className='flex flex-col items-center mt-20' />
