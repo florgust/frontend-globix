@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 interface ItineraryItem {
     id: number;
@@ -11,9 +11,12 @@ interface ItineraryItem {
 }
 
 function ModalItinerary({ isOpen, onClose, itinerario }: { isOpen: boolean; onClose: () => void; itinerario: ItineraryItem[] }) {
+
+    const diasItinerario = agruparItinerarioPorDia(itinerario);
+    const [diaSelecionado, setDiaSelecionado] = useState(0);
     if (!isOpen) return null;
 
-     function agruparItinerarioPorDia(itinerario: ItineraryItem[]) {
+    function agruparItinerarioPorDia(itinerario: ItineraryItem[]) {
         const sorted = [...itinerario].sort((a, b) => new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime());
         const diasMap = new Map<string, ItineraryItem[]>();
         sorted.forEach(item => {
@@ -27,27 +30,6 @@ function ModalItinerary({ isOpen, onClose, itinerario }: { isOpen: boolean; onCl
             eventos
         }));
     }
-
-    const diasItinerario = agruparItinerarioPorDia(itinerario);
-    const [diaSelecionado, setDiaSelecionado] = useState(0);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [atividadesOcultas, setAtividadesOcultas] = useState(0);
-
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el) return;
-        // calcula quantas atividades estão ocultas
-        const visibleHeight = el.clientHeight;
-        let visibleCount = 0;
-        let totalHeight = 0;
-        for (const child of Array.from(el.children)) {
-            // @ts-ignore
-            totalHeight += child.offsetHeight;
-            if (totalHeight <= visibleHeight) visibleCount++;
-        }
-        const total = diasItinerario[diaSelecionado]?.eventos.length || 0;
-        setAtividadesOcultas(total - visibleCount);
-    }, [diaSelecionado, diasItinerario]);
 
     return (
         <div

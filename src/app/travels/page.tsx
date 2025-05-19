@@ -404,7 +404,7 @@ export default function DetailsPage() {
                                 <div className="grid grid-cols-2 gap-2 overflow-x-auto h-60">
                                     {convidados
                                         .filter(usuario => usuario.tipo === "Organizador" || usuario.tipo === "OrganizadorPromovido")
-                                        .map((usuario, index) => (
+                                        .map((usuario) => (
                                             <div key={usuario.id_usuario} className="flex flex-col items-center">
                                                 <img
                                                     src={usuario.foto}
