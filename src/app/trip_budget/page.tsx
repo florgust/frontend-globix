@@ -5,46 +5,46 @@ import { HeaderPages } from "@/components/ui/header";
 import { FiTrash2 } from "react-icons/fi";
 
 const initialCategories = [
-	{ id: 1, name: "Transporte", value: "" },
-	{ id: 2, name: "Hospedagem", value: "" },
-	{ id: 3, name: "Alimentação", value: "" },
-	{ id: 4, name: "Passeio", value: "" },
-	{ id: 5, name: "Reserva", value: "" },
+    { id: 1, name: "Transporte", value: "" },
+    { id: 2, name: "Hospedagem", value: "" },
+    { id: 3, name: "Alimentação", value: "" },
+    { id: 4, name: "Passeio", value: "" },
+    { id: 5, name: "Reserva", value: "" },
 ];
 
 export default function TripBudget() {
-	const [categories, setCategories] = useState(initialCategories);
-	const [notes, setNotes] = useState("");
-	const [participants] = useState(10);
+    const [categories, setCategories] = useState(initialCategories);
+    const [notes, setNotes] = useState("");
+    const [participants] = useState(10);
 
-	const handleCategoryChange = (id: number, value: string) => {
-		setCategories(
-			categories.map((cat) => (cat.id === id ? { ...cat, value } : cat))
-		);
-	};
+    const handleCategoryChange = (id: number, value: string) => {
+        setCategories(
+            categories.map((cat) => (cat.id === id ? { ...cat, value } : cat))
+        );
+    };
 
-	const handleCategoryNameChange = (id: number, name: string) => {
-		setCategories(
-			categories.map((cat) => (cat.id === id ? { ...cat, name } : cat))
-		);
-	};
+    const handleCategoryNameChange = (id: number, name: string) => {
+        setCategories(
+            categories.map((cat) => (cat.id === id ? { ...cat, name } : cat))
+        );
+    };
 
-	const handleRemoveCategory = (id: number) => {
-		setCategories(categories.filter((cat) => cat.id !== id));
-	};
+    const handleRemoveCategory = (id: number) => {
+        setCategories(categories.filter((cat) => cat.id !== id));
+    };
 
-	const handleAddCategory = () => {
-		setCategories([
-			...categories,
-			{ id: Date.now(), name: "", value: "" },
-		]);
-	};
+    const handleAddCategory = () => {
+        setCategories([
+            ...categories,
+            { id: Date.now(), name: "", value: "" },
+        ]);
+    };
 
-	const total = categories.reduce(
-		(sum, cat) => sum + (parseFloat(cat.value) || 0),
-		0
-	);
-	const perPerson = participants > 0 ? total / participants : 0;
+    const total = categories.reduce(
+        (sum, cat) => sum + (parseFloat(cat.value) || 0),
+        0
+    );
+    const perPerson = participants > 0 ? total / participants : 0;
 
     const tripData = {
         name: "Viagem Rifania",
@@ -54,9 +54,9 @@ export default function TripBudget() {
         participants: participants,
     };
 
-	return (
-		<div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-			<SidebarMenu />
+    return (
+        <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+            <SidebarMenu />
 			<div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
 				<HeaderPages />
                 <div className="bg-[#0F2976] w-[80rem] rounded-t-2xl px-10 py-6 mt-8">
@@ -187,7 +187,9 @@ export default function TripBudget() {
                         </div>
                     </div>
 					<div className="flex justify-end mt-6">
-                        <button className="cursor-pointer hover:scale-110 transform bg-[#86EE60] text-[#0F2976] font-bold px-28 py-4 rounded-xl text-xl shadow hover:bg-[#4be05a] transition" style={{ minWidth: "260px" }}>
+                        <button
+                            className="cursor-pointer transition hover:scale-110 bg-[#86EE60] text-[#0F2976] font-bold px-28 py-4 rounded-xl text-xl shadow hover:bg-[#4be05a] min-w-[260px]"
+                        >
                             Próximo
                         </button>
 					</div>
