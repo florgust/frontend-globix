@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
-import { FiCalendar, FiMapPin, FiUsers, FiTrash2, FiPlus } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
 
 const initialCategories = [
 	{ id: 1, name: "Transporte", value: "" },
@@ -23,6 +23,12 @@ export default function TripBudget() {
 		);
 	};
 
+	const handleCategoryNameChange = (id: number, name: string) => {
+		setCategories(
+			categories.map((cat) => (cat.id === id ? { ...cat, name } : cat))
+		);
+	};
+
 	const handleRemoveCategory = (id: number) => {
 		setCategories(categories.filter((cat) => cat.id !== id));
 	};
@@ -40,6 +46,14 @@ export default function TripBudget() {
 	);
 	const perPerson = participants > 0 ? total / participants : 0;
 
+    const tripData = {
+        name: "Viagem Rifania",
+        startDate: "01/07/2025",
+        endDate: "05/07/2025",
+        location: "Rifania",
+        participants: participants,
+    };
+
 	return (
 		<div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
 			<SidebarMenu />
@@ -52,35 +66,43 @@ export default function TripBudget() {
                 </div>
 
                 <div className="w-[80rem] bg-white rounded-b-2xl shadow-lg px-10 py-4">
-					<div className="mb-6">
-						<div className="font-bold text-[2rem] mb-2 text-[#0F2976]">Viagem Rifaina</div>
+
+                    <div className="mb-6">
+                        <div className="font-bold text-[2rem] mb-2 text-[#0F2976]">{tripData.name}</div>
                         <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
                             <img src="/images-trip_budget/calendario.svg" alt="Calendário" className="w-6 h-6" />
                             <span>
-                                Data: <b className="text-[#0F2976]">01/07/2025</b> até <b className="text-[#0F2976]">05/07/2025</b>
+                                Data: <b className="text-[#0F2976]">{tripData.startDate}</b> até <b className="text-[#0F2976]">{tripData.endDate}</b>
                             </span>
                         </div>
                         <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
                             <img src="/images-trip_budget/globo.svg" alt="Globo" className="w-6 h-6" />
-                            <span>Local: <b className="text-[#0F2976]">Rifaina</b></span>
+                            <span>Local: <b className="text-[#0F2976]">{tripData.location}</b></span>
                         </div>
                         <div className="flex items-center gap-4 text-[1.3rem]">
                             <img src="/images-trip_budget/pessoas.svg" alt="Pessoas" className="w-6 h-6" />
                             <span>
-                                Participantes: <b className="text-[#0F2976]">{participants}</b>
+                                Participantes: <b className="text-[#0F2976]">{tripData.participants}</b>
                             </span>
                         </div>
-					</div>
+                    </div>
                     <div className="flex gap-6">
                         <div className="flex-1">
                             <div className="flex font-bold mb-2">
-                                <span className="w-1/2 text-[#0F2976]">Categoria</span>
-                                <span className="w-1/2 text-[#0F2976]">Custo (R$)</span>
+                                <span className="w-1/2 text-[#0F2976] ml-5">Categoria</span>
+                                <span className="w-1/2 text-[#0F2976] ml-2">Custo (R$)</span>
                             </div>
                             <div>
                                 {categories.map((cat, idx) => (
                                     <React.Fragment key={cat.id}>
-                                        <div className="flex items-center mb-2">
+                                        {/* Linha acima da primeira categoria */}
+                                        {idx === 0 && (
+                                            <hr
+                                                className="border-t mb-2"
+                                                style={{ borderColor: "#1C4CDC", width: "86%" }}
+                                            />
+                                        )}
+                                        <div className="flex items-center mb-2 gap-6">
                                             <button
                                                 className="text-red-500 mr-2"
                                                 onClick={() => handleRemoveCategory(cat.id)}
@@ -88,11 +110,18 @@ export default function TripBudget() {
                                             >
                                                 <FiTrash2 />
                                             </button>
-                                            <span className="w-1/2 px-2 py-1 mr-2 text-[#000000]">
-                                                {cat.name}
-                                            </span>
                                             <input
-                                                className="w-1/2 border rounded px-2 py-1"
+                                                className="w-1/3 px-2 py-1 mr-2 border rounded text-[#000000]"
+                                                type="text"
+                                                value={cat.name}
+                                                onChange={(e) =>
+                                                    handleCategoryNameChange(cat.id, e.target.value)
+                                                }
+                                                placeholder="Categoria"
+                                            />
+                                            <div className="w-8" /> {/* Espaçamento ao meio */}
+                                            <input
+                                                className="w-1/3 border rounded px-2 py-1"
                                                 type="number"
                                                 min="0"
                                                 value={cat.value}
@@ -102,47 +131,54 @@ export default function TripBudget() {
                                                 placeholder="R$"
                                             />
                                         </div>
-                                        {idx < categories.length - 1 && (
-                                            <hr className="border-t border-[#EAF1FF] mb-2" />
-                                        )}
+                                        {/* Linha abaixo de todas as categorias */}
+                                        <hr
+                                            className="border-t mb-2"
+                                            style={{ borderColor: "#1C4CDC", width: "86%" }}
+                                        />
                                     </React.Fragment>
                                 ))}
                             </div>
-                            <button
-                                className="flex items-center text-[#1C4CDC] mt-2"
-                                onClick={handleAddCategory}
-                            >
-                                <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#6CFB7B] mr-2">
-                                    <img src="/images-trip_budget/mais.svg" alt="Adicionar" className="w-4 h-4" />
-                                </span>
-                                Adicionar Categoria
-                            </button>
-                            <div className="flex justify-between mt-4 font-bold text-[#1C4CDC]">
-                                <span>Total:</span>
-                                <span>
-                                    R$
-                                    {total.toLocaleString("pt-BR", {
-                                        minimumFractionDigits: 2,
-                                    })}
-                                </span>
-                            </div>
-                            <div className="flex justify-between text-sm text-[#1C4CDC]">
-                                <span>Custo por pessoa:</span>
-                                <span>
-                                    R$
-                                    {perPerson.toLocaleString("pt-BR", {
-                                        minimumFractionDigits: 2,
-                                    })}
-                                </span>
+                            <div className="flex items-center justify-between mt-4">
+                                <button
+                                    className="flex items-center text-[#0F2976] font-bold ml-4 cursor-pointer"
+                                    onClick={handleAddCategory}
+                                >
+                                    <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#6CFB7B] mr-2">
+                                        <img src="/images-trip_budget/mais.svg" alt="Adicionar" className="w-4 h-4" />
+                                    </span>
+                                    Adicionar Categoria
+                                </button>
+
+                                <div className="flex flex-col gap-1 items-start w-56">
+                                    <div className="flex justify-start font-bold text-[#000000] w-full">
+                                        <span>Total: </span>
+                                        <span className="text-[#092064] ml-2">
+                                            R$
+                                            {total.toLocaleString("pt-BR", {
+                                                minimumFractionDigits: 2,
+                                            })}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-start text-sm text-[#000000] w-full">
+                                        <span>Custo por pessoa: </span>
+                                        <span className="text-[#092064] font-bold ml-2">
+                                            R$
+                                            {perPerson.toLocaleString("pt-BR", {
+                                                minimumFractionDigits: 2,
+                                            })}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="w-1/3">
-                            <div className="bg-[#EAF1FF] rounded-xl p-4">
-                                <div className="font-bold text-[#1C4CDC] mb-2">
+                            <div className="bg-[#4182F933] rounded-xl p-5">
+                                <div className="font-bold text-[#0F2976] mb-4 text-[1.1rem]">
                                     Observações Adicionais
                                 </div>
                                 <textarea
-                                    className="w-full h-32 border rounded p-2 text-[#1C4CDC] bg-white"
+                                    className="w-full h-32 border rounded p-2 text-[#FFFFFF] bg-[#102976]"
                                     placeholder="Insira mais detalhes sobre o orçamento da viagem, por exemplo, prazos para pagamento, divisão de custos ou observações importantes."
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
@@ -151,9 +187,9 @@ export default function TripBudget() {
                         </div>
                     </div>
 					<div className="flex justify-end mt-6">
-						<button className="bg-[#6CFB7B] text-[#0F2976] font-bold px-12 py-3 rounded-xl text-lg shadow hover:bg-[#4be05a] transition">
-							próximo
-						</button>
+                        <button className="cursor-pointer hover:scale-110 transform bg-[#86EE60] text-[#0F2976] font-bold px-28 py-4 rounded-xl text-xl shadow hover:bg-[#4be05a] transition" style={{ minWidth: "260px" }}>
+                            Próximo
+                        </button>
 					</div>
 				</div>
 			</div>
