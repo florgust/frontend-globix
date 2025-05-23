@@ -89,7 +89,7 @@ export default function TripBudget() {
                     <div className="flex gap-6">
                         <div className="flex-1">
                             <div className="flex font-bold mb-2">
-                                <span className="w-1/2 text-[#0F2976] ml-5">Categoria</span>
+                                <span className="w-1/2 text-[#0F2976] ml-3">Categoria</span>
                                 <span className="w-1/2 text-[#0F2976] ml-2">Custo (R$)</span>
                             </div>
                             <div>
@@ -99,7 +99,7 @@ export default function TripBudget() {
                                         {idx === 0 && (
                                             <hr
                                                 className="border-t mb-2"
-                                                style={{ borderColor: "#1C4CDC", width: "86%" }}
+                                                style={{ borderColor: "#1C4CDC", width: "73%" }}
                                             />
                                         )}
                                         <div className="flex items-center mb-2 gap-6">
@@ -111,7 +111,7 @@ export default function TripBudget() {
                                                 <FiTrash2 />
                                             </button>
                                             <input
-                                                className="w-1/3 px-2 py-1 mr-2 border rounded text-[#000000]"
+                                                className="w-1/5 px-2 py-1 mr-2 rounded text-[#000000] ml-[-30]"
                                                 type="text"
                                                 value={cat.name}
                                                 onChange={(e) =>
@@ -119,9 +119,9 @@ export default function TripBudget() {
                                                 }
                                                 placeholder="Categoria"
                                             />
-                                            <div className="w-8" /> {/* Espaçamento ao meio */}
+                                            <div className="w-34" />{/* Espaçamento ao meio */}
                                             <input
-                                                className="w-1/3 border rounded px-2 py-1"
+                                                className="w-1/5 border rounded px-2 py-1"
                                                 type="number"
                                                 min="0"
                                                 value={cat.value}
@@ -134,7 +134,7 @@ export default function TripBudget() {
                                         {/* Linha abaixo de todas as categorias */}
                                         <hr
                                             className="border-t mb-2"
-                                            style={{ borderColor: "#1C4CDC", width: "86%" }}
+                                            style={{ borderColor: "#1C4CDC", width: "73%" }}
                                         />
                                     </React.Fragment>
                                 ))}
@@ -151,7 +151,7 @@ export default function TripBudget() {
                                 </button>
 
                                 <div className="flex flex-col gap-1 items-start w-56">
-                                    <div className="flex justify-start font-bold text-[#000000] w-full">
+                                    <div className="flex justify-start font-bold text-[#000000] ml-[-115]">
                                         <span>Total: </span>
                                         <span className="text-[#092064] ml-2">
                                             R$
@@ -160,7 +160,7 @@ export default function TripBudget() {
                                             })}
                                         </span>
                                     </div>
-                                    <div className="flex justify-start text-sm text-[#000000] w-full">
+                                    <div className="flex justify-start text-sm text-[#000000] ml-[-165]">
                                         <span>Custo por pessoa: </span>
                                         <span className="text-[#092064] font-bold ml-2">
                                             R$
@@ -172,13 +172,13 @@ export default function TripBudget() {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-1/3">
-                            <div className="bg-[#4182F933] rounded-xl p-5">
+                        <div className="w-1/3 mr-20">
+                            <div className="bg-[#4182F933] rounded-2xl p-7 shadow-lg">
                                 <div className="font-bold text-[#0F2976] mb-4 text-[1.1rem]">
                                     Observações Adicionais
                                 </div>
                                 <textarea
-                                    className="w-full h-32 border rounded p-2 text-[#FFFFFF] bg-[#102976]"
+                                    className="w-full h-36 border-none rounded-2xl p-4 text-[#FFFFFF] bg-[#102976] resize-none focus:outline-none"
                                     placeholder="Insira mais detalhes sobre o orçamento da viagem, por exemplo, prazos para pagamento, divisão de custos ou observações importantes."
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
@@ -186,9 +186,9 @@ export default function TripBudget() {
                             </div>
                         </div>
                     </div>
-					<div className="flex justify-end mt-6">
+					<div className="flex justify-start mt-6 ml-[785]">
                         <button
-                            className="cursor-pointer transition hover:scale-110 bg-[#86EE60] text-[#0F2976] font-bold px-28 py-4 rounded-xl text-xl shadow hover:bg-[#4be05a] min-w-[260px]"
+                            className="cursor-pointer transition hover:scale-110 bg-[#86EE60] text-[#0F2976] font-bold px-[7rem] py-[1rem] rounded-xl text-xl shadow hover:bg-[#4be05a] min-w-[16.25rem]"
                         >
                             Próximo
                         </button>
