@@ -19,7 +19,7 @@ export default function Profile() {
             <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <HeaderPages />
 
-                <div className="relative w-6/12 bg-[#0F2976] rounded-lg shadow-lg p-8 mt-12 border border-[#FFFFFF]">
+                <div className="relative w-11/12 bg-[#0F2976] rounded-lg shadow-lg p-8 mt-12 border border-[#FFFFFF]">
 
                     {/* Botão X */}
                     <button 
