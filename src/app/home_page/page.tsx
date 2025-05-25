@@ -7,6 +7,8 @@ import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { Modal } from "@/components/ui/modal";
 import api, { axios } from "@/utils/axios"; // Importa o axios configurado
+import Cookies from "js-cookie";
+import Image from "next/image";
 
 const viagens = [
   {
@@ -60,7 +62,14 @@ export default function HomePage() {
       const { data: viagem } = await api.get(`/viagem/codigo/${tripCode}`);
 
       // Passo 4: Enviar solicitação de participação
-      const userId = 35; // Substitua pelo ID do usuário autenticado
+      const usuarioCookie = Cookies.get("usuario");
+      if (!usuarioCookie) {
+        setAlertMessage("Usuário não autenticado.");
+        return;
+      }
+      const usuarioObj = JSON.parse(usuarioCookie);
+      const userId = usuarioObj.id;
+
       await api.post(`/solicitacao/${userId}/${viagem.id}`);
       setAlertMessage(""); // limpa erros antigos
       setShowSuccess(true);
@@ -70,7 +79,6 @@ export default function HomePage() {
         setShowSuccess(false);
       }, 3000);
     } catch (error: unknown) {
-      //console.error("Erro ao participar da viagem:", error); // Log completo do erro
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 404) {
           setAlertMessage("Viagem não encontrada. Verifique o código inserido.");
@@ -110,7 +118,7 @@ export default function HomePage() {
 
         {/* Modal para inserir o código da viagem */}
         <Modal isOpen={openModal}>
-          <h1 className="text-[#0F2976] text-4xl mb-3 text-center mb-10">
+          <h1 className="text-[#0F2976] text-4xl text-center mb-10">
             Insira o código da Viagem que você <br /> quer participar
           </h1>
 
@@ -162,10 +170,13 @@ export default function HomePage() {
             {viagens.map((viagem) => (
               <CarouselItem key={viagem.id}>
                 <div className="relative bg-gradient-to-b from-[#0F2976] to-[#194DE8] w-full h-[25rem] mx-auto rounded-lg flex items-center justify-center">
-                  <img
+                  <Image
                     src={viagem.imagem}
                     alt={viagem.titulo}
+                    width={880}
+                    height={334}
                     className="w-[55rem] h-[20.875rem] mx-auto rounded-lg"
+                    priority
                   />
                   <div className="w-[55rem] absolute top-40 left-18 bottom-8 bg-white bg-opacity-50 text-white flex flex-col opacity-0 hover:opacity-85 transition-opacity rounded-lg p-4">
                     <h1 className="text-[#0F2976] text-3xl font-bold mb-3">{viagem.titulo}</h1>
