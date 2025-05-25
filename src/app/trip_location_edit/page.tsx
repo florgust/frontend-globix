@@ -1,16 +1,29 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { useRouter, useSearchParams } from "next/navigation";
-import api from "@/utils/axios"; // Importa a instância configurada do Axios
+import api from "@/utils/axios";
+import Image from "next/image";
 
-export default function TravelLocation() {
+interface TripData {
+    idViagem: string;
+    nome: string;
+    idaEnderecoPartida: string;
+    idaEnderecoChegada: string;
+    idaDataPartida: string;
+    idaDataChegada: string;
+    voltaEnderecoPartida: string;
+    voltaEnderecoChegada: string;
+    voltaDataPartida: string;
+    voltaDataChegada: string;
+}
+
+function TravelLocationContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const tripId = searchParams.get("tripId"); // Obtém o ID da viagem da URL
+    const tripId = searchParams.get("tripId");
 
-    // Estados para armazenar os dados do formulário
     const [ida, setIda] = useState({
         enderecoPartida: "",
         enderecoChegada: "",
@@ -25,28 +38,22 @@ export default function TravelLocation() {
         dataChegada: "",
     });
 
-    const [tripData, setTripData] = useState<any>(null); // Estado para armazenar os dados da viagem
+    const [tripData, setTripData] = useState<TripData | null>(null);
 
-    // Função para formatar a data para o formato do input
     function formatDateForInput(dateString: string) {
         if (!dateString) return "";
         const date = new Date(dateString);
-        // Ajusta para o fuso horário local
         const offset = date.getTimezoneOffset();
         const localDate = new Date(date.getTime() - offset * 60000);
         return localDate.toISOString().slice(0, 16);
     }
 
-    // Função para buscar os dados da viagem
     useEffect(() => {
         const fetchTripData = async () => {
             if (!tripId) return;
             try {
-                console.log("tripId:", tripId);
                 const response = await api.get(`/viagem/${tripId}`);
                 const data = response.data;
-                console.log("Dados da viagem:", data);
-
                 setTripData(data);
                 setIda({
                     enderecoPartida: data.idaEnderecoPartida || "",
@@ -79,7 +86,7 @@ export default function TravelLocation() {
 
     const handleSave = async () => {
         const payload = {
-            idViagem: tripId, // Usa o ID da viagem
+            idViagem: tripId,
             nome: tripData?.nome || "Localização Exemplo",
             idaEnderecoPartida: ida.enderecoPartida,
             idaEnderecoChegada: ida.enderecoChegada,
@@ -92,9 +99,9 @@ export default function TravelLocation() {
         };
 
         try {
-            await api.post("/localizacao", payload); // Envia o payload para o backend
+            await api.post("/localizacao", payload);
             alert("Localização salva com sucesso!");
-            router.push("/travel_transport"); // Redireciona para a próxima página
+            router.push("/travel_transport");
         } catch (error) {
             console.error("Erro ao salvar a localização:", error);
             alert("Ocorreu um erro ao salvar a localização. Tente novamente.");
@@ -125,7 +132,14 @@ export default function TravelLocation() {
                                     <h2 className="text-[#FFFFFF] font-bold text-4xl mb-2 flex items-center ml-3">
                                         IDA
                                     </h2>
-                                    <img src="/images-travel_location/linha.svg" alt="Linha decorativa" className="mb-4 ml-3" />
+                                    <Image
+                                        src="/images-travel_location/linha.svg"
+                                        alt="Linha decorativa"
+                                        width={400}
+                                        height={12}
+                                        className="mb-4 ml-3"
+                                        priority
+                                    />
                                     <div className="flex flex-col space-y-4 ">
                                         <div className="flex items-center space-x-4 gap-4">
                                             <div className="flex-1">
@@ -185,7 +199,14 @@ export default function TravelLocation() {
                                     <h2 className="text-[#FFFFFF] font-bold text-4xl mb-2 flex items-center mt-5 ml-3">
                                         VOLTA
                                     </h2>
-                                    <img src="/images-travel_location/linha.svg" alt="Linha decorativa" className="mb-4 ml-3" />
+                                    <Image
+                                        src="/images-travel_location/linha.svg"
+                                        alt="Linha decorativa"
+                                        width={400}
+                                        height={12}
+                                        className="mb-4 ml-3"
+                                        priority
+                                    />
                                     <div className="flex flex-col space-y-4">
                                         <div className="flex items-center space-x-4 gap-4">
                                             <div className="flex-1">
@@ -256,5 +277,13 @@ export default function TravelLocation() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function TravelLocation() {
+    return (
+        <Suspense fallback={<div className="text-white">Carregando página...</div>}>
+            <TravelLocationContent />
+        </Suspense>
     );
 }

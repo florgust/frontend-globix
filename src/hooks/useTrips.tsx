@@ -6,7 +6,7 @@ interface UseTripsProps {
 }
 
 export const useTrips = ({ initialTrips }: UseTripsProps) => {
-  const [trips, setTrips] = useState<Trip[]>(initialTrips);
+  const [trips] = useState<Trip[]>(initialTrips);
   const [filtered, setFiltered] = useState<Trip[]>(initialTrips);
   const [sortOrder, setSortOrder] = useState("recentes");
   const [roleFilter, setRoleFilter] = useState("");
