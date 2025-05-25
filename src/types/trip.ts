@@ -6,7 +6,6 @@ export interface Trip {
   imagem: string;
   dataInicio: string;
   dataFim: string;
-  cidade: string;
   organizador: string;
   transporte: string;
   papel: UserRole;
