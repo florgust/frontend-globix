@@ -15,7 +15,7 @@ const menuItems = [
   { icon: <House size={20} />, text: "Página Principal", path: "/home_page" },
   { icon: <img src={minhasViagens} alt="Minhas Viagens" className="h-6 w-6" />, text: "Minhas Viagens", path: "/my_trips" },
   { icon: <img src={community} alt="Comunidade" className="h-6 w-6" />, text: "Comunidade", path: "/comunidade" },
-  { icon: <img src={user} alt="Perfil" className="h-6 w-6" />, text: "Perfil", path: "/perfil" },
+  { icon: <img src={user} alt="Perfil" className="h-6 w-6" />, text: "Perfil", path: "/profile" },
   { icon: <img src={message} alt="Mensagens" className="h-6 w-6" />, text: "Mensagens", path: "/mensagens" },
   { icon: <img src={setting} alt="Configurações" className="h-6 w-6" />, text: "Configurações", path: "/configuracoes", spacer: true },
   { icon: <img src={about} alt="Sobre" className="h-6 w-6" />, text: "Sobre", path: "/sobre" },
