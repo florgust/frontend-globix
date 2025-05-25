@@ -28,7 +28,6 @@ const TripCard = ({ trip }: TripCardProps) => (
         </h3>
       </div>
       <p><strong>Dia:</strong> {trip.dataInicio}</p>
-      <p><strong>Cidade:</strong> {trip.cidade}</p>
       <p><strong>Organizador:</strong> {trip.organizador}</p>
       <p><strong>Transporte:</strong> {trip.transporte}</p>
       <p><strong>Duração:</strong> {trip.dataInicio} até {trip.dataFim}</p>

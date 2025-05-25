@@ -4,9 +4,10 @@ import { IconButton } from "@/components/ui/button";
 interface ModalMoreDetailsProps {
     isOpen: boolean;
     onClose: () => void;
+    onNavigate: (target: 'transport' | 'itinerary') => void;
 }
 
-const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose }) => {
+const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, onNavigate }) => {
     if (!isOpen) return null;
 
     return (
@@ -103,7 +104,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose }) 
                             icon={<img src="/images-travel/Icons/IconGreenTransport.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Transporte clicado!")}
+                            onClick={() => onNavigate('transport')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Transporte</p>
                     </div>
@@ -112,7 +113,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose }) 
                             icon={<img src="/images-travel/Icons/IconGreenItinerary.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Itinerário clicado!")}
+                            onClick={() => onNavigate('itinerary')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Itinerário</p>
                     </div>

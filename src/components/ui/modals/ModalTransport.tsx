@@ -4,9 +4,10 @@ import { IconButton } from "@/components/ui/button";
 interface ModalTransportProps {
     isOpen: boolean;
     onClose: () => void;
+    onNavigate: (target: 'details' | 'itinerary') => void;
 }
 
-const ModalTransport: React.FC<ModalTransportProps> = ({ isOpen, onClose }) => {
+const ModalTransport: React.FC<ModalTransportProps> = ({ isOpen, onClose, onNavigate }) => {
     if (!isOpen) return null;
 
     return (
@@ -132,7 +133,7 @@ const ModalTransport: React.FC<ModalTransportProps> = ({ isOpen, onClose }) => {
                             icon={<img src="/images-travel/Icons/IconGreenList.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Mais Detalhes clicado!")}
+                            onClick={() => onNavigate('details')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Mais Detalhes</p>
                     </div>
@@ -141,7 +142,7 @@ const ModalTransport: React.FC<ModalTransportProps> = ({ isOpen, onClose }) => {
                             icon={<img src="/images-travel/Icons/IconGreenItinerary.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Itinerário clicado!")}
+                            onClick={() => onNavigate('itinerary')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Itinerário</p>
                     </div>

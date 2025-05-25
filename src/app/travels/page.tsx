@@ -14,8 +14,17 @@ import { useState } from 'react';
 export default function DetailsPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isItineraryOpen, setIsItineraryOpen] = useState(false);
 
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
+    const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
+    const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
+
+    const closeAllModals = () => {
+        setIsTransportModalOpen(false);
+        setIsMoreDetailsModalOpen(false);
+        setIsItineraryModalOpen(false);
+    };
 
     async function promoverUsuario(id_usuario: number) {
         await fetch(`/api/usuarios/${id_usuario}/promover`, {
@@ -367,12 +376,11 @@ export default function DetailsPage() {
         "/images-home_page/carousel/carrossel.png", // Imagem inicial
     ]);
 
-    const [activeButton, setActiveButton] = useState("convidados");
+
     const [convidados, setConvidados] = useState(detalhesViagem.usuario);
     const [solicitacoes, setSolicitacoes] = useState(detalhesViagem.solicitacoes);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isMoreDetailsOpen, setIsMoreDetailsOpen] = useState(false);
-    const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
+    const [activeButton, setActiveButton] = useState("convidados");
+
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
@@ -533,29 +541,40 @@ export default function DetailsPage() {
                                         <div className="flex flex-col items-center">
                                             <IconButton
                                                 icon={<List className="w-20 h-20" />}
-                                                onClick={() => setIsMoreDetailsOpen(true)}
+                                                onClick={() => setIsMoreDetailsModalOpen(true)}
                                             />
                                             <p className="text-sm text-gray-500 mt-4">Mais Detalhes</p>
                                         </div>
 
-                                        {/* Modal de Mais Detalhes */}
                                         <ModalMoreDetails
                                             isOpen={isMoreDetailsOpen}
-                                            onClose={() => setIsMoreDetailsOpen(false)}
+                                            onClose={() => setIsMoreDetailsModalOpen(false)}
+                                            onNavigate={(target) => {
+                                                closeAllModals();
+                                                if (target === 'itinerary') setIsItineraryModalOpen(true);
+                                                if (target === 'transport') setIsTransportModalOpen(true);
+                                            }}
                                         />
                                     </div>
 
                                     <div className="flex flex-col items-center">
                                         <IconButton
                                             icon={<img src="/images-travel/Icons/IconGreenTransport.png" className="w-20 h-20" />}
-                                            onClick={() => setIsTransportModalOpen(true)} // Abre o modal
+                                            onClick={() => {
+                                                closeAllModals();
+                                                setIsTransportModalOpen(true);
+                                            }}
                                         />
                                         <p className="text-sm text-gray-500 mt-4">Transporte</p>
 
-                                        {/* Modal de Transporte */}
                                         <ModalTransport
                                             isOpen={isTransportModalOpen}
-                                            onClose={() => setIsTransportModalOpen(false)} // Fecha o modal
+                                            onClose={() => setIsTransportModalOpen(false)}
+                                            onNavigate={(target) => {
+                                                closeAllModals();
+                                                if (target === 'itinerary') setIsItineraryModalOpen(true);
+                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                            }}
                                         />
                                     </div>
 
@@ -563,9 +582,19 @@ export default function DetailsPage() {
                                         <IconButton
                                             icon={<img src="\images-travel\Icons\IconGreenItinerary.png"
                                                 className="w-w-20 h-20" />}
-                                            onClick={() => setIsItineraryOpen(true)}
+                                            onClick={() => setIsItineraryModalOpen(true)}
                                         />
                                         <p className="text-sm text-gray-500 mt-4">Itinerário</p>
+                                        <ModalItinerary
+                                            isOpen={isItineraryOpen}
+                                            onClose={() => setIsItineraryModalOpen(false)}
+                                            onNavigate={(target) => {
+                                                closeAllModals();
+                                                if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                            }}
+                                            itinerario={detalhesViagem.itinerario}
+                                        />
                                     </div>
                                 </div>
 
@@ -594,23 +623,17 @@ export default function DetailsPage() {
                                         />
                                         <p className="text-sm text-gray-500 mt-2">Avisos</p>
                                     </div>
-                                </div>
-
-                                <ModalItinerary
-                                    isOpen={isItineraryOpen}
-                                    onClose={() => setIsItineraryOpen(false)}
-                                    itinerario={detalhesViagem.itinerario}
-                                />
+                                </div>                                
                             </div>
 
                         </div>
                         <div className='w-full flex justify-between mt-8'>
                             <button className='text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer'
-                                    onClick={() => setIsEditModalOpen(true)}
+                                onClick={() => setIsEditModalOpen(true)}
                             >
                                 Editar
                             </button>
-                            
+
                             <button className='text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer'>
                                 Encerrar Viagem
                             </button>
@@ -619,7 +642,7 @@ export default function DetailsPage() {
                                 isOpen={isEditModalOpen}
                                 onClose={() => setIsEditModalOpen(false)}
                                 onEdit={handleEdit}
-                            /> 
+                            />
                         </div>
                     </div>
                 </div>
