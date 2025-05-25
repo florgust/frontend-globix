@@ -1,5 +1,5 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
+import { IconButton } from "@/components/ui/button";
 
 interface ItineraryItem {
     id: number;
@@ -10,10 +10,16 @@ interface ItineraryItem {
     descricao: string;
 }
 
-function ModalItinerary({ isOpen, onClose, itinerario }: { isOpen: boolean; onClose: () => void; itinerario: ItineraryItem[] }) {
+interface ModalItineraryProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onNavigate: (target: 'transport' | 'details') => void;
+    itinerario: ItineraryItem[];
+}
 
-    const diasItinerario = agruparItinerarioPorDia(itinerario);
+function ModalItinerary({ isOpen, onClose, onNavigate, itinerario }: ModalItineraryProps) {
     const [diaSelecionado, setDiaSelecionado] = useState(0);
+
     if (!isOpen) return null;
 
     function agruparItinerarioPorDia(itinerario: ItineraryItem[]) {
@@ -31,127 +37,141 @@ function ModalItinerary({ isOpen, onClose, itinerario }: { isOpen: boolean; onCl
         }));
     }
 
+    const diasItinerario = agruparItinerarioPorDia(itinerario);
+
     return (
         <div
             style={{ backgroundColor: "rgba(41, 45, 50, 0.6)" }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            className="fixed inset-0 flex items-center justify-center z-50"
         >
-            <div className="relative bg-white rounded-lg shadow-lg w-[90%] max-w-6xl h-[80vh] p-10 flex flex-col items-center justify-center">
-                {/* Header e título */}
-                <div className="flex flex-row items-center w-full h-20 mb-6">
+            <div className="relative bg-white rounded-lg shadow-lg w-[90%] max-w-6xl h-auto max-h-[90vh] p-6 md:p-10 flex flex-col items-center overflow-y-auto">
+                <div className="flex items-center justify-between w-full mb-6">
+                    {/* Botão com a seta para a esquerda */}
                     <button
                         onClick={onClose}
-                        className="relative absolute text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-gray-700 flex items-center"
                     >
-                        <ChevronLeft className="w-15 h-15" />
+                        <img src="/images-modals/Icons/BackIcon.png" alt="Voltar" className="w-14 h-14 cursor-pointer" />
                     </button>
 
-                    <div className="relative w-full flex flex-col items-center justify-center h-20">
-                        <div className="absolute mt-4 ml-5 w-2/5 h-15 p-4 bg-[#1C4CDC]"></div>
-                        <div className="absolute h-15 w-2/5 h-15 p-4 bg-[#0F2976]">
-                            <h1 className="text-3xl font-bold text-center text-[#00FF4D]">
-                                Itinerário
-                            </h1>
-                        </div>
+                    {/* Título "Itinerário" */}
+                    <div className="relative">
+                        <h2 className="text-4xl font-bold text-[#00FF4D] bg-[#0F2976] px-14 py-2 relative z-10">
+                            Itinerário
+                        </h2>
+                        <div className="absolute top-2 left-2 w-full h-full bg-[#1C4CDC] z-0"></div>
                     </div>
+
+                    {/* Espaço vazio para alinhar o título ao centro */}
+                    <div className="w-8"></div>
                 </div>
 
-
-
                 {/* Eventos do dia selecionado */}
-                <div className="bg-[#E3FFEB] border border-[#0F2976] rounded-4xl shadow-2xl px-10 py-6 w-[53rem] max-h-[80vh] flex flex-col items-center mx-auto">
-
+                <div className="bg-[#E3FFEB] border border-[#0F2976] rounded-lg shadow-md px-6 py-4 w-full max-w-4xl flex flex-col items-center">
                     {/* Botões dos dias */}
-                    <div
-                        className="w-full overflow-x-auto"
-                        style={{
-                            scrollbarWidth: "none",
-                            msOverflowStyle: "none"
-                        }}
-                    >
-                        <div
-                            className="flex gap-2 mb-3 ml-3 flex-nowrap min-w-max"
-                            style={{
-                                overflow: "hidden"
-                            }}
-                        >                            {diasItinerario.map((dia, idx) => (
-                            <button
-                                key={dia.data}
-                                className={`px-4 py-2 rounded-lg font-bold transition-all text-2xl whitespace-nowrap
-                                    ${diaSelecionado === idx
-                                        ? "bg-[#0F2976] text-white"
-                                        : "bg-[#659EF6] text-white hover:bg-[#0F2976] hover:text-white"}
-                                `}
-                                onClick={() => setDiaSelecionado(idx)}
-                            >
-                                Dia {dia.dia}
-                            </button>
-                        ))}
+                    <div className="w-full overflow-x-auto mb-4">
+                        <div className="flex gap-2">
+                            {diasItinerario.map((dia, idx) => (
+                                <button
+                                    key={dia.data}
+                                    className={`px-4 py-2 rounded-lg font-bold text-lg transition-all whitespace-nowrap
+                                        ${diaSelecionado === idx
+                                            ? "bg-[#0F2976] text-white"
+                                            : "bg-[#659EF6] text-white hover:bg-[#0F2976]"}
+                                    `}
+                                    onClick={() => setDiaSelecionado(idx)}
+                                >
+                                    Dia {dia.dia}
+                                </button>
+                            ))}
                         </div>
-                        <style>
-                            {`
-                        div::-webkit-scrollbar {
-                            display: none;
-                        }
-                        `}
-                        </style>
                     </div>
 
-                    <div className="w-full border-t border-[#0F2976] mb-2"></div>
+                    <div className="w-full border-t border-[#0F2976] mb-4"></div>
 
                     {/* Mini título do dia selecionado */}
-                    <div className="w-full text-left mb-4 ml-2">
-                        <span className="text-2xl text-[#292D32]">
+                    <div className="w-full text-left mb-4">
+                        <span className="text-xl text-[#292D32]">
                             Dia {diasItinerario[diaSelecionado]?.dia} - {diasItinerario[diaSelecionado] && new Date(diasItinerario[diaSelecionado].data).toLocaleDateString("pt-BR")}
                         </span>
                     </div>
 
-                    <div className="overflow-y-auto w-3/4 max-h-90 self-start">
+                    {/* Lista de eventos */}
+                    <div className="w-full overflow-y-auto max-h-60">
                         {diasItinerario[diaSelecionado]?.eventos.map(item => (
-                            <div key={item.id} className="mb-4 h-24 p-4 border border-[#1C4CDC] rounded-lg bg-[#F5F8FF]">
+                            <div key={item.id} className="mb-4 p-4 border border-[#1C4CDC] rounded-lg bg-[#F5F8FF]">
                                 <div className="flex items-start">
-                                    <span className="text-xl text-gray-800 min-w-[70px] text-left">
+                                    <span className="text-lg text-gray-800 min-w-[70px]">
                                         {new Date(item.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                                     </span>
-                                    <div className="flex flex-col">
+                                    <div className="ml-4">
                                         <span className="font-semibold text-gray-800 text-lg">{item.titulo}</span>
-                                        <span className="text-gray-800 truncate">{item.descricao}</span>
+                                        <p className="text-gray-600">{item.descricao}</p>
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
-                                    <span className="text-xs text-gray-700 opacity-70">{item.tipoEvento}</span>
+                                    <span className="text-xs text-gray-500">{item.tipoEvento}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
+                </div>
 
-                    {/* Paginação dos dias */}
-                    <div className="w-full flex items-center justify-between mt-4">
-                        <button
-                            className={`flex items-center font-bold text-xl transition-all
-                             ${diaSelecionado === 0
-                                    ? "text-gray-400 cursor-not-allowed"
-                                    : "text-[#0F2976] hover:text-[#1C4CDC]"}
-                            `}
-                            onClick={() => setDiaSelecionado(diaSelecionado - 1)}
-                            disabled={diaSelecionado === 0}
-                        >
-                            <ChevronLeft className="w-15 h-15" />
-                            Dia anterior
-                        </button>
+                {/* Ícones de ações */}
+                <div className="flex justify-center gap-5 mt-7">
+                    {/* Ícone de Mais Detalhes */}
+                    <div className="flex flex-col items-center">
+                        <IconButton
+                            icon={<img src="/images-travel/Icons/IconGreenList.png" className="w-16 h-16 cursor-pointer" />}
+                            size="lg"
+                            shape="circle"
+                            onClick={() => onNavigate('details')}
+                        />
+                        <p className="text-sm text-[#0F2976] mt-2">Mais Detalhes</p>
+                    </div>
 
-                        <button
-                            className={`flex items-center font-bold text-xl transition-all
-                            ${diaSelecionado === diasItinerario.length - 1
-                                    ? "text-gray-400 cursor-not-allowed"
-                                    : "text-[#0F2976] hover:text-[#1C4CDC]"}
-                            `}
-                            onClick={() => setDiaSelecionado(diaSelecionado + 1)}
-                            disabled={diaSelecionado === diasItinerario.length - 1}
-                        >
-                            Dia seguinte
-                            <ChevronRight className="w-15 h-15" />
-                        </button>
+                    {/* Ícone de Transporte */}
+                    <div className="flex flex-col items-center">
+                        <IconButton
+                            icon={<img src="/images-travel/Icons/IconGreenTransport.png" className="w-16 h-16 cursor-pointer" />}
+                            size="lg"
+                            shape="circle"
+                            onClick={() => onNavigate('transport')}
+                        />
+                        <p className="text-sm text-[#0F2976] mt-2">Transporte</p>
+                    </div>
+
+                    {/* Ícone de Orçamento */}
+                    <div className="flex flex-col items-center">
+                        <IconButton
+                            icon={<img src="/images-travel/Icons/IconGreenBudget.png" className="w-16 h-16 cursor-pointer" />}
+                            size="lg"
+                            shape="circle"
+                            onClick={() => alert("Orçamento clicado!")}
+                        />
+                        <p className="text-sm text-[#0F2976] mt-2">Orçamento</p>
+                    </div>
+
+                    {/* Ícone de Mensagens */}
+                    <div className="flex flex-col items-center">
+                        <IconButton
+                            icon={<img src="/images-travel/Icons/IconMessage.png" className="w-16 h-16 cursor-pointer" />}
+                            size="lg"
+                            shape="circle"
+                            onClick={() => alert("Mensagens clicado!")}
+                        />
+                        <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
+                    </div>
+
+                    {/* Ícone de Aviso */}
+                    <div className="flex flex-col items-center">
+                        <IconButton
+                            icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
+                            size="lg"
+                            shape="circle"
+                            onClick={() => alert("Avisos clicado!")}
+                        />
+                        <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
                     </div>
                 </div>
             </div>
