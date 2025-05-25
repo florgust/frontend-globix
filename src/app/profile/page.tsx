@@ -10,10 +10,11 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import api from "@/utils/axios";
-
+import ModalProfileEdit from "@/components/ui/modals/ModalProfileEdit";
 
 export default function Profile() {
     const [trips, setTrips] = useState<Trip[]>([]);
+
     const { sortOrder, setSortOrder, roleFilter, setRoleFilter } = useTrips({
         initialTrips: trips,
     });
@@ -42,6 +43,7 @@ export default function Profile() {
             }
         }
     }, []);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <div className="flex h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
@@ -69,12 +71,12 @@ export default function Profile() {
                                 <p className="text-sm opacity-50">{usuario?.email ?? "Email do usuario"}</p>
                             </div>
                         </div>
-                        <a
-                            href="/profile_edit"
+                        <button
+                            onClick={() => setIsModalOpen(true)}
                             className="bg-[#00FF4D] text-[#0F2976] px-6 py-2 rounded-md shadow-md hover:scale-105 transition-transform cursor-pointer text-[1.1rem]"
                         >
                             Editar Perfil
-                        </a>
+                        </button>
                     </div>
 
                     {/* Minhas Viagens */}
@@ -103,6 +105,9 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
+
+            {/* Modal */}
+            <ModalProfileEdit isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );
 }
