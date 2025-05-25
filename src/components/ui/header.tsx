@@ -2,10 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
-import React from "react";
-import { Search } from "lucide-react";
-
-const logo = "images-home_page/logo-globix.png";
+import { Menu, Search } from 'lucide-react';
 
 export function HeaderPages() {
   return (
@@ -24,7 +21,16 @@ export function HeaderPages() {
               className="absolute left-15 top-1/2 transform -translate-y-1/2"
             />
           </div>
-          <img src={logo} className="ml-auto pr-10"></img>
+          <div className="ml-auto pr-10 flex items-center">
+            <Image
+              src="/images-home_page/logo-globix.png"
+              alt="Logo Globix"
+              width={120}
+              height={40}
+              priority
+              className="h-auto w-auto"
+            />
+          </div>
         </div>
       </div>
     </header>
@@ -35,13 +41,18 @@ export function HeaderPages() {
 
 export function Header() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Fecha o menu ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpenMenu(null);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setShowMobileMenu(false);
       }
     };
 
@@ -52,22 +63,23 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-[#102976] text-white px-8 py-3 flex justify-center items-center relative z-20 h-[92px]">
+    <header className="bg-[#102976] text-white px-4 md:px-8 py-3 flex justify-center items-center relative z-20 h-[92px]">
       {/* Contêiner central */}
-      <div className="flex items-center justify-between w-full max-w-6xl gap-10">
+      <div className="flex flex-wrap items-center justify-between w-full max-w-7xl gap-4 md:gap-10">
         {/* Logo */}
-        <div className="flex items-center cursor-pointer justify-center h-full">
+        <div className="flex items-center cursor-pointer justify-center h-full min-w-[120px]">
           <Image
             src="/images-initial/globix-logo.png"
             alt="Logo Globix"
-            width={200}
+            width={160}
             height={0}
             priority
+            className="w-32 md:w-40 lg:w-48 h-auto"
           />
         </div>
 
         {/* Navegação principal */}
-        <nav className="flex items-center gap-8 text-sm font-medium" ref={menuRef}>
+        <nav className="flex flex-wrap items-center gap-4 md:gap-8 text-sm font-medium min-w-0" ref={menuRef}>
           {/* Viagens */}
           <div className="relative">
             <button
@@ -83,7 +95,7 @@ export function Header() {
               />
             </button>
             {openMenu === 'viagens' && (
-              <ul className="absolute mt-2 bg-white text-[#0D1A3A] rounded shadow p-2 w-40 z-10">
+              <ul className="absolute mt-2 bg-white text-[#0D1A3A] rounded shadow p-2 w-36 md:w-40 z-10">
                 <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Planejadas</li>
                 <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Passadas</li>
               </ul>
@@ -106,7 +118,7 @@ export function Header() {
               />
             </button>
             {openMenu === 'sobre' && (
-              <ul className="absolute mt-2 bg-white text-[#0D1A3A] rounded shadow p-2 w-40 z-10">
+              <ul className="absolute mt-2 bg-white text-[#0D1A3A] rounded shadow p-2 w-36 md:w-40 z-10">
                 <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Quem Somos</li>
                 <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Contato</li>
               </ul>
@@ -114,14 +126,46 @@ export function Header() {
           </div>
         </nav>
 
-        {/* Botões */}
-        <div className="flex justify-center items-center gap-6">
-          <a href='/login' className="flex justify-center items-center bg-[#C8FFB2] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#b3f9a1] active:scale-95 transition w-24 h-12">
+        {/* Botões - Desktop */}
+        <div className="hidden sm:flex flex-wrap justify-center items-center gap-4 md:gap-6 min-w-[180px]">
+          <a href='/login' className="flex justify-center items-center bg-[#C8FFB2] text-[#0D1A3A] font-semibold cursor-pointer text-xs md:text-sm px-4 md:px-5 py-2 md:py-3 rounded-md hover:bg-[#b3f9a1] active:scale-95 transition w-20 md:w-24 h-10 md:h-12">
             Login
           </a>
-          <a href='/register' className="flex justify-center items-center bg-[#FFFDFD] text-[#0D1A3A] font-semibold cursor-pointer text-sm px-5 py-3 rounded-md hover:bg-[#f2f2f2] active:scale-95 transition w-24 h-12">
+          <a href='/register' className="flex justify-center items-center bg-[#FFFDFD] text-[#0D1A3A] font-semibold cursor-pointer text-xs md:text-sm px-4 md:px-5 py-2 md:py-3 rounded-md hover:bg-[#f2f2f2] active:scale-95 transition w-20 md:w-24 h-10 md:h-12">
             Cadastro
           </a>
+        </div>
+
+        {/* Menu Hamburguer - Mobile */}
+        <div className="sm:hidden flex items-center">
+          <button
+            onClick={() => setShowMobileMenu((prev) => !prev)}
+            className="p-2 rounded hover:bg-[#223a7a] transition"
+            aria-label="Abrir menu"
+          >
+            <Menu size={28} />
+          </button>
+          {showMobileMenu && (
+            <div
+              ref={mobileMenuRef}
+              className="absolute top-[80px] right-4 bg-white text-[#0D1A3A] rounded shadow-lg flex flex-col items-stretch w-40 z-30 animate-fade-in"
+            >
+              <a
+                href="/login"
+                className="px-6 py-3 border-b border-gray-200 hover:bg-gray-100 font-semibold transition"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Login
+              </a>
+              <a
+                href="/register"
+                className="px-6 py-3 hover:bg-gray-100 font-semibold transition"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Cadastro
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </header>
