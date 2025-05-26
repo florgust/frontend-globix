@@ -1,12 +1,14 @@
 import React from "react";
 import { X } from "lucide-react";
+import Image from "next/image";
 
 interface ModalProfileEditProps {
     isOpen: boolean;
     onClose: () => void;
+    onOpenPassword: () => void; // Adicione esta prop
 }
 
-const ModalProfileEdit: React.FC<ModalProfileEditProps> = ({ isOpen, onClose }) => {
+const ModalProfileEdit: React.FC<ModalProfileEditProps> = ({ isOpen, onClose, onOpenPassword }) => {
     if (!isOpen) return null;
 
     return (
@@ -28,9 +30,11 @@ const ModalProfileEdit: React.FC<ModalProfileEditProps> = ({ isOpen, onClose }) 
                 <div className="flex items-center justify-center mb-6 relative">
                     <div className="flex flex-col items-center">
                         <div className="w-32 h-32 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden relative">
-                            <img
+                            <Image
                                 src="/images-profile/mauro.svg"
                                 alt="Profile"
+                                width={128}
+                                height={128}
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -42,7 +46,7 @@ const ModalProfileEdit: React.FC<ModalProfileEditProps> = ({ isOpen, onClose }) 
 
                 <div className="flex flex-col gap-6 items-center">
                     <div className="w-full max-w-120">
-                        <label className="block text-[#FFFFFD] mb-2 text-left">Nome</label>
+                        <label className="block text-[#FFFFFD] mb-2 text-left">Nome 👤</label>
                         <input
                             type="text"
                             placeholder="Digite seu nome"
@@ -50,10 +54,10 @@ const ModalProfileEdit: React.FC<ModalProfileEditProps> = ({ isOpen, onClose }) 
                         />
                     </div>
                     <div className="w-full max-w-120">
-                        <label className="block text-[#FFFFFD] mb-2 text-left">Sobrenome</label>
+                        <label className="block text-[#FFFFFD] mb-2 text-left">Email ✉️</label>
                         <input
-                            type="text"
-                            placeholder="Digite seu sobrenome"
+                            type="email"
+                            placeholder="Digite seu email"
                             className="rounded-[0.5rem] w-full p-2 bg-[#F9F9F9] text-[#1E1E1E] border border-gray-500"
                         />
                     </div>
@@ -64,13 +68,18 @@ const ModalProfileEdit: React.FC<ModalProfileEditProps> = ({ isOpen, onClose }) 
                     <div className="flex items-center justify-between bg-transparent mt-2">
                         <div className="flex items-center ml-0">
                             <div className="w-8 h-8 rounded-full bg-[#FFFFFF] mr-2 flex items-center justify-center overflow-hidden">
-                                <img
+                                <Image
                                     src="/images-profile_edit/senha.svg"
                                     alt="Senha"
+                                    width={24}
+                                    height={24}
                                     className="w-6 h-6"
                                 />
                             </div>
-                            <button className="ml-1 px-4 py-1 bg-[#163a9c] text-[#4182F9] rounded transition-colors text-sm hover:scale-110 transition-transform cursor-pointer">
+                            <button
+                                className="ml-1 px-4 py-1 bg-[#163a9c] text-[#4182F9] rounded transition-colors text-sm hover:scale-110 transition-transform cursor-pointer"
+                                onClick={onOpenPassword}
+                            >
                                 Alterar senha
                             </button>
                         </div>
