@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import api, { axios } from "@/utils/axios";
+import Cookies from "js-cookie";
 
 interface ModalPasswordEditProps {
     isOpen: boolean;
@@ -37,12 +38,29 @@ const ModalPasswordEdit: React.FC<ModalPasswordEditProps> = ({ isOpen, onClose }
             setError("A nova senha deve ter pelo menos 6 caracteres.");
             return;
         }
+
+        // Pega o id do usuário do cookie
+        const usuarioCookie = Cookies.get("usuario");
+        let id;
+        if (usuarioCookie) {
+            try {
+                const usuarioObj = JSON.parse(usuarioCookie);
+                id = usuarioObj.id;
+            } catch {
+                setError("Erro ao obter usuário.");
+                return;
+            }
+        } else {
+            setError("Usuário não autenticado.");
+            return;
+        }
+
         try {
-            await api.post("/usuario/alterar-senha", {
-                senhaAtual: currentPassword,
-                novaSenha: newPassword,
+            await api.put(`/usuario/${id}`, {
+                senha: newPassword,
             });
             handleCancel(); // Limpa e fecha modal
+            window.location.reload(); // Recarrega a página para atualizar informações
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 setError(
