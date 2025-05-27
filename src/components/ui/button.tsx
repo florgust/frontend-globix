@@ -59,29 +59,41 @@ function Button({
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode; // O ícone a ser exibido no botão
   size?: "sm" | "md" | "lg"; // Tamanhos opcionais
+  shape?: "rounded" | "circle"; // Formato do botão
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon, size = "lg", className, ...props }) => {
+const IconButton: React.FC<IconButtonProps> = ({
+  icon,
+  size = "lg",
+  shape = "rounded",
+  className,
+  ...props
+}) => {
   const sizeClasses = {
     sm: "w-8 h-8",
     md: "w-10 h-10",
     lg: "w-25 h-25",
   };
 
+  const shapeClasses = {
+    rounded: "rounded-3xl", // Padrão
+    circle: "rounded-full", // Bolinha
+  };
+
   return (
     <button
       className={cn(
-        "flex items-center justify-center rounded-3xl bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] text-[#00FF4D] shadow-lg hover:shadow-lg transition duration-300 ease-in-out",
+        "flex items-center justify-center bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] text-[#00FF4D] shadow-lg hover:shadow-lg transition duration-300 ease-in-out cursor-pointer",
         sizeClasses[size],
+        shapeClasses[shape],
         className
       )}
       {...props}
     >
       {icon}
     </button>
-    
   );
 };
 
 
-export { Button, buttonVariants , IconButton}
+export { Button, buttonVariants, IconButton }

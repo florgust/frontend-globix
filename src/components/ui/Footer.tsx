@@ -17,21 +17,20 @@ const Footer = () => {
         if (!emailRegex.test(email)) {
             setError("Digite um e-mail válido");
             setSuccessMessage("");
-            setTimeout(() => setError(""), 4000); 
+            setTimeout(() => setError(""), 4000);
         } else {
             setError("");
             setSuccessMessage("E-mail cadastrado com sucesso!");
             setEmail("");
-            setTimeout(() => setSuccessMessage(""), 4000); 
+            setTimeout(() => setSuccessMessage(""), 4000);
         }
     };
 
-
     return (
-        <footer className="bg-[#102976] text-white px-6 py-8 md:px-20 relative w-full">
-            <div className="flex flex-col md:flex-row justify-between w-full flex-wrap gap-y-12">
+        <footer className="bg-[#102976] text-white px-4 sm:px-8 md:px-16 lg:px-24 py-8 relative w-full">
+            <div className="flex flex-wrap justify-between w-full gap-y-12 gap-x-8 max-w-7xl mx-auto">
                 {/* Logo + Back to Top */}
-                <div className="flex flex-col items-center md:items-start gap-4">
+                <div className="flex flex-col items-center md:items-start gap-4 min-w-[200px] flex-1">
                     <Image src={"/images-login/globix-logo.png"} alt="Globix Logo" width={160} height={40} />
                     <div className="flex justify-center items-center w-full">
                         <button
@@ -45,7 +44,7 @@ const Footer = () => {
                 </div>
 
                 {/* Saiba Mais */}
-                <div className="space-y-4">
+                <div className="space-y-4 min-w-[180px] flex-1">
                     <h3 className="font-semibold">Saiba Mais</h3>
                     <ul className="text-sm text-gray-200">
                         <li className="my-3"><a href="#">Sobre Nós</a></li>
@@ -56,7 +55,7 @@ const Footer = () => {
                 </div>
 
                 {/* Entre em Contato */}
-                <div className="space-y-4">
+                <div className="space-y-4 min-w-[200px] flex-1">
                     <h3 className="font-semibold">Entre em Contato</h3>
                     <ul className="text-sm text-gray-200">
                         <li className="my-3"><span className="font-medium">E-mail:</span> suporte@globix.com</li>
@@ -66,9 +65,9 @@ const Footer = () => {
                 </div>
 
                 {/* Redes Sociais */}
-                <div className="space-y-4">
+                <div className="space-y-4 min-w-[180px] flex-1">
                     <h3 className="font-semibold">Redes Sociais</h3>
-                    <div className="flex gap-4 text-xl text-white my-3">
+                    <div className="flex gap-4 text-xl text-white my-3 flex-wrap">
                         <a href="#"><FaFacebookF /></a>
                         <a href="#"><FaInstagram /></a>
                         <a href="#"><FaTwitter /></a>
@@ -77,9 +76,8 @@ const Footer = () => {
                 </div>
 
                 {/* Atualizações */}
-                <div className="space-y-4 w-full md:w-auto">
+                <div className="space-y-4 w-full md:w-auto flex-1 min-w-[220px] max-w-sm">
                     <h3 className="font-semibold">Atualizações</h3>
-
                     <div className={`flex border rounded-md overflow-hidden mt-3 ${error ? 'border-red-500' : 'border-white'}`}>
                         <input
                             type="email"
@@ -104,7 +102,6 @@ const Footer = () => {
                             </svg>
                         </button>
                     </div>
-
                     {error && (
                         <div className="flex items-center gap-2 bg-red-100 text-red-600 border border-red-400 rounded-md p-2 mt-2">
                             <svg
@@ -135,7 +132,6 @@ const Footer = () => {
                     )}
                 </div>
             </div>
-
             {/* Linha inferior */}
             <hr className="border-gray-500 mt-4" />
             <p className="text-center text-sm text-gray-300 mt-8 mb-0">© 2025 Globix | Todos os direitos reservados</p>

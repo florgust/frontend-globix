@@ -5,12 +5,14 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { GoogleButton } from '@/components/ui/GoogleButton';
 import { AuthCard } from '@/components/ui/AuthCard';
 import { ImageCarousel } from '@/components/ui/ImageCarousel';
-import { SuccessAlert } from '@/components/ui/SuccessAlert';
+import { LoginSuccessModal } from '@/components/ui/modals/ModalLoginSucess';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
+import api from '@/utils/axios';
+import Cookies from 'js-cookie';
+import { AxiosError } from 'axios';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -26,7 +28,7 @@ export default function LoginPage() {
     });
 
     const [remember, setRemember] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
+    const [modalOpen, setModalOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -35,17 +37,15 @@ export default function LoginPage() {
             [name]: value,
         });
 
-        // Limpa o erro do campo correspondente ao digitar
         setInputErrors({
             ...inputErrors,
             [name]: '',
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validação dos campos
         const newInputErrors = {
             email: !formData.email ? 'O e-mail não pode estar vazio.' : '',
             password: !formData.password ? 'A senha não pode estar vazia.' : '',
@@ -53,18 +53,43 @@ export default function LoginPage() {
 
         setInputErrors(newInputErrors);
 
-        // Verifica se há erros
         if (Object.values(newInputErrors).some((error) => error !== '')) {
-            return; // Interrompe o envio se houver erros
+            return;
         }
 
-        // Simulação de login bem-sucedido
-        setSuccessMessage('Login realizado com sucesso!');
+        try {
+            const response = await api.post('/login', {
+                email: formData.email,
+                senha: formData.password,
+            });
 
-        // Redirecionar após 2 segundos
-        setTimeout(() => {
-            router.push('/home_page'); // Redireciona para /home_page
-        }, 2000);
+            const { token, usuario } = response.data;
+
+            // Salva token e usuário nos cookies
+            Cookies.set('token', token, { path: '/', expires: remember ? 30 : undefined });
+            Cookies.set('usuario', JSON.stringify(usuario), { path: '/', expires: remember ? 30 : undefined });
+
+            setModalOpen(true);
+
+            setTimeout(() => {
+                setModalOpen(false);
+                router.push('/home_page');
+            }, 2000);
+        } catch (error) {
+            const err = error as AxiosError;
+
+            if (err.response && err.response.status === 401) {
+                setInputErrors({
+                    ...inputErrors,
+                    password: 'E-mail ou senha inválidos.',
+                });
+            } else {
+                setInputErrors({
+                    ...inputErrors,
+                    password: 'Erro ao conectar. Tente novamente.',
+                });
+            }
+        }
     };
 
     return (
@@ -95,7 +120,7 @@ export default function LoginPage() {
                             placeholder="Digite seu e-mail"
                             value={formData.email}
                             onChange={handleChange}
-                            errorMessage={inputErrors.email} // Passa a mensagem de erro
+                            errorMessage={inputErrors.email}
                         />
                     </div>
 
@@ -108,7 +133,7 @@ export default function LoginPage() {
                             placeholder="Digite sua senha"
                             value={formData.password}
                             onChange={handleChange}
-                            errorMessage={inputErrors.password} // Passa a mensagem de erro
+                            errorMessage={inputErrors.password}
                         />
                     </div>
 
@@ -134,13 +159,8 @@ export default function LoginPage() {
                 </form>
             </AuthCard>
 
-            {/* SuccessAlert */}
-            {successMessage && (
-                <SuccessAlert
-                    message={successMessage}
-                    onClose={() => setSuccessMessage('')}
-                />
-            )}
+            {/* Modal de sucesso */}
+            <LoginSuccessModal open={modalOpen} onClose={() => setModalOpen(false)} />
         </main>
     );
 }

@@ -1,5 +1,5 @@
 'use client';
-import { BellDot, Bell } from "lucide-react";
+import { Bell } from "lucide-react";
 import { useContext, createContext, useState } from "react"
 import Link from "next/link";
 
