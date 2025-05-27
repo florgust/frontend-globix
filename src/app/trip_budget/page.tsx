@@ -186,9 +186,9 @@ export default function TripBudget() {
                             </div>
                         </div>
                     </div>
-					<div className="flex justify-start mt-6 ml-[785]">
+					<div className="flex justify-center mt-6">
                         <button
-                            className="cursor-pointer transition hover:scale-110 bg-[#86EE60] text-[#0F2976] font-bold px-[7rem] py-[1rem] rounded-xl text-xl shadow hover:bg-[#4be05a] min-w-[16.25rem]"
+                            className="cursor-pointer transition hover:scale-110 bg-[#86EE60] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow hover:bg-[#4be05a] min-w-[40rem]"
                         >
                             Próximo
                         </button>
