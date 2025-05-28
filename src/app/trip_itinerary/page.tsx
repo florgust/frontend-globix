@@ -80,22 +80,83 @@ export default function TripItinerary() {
     const [description, setDescription] = useState("");
     const [type, setType] = useState(eventTypes[0]);
 
-    // Add itinerary item
+    // Utilitário para formatar data para "dd/mm/yyyy"
+    const formatDateDisplay = (dateStr: string) => {
+        if (dateStr.includes("/")) return dateStr;
+        const [year, month, day] = dateStr.split("-");
+        return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+    };
+
+    // Utilitário para comparar datas (yyyy-mm-dd)
+    const getComparableDate = (dateStr: string) => {
+        if (dateStr.includes("/")) {
+            const [day, month, year] = dateStr.split("/");
+            return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+        }
+        return dateStr;
+    };
+
+    // Utilitário para comparar horas (hh:mm)
+    const getComparableTime = (timeStr: string) => {
+        return timeStr.padStart(5, "0");
+    };
+
+    // Adicionar atividade ao dia correto, criando o dia se necessário, mantendo ordem cronológica
     const handleAddItinerary = () => {
-        if (!title.trim()) return;
-        const activity = {
-            time,
-            title,
-            description,
-            type,
-        };
-        setItineraries((prev) =>
-            prev.map((it, idx) =>
-                idx === currentPage
-                    ? { ...it, activities: [...it.activities, activity] }
-                    : it
-            )
-        );
+        if (!title.trim() || !description.trim() || !date.trim() || !time.trim() || !type.trim()) return;
+
+        const displayDate = formatDateDisplay(date);
+        const comparableDate = getComparableDate(date);
+
+        setItineraries(prev => {
+            // Procura se já existe o dia
+            let found = false;
+            let newItineraries = prev.map(it => {
+                if (getComparableDate(it.date) === comparableDate) {
+                    found = true;
+                    // Verifica se já existe atividade no mesmo horário
+                    const exists = it.activities.some(a => getComparableTime(a.time) === getComparableTime(time));
+                    if (exists) {
+                        alert("Já existe um evento neste horário para este dia.");
+                        return it;
+                    }
+                    // Adiciona atividade e ordena por hora
+                    const newActivities = [
+                        ...it.activities,
+                        { time, title, description, type }
+                    ].sort((a, b) => getComparableTime(a.time).localeCompare(getComparableTime(b.time)));
+                    return { ...it, activities: newActivities };
+                }
+                return it;
+            });
+
+            // Se não encontrou, cria novo dia
+            if (!found) {
+                newItineraries = [
+                    ...newItineraries,
+                    {
+                        day: 0, // será ajustado depois
+                        date: displayDate,
+                        activities: [
+                            { time, title, description, type }
+                        ]
+                    }
+                ];
+            }
+
+            // Ordena os dias por data
+            newItineraries = newItineraries
+                .sort((a, b) => getComparableDate(a.date).localeCompare(getComparableDate(b.date)))
+                .map((it, idx) => ({ ...it, day: idx + 1 }));
+
+            // Atualiza página atual para o dia do evento recém adicionado
+            const newPage = newItineraries.findIndex(it => getComparableDate(it.date) === comparableDate);
+
+            setCurrentPage(newPage);
+
+            return newItineraries;
+        });
+
         setTitle("");
         setDescription("");
         setType(eventTypes[0]);
@@ -180,16 +241,11 @@ export default function TripItinerary() {
                 <div className="w-[80rem] bg-white rounded-b-2xl shadow-lg px-10 py-8 flex gap-8">
                     {/* Formulário */}
                     <div className="flex flex-col w-1/2 gap-4">
-                        <label className="font-bold text-[#0F2976] text-lg">
+                        <label className="font-bold text-[#292D32] text-lg">
                             Data e Hora
                         </label>
                         <div className="flex gap-2 items-center">
-                            <div className="flex items-center border border-[#86EE60] rounded-lg px-2 py-1 bg-white">
-                                <img
-                                    src="/images-trip_budget/calendario.svg"
-                                    alt="Calendário"
-                                    className="w-5 h-5 mr-2"
-                                />
+                            <div className="flex items-center border border-[#00FF4D] rounded-lg px-2 py-1 bg-white">
                                 <input
                                     type="date"
                                     className="outline-none border-none bg-transparent text-[#0F2976] font-bold"
@@ -204,29 +260,29 @@ export default function TripItinerary() {
                                 />
                             </div>
                         </div>
-                        <label className="font-bold text-[#0F2976] text-lg mt-2">
+                        <label className="font-bold text-[#292D32] text-lg mt-2">
                             Título
                         </label>
                         <input
-                            className="border-2 border-[#86EE60] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
+                            className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] focus:outline-none"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Título do evento"
                         />
-                        <label className="font-bold text-[#0F2976] text-lg mt-2">
+                        <label className="font-bold text-[#292D32] text-lg mt-2">
                             Descrição
                         </label>
                         <textarea
-                            className="border-2 border-[#86EE60] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
+                            className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Descrição do evento"
                         />
-                        <label className="font-bold text-[#0F2976] text-lg mt-2">
+                        <label className="font-bold text-[#292D32] text-lg mt-2">
                             Tipo de Evento
                         </label>
                         <select
-                            className="border-2 border-[#86EE60] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
+                            className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
                         >
@@ -236,21 +292,35 @@ export default function TripItinerary() {
                                 </option>
                             ))}
                         </select>
-                        <button
-                            className="flex items-center justify-center gap-2 mt-4 bg-[#86EE60] text-[#0F2976] font-bold px-6 py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition"
-                            onClick={handleAddItinerary}
-                            type="button"
-                        >
-                            <span className="text-2xl">+</span> Adicionar Itinerário
-                        </button>
+                        <div className="flex justify-center">
+                            <button
+                                className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
+                                onClick={handleAddItinerary}
+                                type="button"
+                                disabled={
+                                    !title.trim() ||
+                                    !description.trim() ||
+                                    !date.trim() ||
+                                    !time.trim() ||
+                                    !type.trim()
+                                }
+                            >
+                                <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white mr-2">
+                                    <img src="/images-trip_itinerary/mais.svg" alt="Adicionar" className="w-5 h-5" />
+                                </span>
+                                Adicionar Itinerário
+                            </button>
+                        </div>
                     </div>
+                    {/* Linha vertical divisória */}
+                    <div className="w-px bg-[#092064] mx-2" />
                     {/* Atividades */}
                     <div className="flex flex-col w-1/2">
                         <div className="font-bold text-[#0F2976] text-lg mb-2">
                             Atividades
                         </div>
-                        <div className="bg-[#E9FFE5] rounded-xl p-2 mb-2">
-                            <div className="flex items-center justify-between bg-[#86EE60] rounded-t-xl px-4 py-2">
+                        <div className="rounded-xl p-2 mb-2">
+                            <div className="flex items-center justify-between bg-[#A7FF84] rounded-t-xl px-4 py-2">
                                 <span className="font-bold text-[#0F2976] text-base">
                                     Dia {itineraries[currentPage].day} - {itineraries[currentPage].date}
                                 </span>
@@ -296,13 +366,17 @@ export default function TripItinerary() {
                                     </div>
                                 ))}
                             </div>
+                            
                         </div>
                         {/* Paginação */}
                         <div className="flex items-center justify-center gap-4 mt-2">
                             <button
-                                className="p-2 rounded-full bg-[#E9FFE5] text-[#0F2976] hover:bg-[#86EE60] transition"
-                                onClick={handlePrev}
+                                className={`p-2 rounded-full text-[#0F2976] transition border border-[#E9FFE5] ${
+                                    currentPage === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#E9FFE5]"
+                                }`}
+                                onClick={currentPage === 0 ? undefined : handlePrev}
                                 disabled={currentPage === 0}
+                                tabIndex={currentPage === 0 ? -1 : 0}
                             >
                                 <FaChevronLeft />
                             </button>
@@ -320,21 +394,25 @@ export default function TripItinerary() {
                                 </button>
                             ))}
                             <button
-                                className="p-2 rounded-full bg-[#E9FFE5] text-[#0F2976] hover:bg-[#86EE60] transition"
-                                onClick={handleNext}
+                                className={`p-2 rounded-full text-[#0F2976] transition border border-[#E9FFE5] ${
+                                    currentPage === itineraries.length - 1
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : "hover:bg-[#E9FFE5]"
+                                }`}
+                                onClick={
+                                    currentPage === itineraries.length - 1
+                                        ? undefined
+                                        : handleNext
+                                }
                                 disabled={currentPage === itineraries.length - 1}
+                                tabIndex={currentPage === itineraries.length - 1 ? -1 : 0}
                             >
                                 <FaChevronRight />
                             </button>
-                            <button
-                                className="ml-4 px-3 py-1 rounded bg-[#86EE60] text-[#0F2976] font-bold text-sm hover:bg-[#4be05a] transition"
-                                onClick={handleAddDay}
-                                type="button"
-                            >
-                                + Dia
-                            </button>
                         </div>
+                        
                     </div>
+                    
                 </div>
                 <div className="flex justify-center mt-8 w-full">
                     <button
