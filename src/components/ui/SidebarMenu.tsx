@@ -13,7 +13,7 @@ const about = "/images-home_page/sidebar-menu/about.svg";
 const community = "/images-home_page/sidebar-menu/comunity.svg";
 
 const menuItems = [
-  { icon: (active: boolean) => <House size={20} color={active ? "#0F2976" : "#D1D5DB"} />, text: "Página Principal", path: "/home_page" },
+  { icon: (active: boolean) => <House size={20} color={active ? "#0F2976" : "#D1D5DB"} />, text: "Página Principal", path: "/home" },
   { icon: (active: boolean) => <img src={minhasViagens} alt="Minhas Viagens" className={`h-6 w-6 ${active ? "" : "grayscale opacity-40"}`} />, text: "Minhas Viagens", path: "/my_trips" },
   { icon: (active: boolean) => <img src={community} alt="Comunidade" className={`h-6 w-6 ${active ? "" : "grayscale opacity-40"}`} />, text: "Comunidade", path: "/comunidade" },
   { icon: (active: boolean) => <img src={user} alt="Perfil" className={`h-6 w-6 ${active ? "" : "grayscale opacity-40"}`} />, text: "Perfil", path: "/profile" },

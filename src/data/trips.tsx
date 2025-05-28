@@ -1,0 +1,32 @@
+export const trips = [
+  {
+    id: 1,
+    title: "Trip to Rio de Janeiro",
+    date: "2025-05-20",
+    destination: "Rio de Janeiro",
+    organizer: "Patrick e Arthur",
+    transportType: "Car",
+    duration: "5 days",
+    image: "/images/trip-rio.jpg",
+  },
+  {
+    id: 2,
+    title: "Trip to Nordeste",
+    date: "2025-10-02",
+    destination: "Recife - PE",
+    organizer: "Luan",
+    transportType: "Plane",
+    duration: "7 days",
+    image: "/images/trip-nordeste.jpg",
+  },
+  {
+    id: 3,
+    title: "Trip to Rifaina - SP",
+    date: "2025-04-22",
+    destination: "Rifaina",
+    organizer: "Bárbara",
+    transportType: "Microbus",
+    duration: "2 days",
+    image: "/images/trip-rifaina.jpg",
+  },
+];
