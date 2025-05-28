@@ -1,19 +1,66 @@
-import { Briefcase, UserRoundPlus, Search } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function ActionCards() {
+  const router = useRouter();
+
   return (
-    <div className="flex gap-8">
-      <button className="flex flex-col items-center justify-center bg-[#F0F9FF] hover:bg-[#e0f2fe] transition rounded-xl shadow-lg w-56 h-24">
-        <Briefcase className="text-[#1C4CDC] mb-2" size={32} />
-        <span className="text-[#1C4CDC] font-semibold">Criar Viagem</span>
+    <div className="flex gap-22">
+      {/* Criar Viagem */}
+      <button
+        className="flex items-center gap-4 rounded-2xl shadow-lg w-[220px] h-[90px] transition hover:scale-105 cursor-pointer"
+        style={{
+          background: "linear-gradient(270deg, #366EDB 0%, #36B6CF 89.42%)"
+        }}
+        onClick={() => router.push("/create_trip")}
+      >
+        <span className="flex items-center justify-center bg-white rounded-full w-14 h-14 ml-4">
+          <Image
+            src="/images-home_page/icons/BlueBagIcon.png"
+            alt="Criar Viagem"
+            width={32}
+            height={32}
+          />
+        </span>
+        <span className="text-white font-semibold text-lg">Criar Viagem</span>
       </button>
-      <button className="flex flex-col items-center justify-center bg-[#B0FAC6] hover:bg-[#7ff9a9] transition rounded-xl shadow-lg w-56 h-24">
-        <UserRoundPlus className="text-[#1C4CDC] mb-2" size={32} />
-        <span className="text-[#1C4CDC] font-semibold">Participar de Viagem</span>
+
+      {/* Participar de Viagem */}
+      <button
+        className="flex items-center gap-4 rounded-2xl shadow-lg w-[220px] h-[90px] transition hover:scale-105 cursor-pointer"
+        style={{
+          background: "linear-gradient(90deg, #3579D9 0%, #6CB9B0 50.48%, #A7FF84 100%)"
+        }}
+      // futuramente: onClick={() => router.push("/participar_viagem")}
+      >
+        <span className="flex items-center justify-center bg-white rounded-full w-14 h-14 ml-4">
+          <Image
+            src="/images-home_page/icons/BlueAddIcon.png"
+            alt="Participar de Viagem"
+            width={32}
+            height={32}
+          />
+        </span>
+        <span className="text-white font-semibold text-lg">Participar <br /> de Viagem</span>
       </button>
-      <button className="flex flex-col items-center justify-center bg-[#00C86B] hover:bg-[#00a95a] transition rounded-xl shadow-lg w-56 h-24">
-        <Search className="text-white mb-2" size={32} />
-        <span className="text-white font-semibold">Explorar Viagens</span>
+
+      {/* Explorar Viagens */}
+      <button
+        className="flex items-center gap-4 rounded-2xl shadow-lg w-[220px] h-[90px] transition hover:scale-105 cursor-pointer"
+        style={{
+          background: "linear-gradient(90deg, #ACEBA2 18.27%, #3AB660 100%)"
+        }}
+      // futuramente: onClick={() => router.push("/explorar_viagens")}
+      >
+        <span className="flex items-center justify-center bg-white rounded-full w-16 h-14 ml-4">
+          <Image
+            src="/images-home_page/icons/BlueGlobeIcon.png"
+            alt="Explorar Viagens"
+            width={32}
+            height={32}
+          />
+        </span>
+        <span className="text-white font-semibold text-lg">Explorar Viagens</span>
       </button>
     </div>
   );

@@ -1,23 +1,52 @@
-import { CheckCircle, AlertCircle, Clock } from "lucide-react";
+import Image from "next/image";
+
+interface Notification {
+  id: number;
+  message: string;
+}
+
+const notifications: Notification[] = [
+  {
+    id: 1,
+    message: "Ana Costa enviou uma mensagem: ‘Pessoal, lembrem de levar água para o passeio’",
+  },
+  {
+    id: 2,
+    message: "Você cancelou a atividade ‘Visita ao Museu’.",
+  },
+  {
+    id: 3,
+    message: "Próximo evento: ‘Check-In’ começa em 1 hora.",
+  },
+  // Adicione mais notificações aqui se quiser testar
+];
 
 export default function NotificationsCard() {
+  // Pegue as 3 últimas notificações
+  const lastNotifications = notifications.slice(-3).reverse();
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg px-6 py-5 w-[420px] h-[120px] flex flex-col">
-      <h2 className="text-[#1C4CDC] text-lg font-bold mb-2">Notificações Recentes</h2>
-      <ul className="text-[#333] text-sm space-y-1">
-        <li className="flex items-center gap-2">
-          <AlertCircle className="text-[#00C86B]" size={18} />
-          Ana Costa enviou uma mensagem: ‘Pessoal, lembrem de levar água para o passeio’
-        </li>
-        <li className="flex items-center gap-2">
-          <CheckCircle className="text-[#00C86B]" size={18} />
-          Você cancelou a atividade ‘Visita ao Museu’.
-        </li>
-        <li className="flex items-center gap-2">
-          <Clock className="text-[#00C86B]" size={18} />
-          Próximo evento: ‘Check-In’ começa em 1 hora.
-        </li>
-      </ul>
+    <div className="bg-white/90 rounded-2xl shadow-lg px-6 py-3 w-[85.5%] h-[19vh] flex flex-col">
+      <h2 className="text-[#1C4CDC] text-2xl font-bold mb-2">Notificações Recentes</h2>
+      {lastNotifications.length > 0 ? (
+        <ul className="text-[#333] text-2sm space-y-1">
+          {lastNotifications.map((notification) => (
+            <li key={notification.id} className="flex items-center gap-2 py-1">
+              <Image
+                src="/images-home_page/icons/GreenElipse.png"
+                alt="Notificação"
+                width={8}
+                height={8}
+              />
+              {notification.message}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-gray-400 text-sm mt-2">
+          Nenhuma notificação recente.
+        </div>
+      )}
     </div>
   );
 }

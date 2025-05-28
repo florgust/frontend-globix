@@ -21,28 +21,29 @@ export default function HomePage() {
             <div className="flex flex-col w-full overflow-hidden">
                 <HeaderPages />
 
-                <main className="flex flex-col w-full items-center pt-10 px-10">
-                    {/* Linha 1 */}
-                    <div className="flex w-full max-w-[1400px] justify-between mb-8">
+                <main className="flex w-full max-w-[90%] mx-auto pt-10 px-5 gap-8">
+                    {/* Coluna Esquerda */}
+                    <div className="flex flex-col gap-8 w-[80%]">
                         <GreetingCard />
-                        <CalendarCard />
-                    </div>
-
-                    {/* Linha 2 */}
-                    <div className="flex w-full max-w-[1400px] justify-between mb-8">
                         <ActionCards />
+
+                        {/* Linha para Notificações, Dicas e Próxima Viagem */}
+                        <div className="flex w-full">
+                            {/* Coluna: Notificações + Dicas */}
+                            <div className="flex flex-col gap-8 w-[53%]">
+                                <NotificationsCard />
+                                <TravelTipsCard />
+                            </div>
+                            {/* Coluna: Próxima Viagem */}
+                            <div className="w-[48%] flex flex-col">
+                                <NextTripCard />
+                            </div>
+                        </div>
+                    </div>
+                    {/* Coluna Direita */}
+                    <div className="flex flex-col gap-8 w-[20%]">
+                        <CalendarCard />
                         <WeatherCard />
-                    </div>
-
-                    {/* Linha 3 */}
-                    <div className="flex w-full max-w-[1400px] gap-8 mb-8">
-                        <NotificationsCard />
-                        <NextTripCard />
-                    </div>
-
-                    {/* Linha 4 */}
-                    <div className="flex w-full max-w-[1400px] gap-8">
-                        <TravelTipsCard />
                         <TravelSummariesCard />
                     </div>
                 </main>
