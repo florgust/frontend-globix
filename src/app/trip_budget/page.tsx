@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { FiTrash2 } from "react-icons/fi";
+import Image from "next/image";
 
 const initialCategories = [
     { id: 1, name: "Transporte", value: "" },
@@ -57,8 +58,8 @@ export default function TripBudget() {
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
             <SidebarMenu />
-			<div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-				<HeaderPages />
+            <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+                <HeaderPages />
                 <div className="bg-[#0F2976] w-[80rem] rounded-t-2xl px-10 py-6 mt-8">
                     <h2 className="text-3xl font-bold text-white">
                         Criar Viagem - Orçamento
@@ -70,17 +71,35 @@ export default function TripBudget() {
                     <div className="mb-6">
                         <div className="font-bold text-[2rem] mb-2 text-[#0F2976]">{tripData.name}</div>
                         <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
-                            <img src="/images-trip_budget/calendario.svg" alt="Calendário" className="w-6 h-6" />
+                            <Image
+                                src="/images-trip_budget/calendario.svg"
+                                alt="Calendário"
+                                width={24}
+                                height={24}
+                                className="w-6 h-6"
+                            />
                             <span>
                                 Data: <b className="text-[#0F2976]">{tripData.startDate}</b> até <b className="text-[#0F2976]">{tripData.endDate}</b>
                             </span>
                         </div>
                         <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
-                            <img src="/images-trip_budget/globo.svg" alt="Globo" className="w-6 h-6" />
+                            <Image
+                                src="/images-trip_budget/globo.svg"
+                                alt="Globo"
+                                width={24}
+                                height={24}
+                                className="w-6 h-6"
+                            />
                             <span>Local: <b className="text-[#0F2976]">{tripData.location}</b></span>
                         </div>
                         <div className="flex items-center gap-4 text-[1.3rem]">
-                            <img src="/images-trip_budget/pessoas.svg" alt="Pessoas" className="w-6 h-6" />
+                            <Image
+                                src="/images-trip_budget/pessoas.svg"
+                                alt="Pessoas"
+                                width={24}
+                                height={24}
+                                className="w-6 h-6"
+                            />
                             <span>
                                 Participantes: <b className="text-[#0F2976]">{tripData.participants}</b>
                             </span>
@@ -145,7 +164,13 @@ export default function TripBudget() {
                                     onClick={handleAddCategory}
                                 >
                                     <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#6CFB7B] mr-2">
-                                        <img src="/images-trip_budget/mais.svg" alt="Adicionar" className="w-4 h-4" />
+                                        <Image
+                                            src="/images-trip_budget/mais.svg"
+                                            alt="Adicionar"
+                                            width={16}
+                                            height={16}
+                                            className="w-4 h-4"
+                                        />
                                     </span>
                                     Adicionar Categoria
                                 </button>
@@ -186,15 +211,15 @@ export default function TripBudget() {
                             </div>
                         </div>
                     </div>
-					<div className="flex justify-center mt-6">
+                    <div className="flex justify-center mt-6">
                         <button
-                            className="cursor-pointer transition hover:scale-110 bg-[#86EE60] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow hover:bg-[#4be05a] min-w-[40rem]"
+                            className="cursor-pointer bg-[#00FF4D] transition hover:scale-110 text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow hover:bg-[#4be05a] min-w-[40rem]"
                         >
                             Próximo
                         </button>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
