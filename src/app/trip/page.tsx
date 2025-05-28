@@ -6,12 +6,10 @@ import { IconButton } from '@/components/ui/button';
 import { ModalItinerary } from '@/components/ui/modals/ModalItinerary';
 import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
 import ModalTransport from '@/components/ui/modals/ModalTransport';
-import { List, Plus } from 'lucide-react';
+import { List } from 'lucide-react';
 import { useState } from 'react';
 
 export default function DetailsPage() {
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
     const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
@@ -334,12 +332,7 @@ export default function DetailsPage() {
         ]
     };
 
-    const [imagens, setImagens] = useState([
-        "/images-home_page/carousel/carrossel.png", // Imagem inicial
-    ]);
-
-
-    const [convidados, setConvidados] = useState(detalhesViagem.usuario);
+    const [convidados] = useState(detalhesViagem.usuario);
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
