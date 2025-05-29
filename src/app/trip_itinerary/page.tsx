@@ -330,8 +330,12 @@ export default function TripItinerary() {
                     </div>
                     <div className="flex justify-center pb-44">
                         <button
-                            className="cursor-pointer transition hover:scale-105 bg-[#A7FF84] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow min-w-[20rem]"
+                            className="cursor-pointer transition hover:scale-105 bg-[#A7FF84] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow min-w-[20rem] disabled:opacity-50 disabled:cursor-not-allowed"
                             type="button"
+                            disabled={
+                                itineraries.length === 0 ||
+                                !itineraries.some(it => it.activities && it.activities.length > 0)
+                            }
                         >
                             Salvar
                         </button>
@@ -340,4 +344,4 @@ export default function TripItinerary() {
             </div>
         </div>
     );
-}   
+}
