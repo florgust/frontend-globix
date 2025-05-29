@@ -4,6 +4,7 @@ import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Itinerary } from "@/components/ui/Itinerary";
 
 const initialItineraries = [
     {
@@ -314,105 +315,15 @@ export default function TripItinerary() {
                     </div>
                     {/* Linha vertical divisória */}
                     <div className="w-px bg-[#092064] mx-2" />
-                    {/* Atividades */}
-                    <div className="flex flex-col w-1/2">
-                        <div className="font-bold text-[#0F2976] text-lg mb-2">
-                            Atividades
-                        </div>
-                        <div className="rounded-xl p-2 mb-2">
-                            <div className="flex items-center justify-between bg-[#A7FF84] rounded-t-xl px-4 py-2">
-                                <span className="font-bold text-[#0F2976] text-base">
-                                    Dia {itineraries[currentPage].day} - {itineraries[currentPage].date}
-                                </span>
-                                <button
-                                    className="text-[#0F2976] hover:text-red-600"
-                                    title="Remover dia"
-                                    onClick={() => handleRemoveDay(currentPage)}
-                                >
-                                    <FiTrash2 />
-                                </button>
-                            </div>
-                            <div className="flex flex-col gap-2 px-2 py-2">
-                                {itineraries[currentPage].activities.length === 0 && (
-                                    <span className="text-[#0F2976] text-center py-4">
-                                        Nenhuma atividade cadastrada para este dia.
-                                    </span>
-                                )}
-                                {itineraries[currentPage].activities.map((act, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="flex items-center justify-between bg-white rounded-lg px-4 py-2 shadow"
-                                    >
-                                        <div>
-                                            <div className="font-bold text-[#0F2976] text-sm">
-                                                {act.time} - {act.title}
-                                            </div>
-                                            <div className="text-[#0F2976] text-xs">
-                                                {act.description}
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-[#0F2976] text-xs">
-                                                {act.type}
-                                            </span>
-                                            <button
-                                                className="text-red-500 hover:text-red-700"
-                                                title="Remover atividade"
-                                                onClick={() => handleRemoveActivity(idx)}
-                                            >
-                                                <FiTrash2 />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            
-                        </div>
-                        {/* Paginação */}
-                        <div className="flex items-center justify-center gap-4 mt-2">
-                            <button
-                                className={`p-2 rounded-full text-[#0F2976] transition border border-[#E9FFE5] ${
-                                    currentPage === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#E9FFE5]"
-                                }`}
-                                onClick={currentPage === 0 ? undefined : handlePrev}
-                                disabled={currentPage === 0}
-                                tabIndex={currentPage === 0 ? -1 : 0}
-                            >
-                                <FaChevronLeft />
-                            </button>
-                            {itineraries.map((_, idx) => (
-                                <button
-                                    key={idx}
-                                    className={`w-8 h-8 rounded-full font-bold ${
-                                        idx === currentPage
-                                            ? "bg-[#0F2976] text-white"
-                                            : "bg-[#E9FFE5] text-[#0F2976] hover:bg-[#86EE60]"
-                                    }`}
-                                    onClick={() => setCurrentPage(idx)}
-                                >
-                                    {idx + 1}
-                                </button>
-                            ))}
-                            <button
-                                className={`p-2 rounded-full text-[#0F2976] transition border border-[#E9FFE5] ${
-                                    currentPage === itineraries.length - 1
-                                        ? "opacity-50 cursor-not-allowed"
-                                        : "hover:bg-[#E9FFE5]"
-                                }`}
-                                onClick={
-                                    currentPage === itineraries.length - 1
-                                        ? undefined
-                                        : handleNext
-                                }
-                                disabled={currentPage === itineraries.length - 1}
-                                tabIndex={currentPage === itineraries.length - 1 ? -1 : 0}
-                            >
-                                <FaChevronRight />
-                            </button>
-                        </div>
-                        
-                    </div>
-                    
+                    <Itinerary
+                        itineraries={itineraries}
+                        currentPage={currentPage}
+                        handleRemoveDay={handleRemoveDay}
+                        handleRemoveActivity={handleRemoveActivity}
+                        handlePrev={handlePrev}
+                        handleNext={handleNext}
+                        setCurrentPage={setCurrentPage}
+                    />
                 </div>
                 <div className="flex justify-center mt-8 w-full">
                     <button
