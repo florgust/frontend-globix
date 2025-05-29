@@ -37,7 +37,7 @@ export function Itinerary({
 }: ItineraryProps) {
     return (
         <div className="flex flex-col w-1/2">
-            <div className="font-bold text-[#0F2976] text-lg mb-2">
+            <div className="font-bold text-[#292D32] text-lg mb-2">
                 Atividades
             </div>
             <div className="rounded-xl mb-2 border-2 border-[#00FF4D] p-0">
