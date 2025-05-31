@@ -8,12 +8,14 @@ import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
 import ModalTransport from '@/components/ui/modals/ModalTransport';
 import { List } from 'lucide-react';
 import { useState } from 'react';
+import ModalBudget from '@/components/ui/modals/ModalBudget'; // certifique-se de importar
 
 export default function DetailsPage() {
 
     const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
     const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
     const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
+    const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
 
     const closeAllModals = () => {
         setIsTransportModalOpen(false);
@@ -474,11 +476,24 @@ export default function DetailsPage() {
                                 <div className="flex gap-4 mt-5">
                                     <div className="flex flex-col items-center">
                                         <IconButton
-                                            icon={<img src="\images-travel\Icons\IconGreenBudget.png"
-                                                className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                            icon={<img src="/images-travel/Icons/IconGreenBudget.png" className="w-20 h-20" />}
+                                            onClick={() => {
+                                                closeAllModals();
+                                                setIsBudgetModalOpen(true);
+                                            }}
                                         />
-                                        <p className="text-sm text-gray-500 mt-2">Orçamento</p>
+                                        <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+
+                                        <ModalBudget
+                                            isOpen={isBudgetModalOpen}
+                                            onClose={() => setIsBudgetModalOpen(false)}
+                                            onNavigate={(target) => {
+                                                closeAllModals();
+                                                if (target === 'itinerary') setIsItineraryModalOpen(true);
+                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'transport') setIsTransportModalOpen(true);
+                                            }}
+                                        />
                                     </div>
                                     <div className="flex flex-col items-center">
                                         <IconButton
