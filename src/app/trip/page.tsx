@@ -481,7 +481,8 @@ export default function DetailsPage() {
                                     <div>
                                         <div className="flex flex-col items-center">
                                             <IconButton
-                                                icon={<List className="w-20 h-20" />}
+                                                icon={<img src="\images-travel\Icons\IconGreenBudget.png"
+                                                className="w-w-20 h-20" />}
                                                 onClick={() => setIsBudgetModalOpen(true)}
                                             />
                                             <p className="text-sm text-gray-500 mt-4">Orçamento</p>
