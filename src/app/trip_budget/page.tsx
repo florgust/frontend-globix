@@ -4,6 +4,9 @@ import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { FiTrash2 } from "react-icons/fi";
 import Image from "next/image";
+import api from "@/utils/axios";
+import { useRouter } from "next/navigation";
+import SuccessModal from "@/components/ui/modals/ModalSuccess";
 
 const initialCategories = [
     { id: 1, name: "Transporte", value: "" },
@@ -17,6 +20,40 @@ export default function TripBudget() {
     const [categories, setCategories] = useState(initialCategories);
     const [notes, setNotes] = useState("");
     const [participants] = useState(10);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async () => {
+        // Buscar id da viagem do localStorage
+        const viagemStr = localStorage.getItem("viagemEmCriacao");
+        if (!viagemStr) {
+            alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
+            return;
+        }
+        const viagem = JSON.parse(viagemStr);
+        const viagemId = viagem.id ?? viagem.id_viagem; // ajuste conforme o campo retornado pelo backend
+
+        try {
+            for (const cat of categories) {
+                if (!cat.name || !cat.value) continue;
+                await api.post("/orcamento", {
+                    viagemId,
+                    categoria: cat.name,
+                    custo: parseFloat(cat.value),
+                    observacao: notes || "Orçamento destinado à viagem"
+                });
+            }
+            setShowSuccess(true);
+        } catch (error) {
+            console.error("Erro ao salvar orçamentos:", error);
+            alert("Erro ao salvar orçamentos.");
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowSuccess(false);
+        router.push("/home_page");
+    };
 
     const handleCategoryChange = (id: number, value: string) => {
         setCategories(
@@ -47,13 +84,25 @@ export default function TripBudget() {
     );
     const perPerson = participants > 0 ? total / participants : 0;
 
-    const tripData = {
-        name: "Viagem Rifania",
-        startDate: "01/07/2025",
-        endDate: "05/07/2025",
-        location: "Rifania",
+    const viagemStr = typeof window !== "undefined" ? localStorage.getItem("viagemEmCriacao") : null;
+    let tripData = {
+        name: "",
+        startDate: "",
+        endDate: "",
+        location: "",
         participants: participants,
     };
+
+    if (viagemStr) {
+        const viagem = JSON.parse(viagemStr);
+        tripData = {
+            name: viagem.nome ?? "",
+            startDate: viagem.dataInicio ?? "",
+            endDate: viagem.dataFim ?? "",
+            location: (viagem.nome?.split(" ")[2]) ?? "", // terceira palavra do nome
+            participants: viagem.quantidadeParticipante ?? participants,
+        };
+    }
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
@@ -172,7 +221,7 @@ export default function TripBudget() {
                                             className="w-4 h-4"
                                         />
                                     </span>
-                                    Adicionar Categoria
+                                    <span>Adicionar Categoria</span>
                                 </button>
 
                                 <div className="flex flex-col gap-1 items-start w-56">
@@ -214,12 +263,18 @@ export default function TripBudget() {
                     <div className="flex justify-center mt-6">
                         <button
                             className="cursor-pointer bg-[#00FF4D] transition hover:scale-110 text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow hover:bg-[#4be05a] min-w-[40rem]"
+                            onClick={handleSubmit}
                         >
                             Próximo
                         </button>
                     </div>
                 </div>
             </div>
+            <SuccessModal
+                isOpen={showSuccess}
+                message="Orçamentos salvos com sucesso!"
+                onClose={handleCloseModal}
+            />
         </div>
     );
 }
