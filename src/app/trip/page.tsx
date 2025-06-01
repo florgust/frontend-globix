@@ -6,8 +6,9 @@ import { IconButton } from '@/components/ui/button';
 import { ModalItinerary } from '@/components/ui/modals/ModalItinerary';
 import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
 import ModalTransport from '@/components/ui/modals/ModalTransport';
+import { Trip } from '@/types/trip';
 import { List } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function DetailsPage() {
 
@@ -15,6 +16,16 @@ export default function DetailsPage() {
     const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
     const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
 
+    const [trip, setTrip] = useState<Trip | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedTrip = localStorage.getItem("selectedTrip");
+            if (storedTrip) {
+                setTrip(JSON.parse(storedTrip));
+            }
+        }
+    }, []);
     const closeAllModals = () => {
         setIsTransportModalOpen(false);
         setIsMoreDetailsModalOpen(false);
@@ -22,15 +33,6 @@ export default function DetailsPage() {
     };
 
     const detalhesViagem = {
-        viagem: {
-            id_viagem: 1,
-            nome: "Viagem Rifaina",
-            criador_id: 1,
-            descricao: "Uma viagem incrível para Rifaina, cheia de aventuras e diversão.",
-            data_inicio: "2025-06-01",
-            data_fim: "2025-06-07",
-            imagem_capa: "/images-home_page/carousel/rifaina-capa.png"
-        },
         usuario_viagem: [
             {
                 id_usuario: 1,
@@ -344,7 +346,7 @@ export default function DetailsPage() {
                 <div className="absolute top-17 ml-5 items-center justify-center w-1/5 h-18 p-4 bg-[#1C4CDC]" />
 
                 <div className="absolute top-15 items-center justify-center w-1/5 h-18 p-4 bg-white">
-                    <h1 className="text-4xl font-bold text-center text-[#0F2976]">{detalhesViagem.viagem.nome}</h1>
+                    <h1 className="text-4xl font-bold text-center text-[#0F2976]">{trip?.nome}</h1>
                 </div>
 
                 {/* div branca */}
