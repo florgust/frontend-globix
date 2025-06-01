@@ -127,8 +127,7 @@ const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }
                                         );
                                     });
                                 })()}
-                                {/* Círculo branco central para efeito donut */}
-                                <circle cx="60" cy="60" r="28" fill="#fff" />
+                                
                                 {/* Borda externa */}
                                 <circle cx="60" cy="60" r="55" fill="none" stroke="#002B7F" strokeWidth="2" />
                             </svg>
