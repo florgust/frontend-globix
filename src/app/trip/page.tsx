@@ -8,7 +8,7 @@ import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
 import ModalTransport from '@/components/ui/modals/ModalTransport';
 import { List } from 'lucide-react';
 import { useState } from 'react';
-import ModalBudget from '@/components/ui/modals/ModalBudget'; // certifique-se de importar
+import ModalBudget from '@/components/ui/modals/ModalBudget';
 
 export default function DetailsPage() {
 
@@ -21,6 +21,7 @@ export default function DetailsPage() {
         setIsTransportModalOpen(false);
         setIsMoreDetailsModalOpen(false);
         setIsItineraryModalOpen(false);
+        setIsBudgetModalOpen(false);
     };
 
     const detalhesViagem = {
@@ -428,6 +429,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -449,6 +451,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -467,6 +470,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'transport') setIsTransportModalOpen(true);
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                             itinerario={detalhesViagem.itinerario}
                                         />
@@ -474,15 +478,14 @@ export default function DetailsPage() {
                                 </div>
 
                                 <div className="flex gap-4 mt-5">
-                                    <div className="flex flex-col items-center">
-                                        <IconButton
-                                            icon={<img src="/images-travel/Icons/IconGreenBudget.png" className="w-20 h-20" />}
-                                            onClick={() => {
-                                                closeAllModals();
-                                                setIsBudgetModalOpen(true);
-                                            }}
-                                        />
-                                        <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                                    <div>
+                                        <div className="flex flex-col items-center">
+                                            <IconButton
+                                                icon={<List className="w-20 h-20" />}
+                                                onClick={() => setIsBudgetModalOpen(true)}
+                                            />
+                                            <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                                        </div>
 
                                         <ModalBudget
                                             isOpen={isBudgetModalOpen}
@@ -490,8 +493,8 @@ export default function DetailsPage() {
                                             onNavigate={(target) => {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
-                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
                                                 if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -521,8 +524,6 @@ export default function DetailsPage() {
                             >
                                 Sair da viagem
                             </button>
-
-                            
                         </div>
                     </div>
                 </div>

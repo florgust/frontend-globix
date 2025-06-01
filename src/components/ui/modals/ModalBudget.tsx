@@ -7,14 +7,19 @@ interface ModalBudgetProps {
     onNavigate: (target: 'details' | 'itinerary' | 'transport') => void;
 }
 
+const colorMap = [
+    "bg-[#00B894]", // Transporte
+    "bg-[#0984E3]", // Hospedagem
+    "bg-[#FDCB6E]", // Alimentação
+    "bg-[#E17055]", // Passeios
+    "bg-[#636E72]", // Outros
+];
+
 const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }) => {
     if (!isOpen) return null;
 
     return (
-        <div
-            style={{ backgroundColor: "rgba(41, 45, 50, 0.6)" }}
-            className="fixed inset-0 flex items-center justify-center z-50"
-        >
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-[rgba(41,45,50,0.6)]">
             <div className="bg-white rounded-lg shadow-lg w-[95%] max-w-5xl p-8 relative">
                 <div className="flex items-center justify-between w-full mb-6">
                     {/* Botão com a seta para a esquerda */}
@@ -26,11 +31,13 @@ const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }
                     </button>
 
                     {/* Título "Transporte" */}
-                    <div className="relative">
-                        <h2 className="text-4xl font-bold text-[#00FF4D] bg-[#0F2976] px-16 py-2 relative z-10">
-                            Orçamento
-                        </h2>
-                        <div className="absolute top-2 left-2 w-full h-full bg-[#1C4CDC] z-0"></div>
+                    <div className="relative flex-1 flex justify-center">
+                        <div className="relative inline-block">
+                            <h2 className="text-4xl font-bold text-[#00FF4D] bg-[#0F2976] px-16 py-2 relative z-10">
+                                Orçamento
+                            </h2>
+                            <div className="absolute top-2 left-2 w-full h-full bg-[#1C4CDC] z-0 rounded"></div>
+                        </div>
                     </div>
 
                     {/* Espaço vazio para alinhar o título ao centro */}
@@ -43,11 +50,11 @@ const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }
                     <table className="min-w-[260px] border shadow-md">
                         <thead>
                             <tr>
-                                <th className="bg-[#002B7F] text-white px-6 py-3 text-left text-lg">Descrição</th>
-                                <th className="bg-[#002B7F] text-white px-6 py-3 text-left text-lg">Valor Estimado</th>
+                                <th className="bg-[#0F2976] text-[#FFFFFF] px-6 py-3 text-left text-lg">Descrição</th>
+                                <th className="bg-[#0F2976] text-[#FFFFFF] px-6 py-3 text-left text-lg">Valor Estimado</th>
                             </tr>
                         </thead>
-                        <tbody className="font-bold">
+                        <tbody className="font-bold text-[#000000]">
                             <tr>
                                 <td className="px-6 py-2 border-b border-r text-base">Transporte</td>
                                 <td className="px-6 py-2 border-b text-base">R$ 1.200,00</td>
@@ -128,32 +135,24 @@ const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }
 
                             {/* Legenda ao lado direito do gráfico */}
                             <div className="flex flex-col gap-2 ml-6 mt-2">
-                                <div className="flex items-center gap-2 text-sm">
-                                    <span className="inline-block w-4 h-4 rounded-full" style={{ background: "#00B894" }}></span>
-                                    Transporte
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <span className="inline-block w-4 h-4 rounded-full" style={{ background: "#0984E3" }}></span>
-                                    Hospedagem
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <span className="inline-block w-4 h-4 rounded-full" style={{ background: "#FDCB6E" }}></span>
-                                    Alimentação
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <span className="inline-block w-4 h-4 rounded-full" style={{ background: "#E17055" }}></span>
-                                    Passeios
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <span className="inline-block w-4 h-4 rounded-full" style={{ background: "#636E72" }}></span>
-                                    Outros
-                                </div>
+                                {[
+                                    { label: "Transporte", color: "bg-[#00B894]" },
+                                    { label: "Hospedagem", color: "bg-[#0984E3]" },
+                                    { label: "Alimentação", color: "bg-[#FDCB6E]" },
+                                    { label: "Passeios", color: "bg-[#E17055]" },
+                                    { label: "Outros", color: "bg-[#636E72]" },
+                                ].map((item, idx) => (
+                                    <div key={item.label} className="flex items-center gap-2 text-sm">
+                                        <span className={`inline-block w-4 h-4 rounded-full ${item.color}`}></span>
+                                        {item.label}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         {/* Observações abaixo do gráfico+legenda */}
                         <div className="flex flex-col w-[380px] mt-8">
-                            <span className="text-[#002B7F] font-bold text-lg mb-2">Observações do Organizador</span>
-                            <div className="bg-[#E9FFF0] border border-[#B2E2C8] rounded-lg p-3 text-[#1A2E05] text-base">
+                            <span className="text-[#102976] font-bold text-lg mb-2">Observações do Organizador</span>
+                            <div className="bg-[#E3FFEB] border border-[#261498] rounded-lg p-3 text-[#000000] text-base">
                                 Seguinte não quero ninguém gastando mais que o permitido, se o budget estourar eu vou matar um.
                             </div>
                         </div>
@@ -187,7 +186,7 @@ const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }
                             shape="circle"
                             onClick={() => onNavigate('transport')}
                         />
-                        <p className="text-sm text-[#0F2976] mt-2">Orçamento</p>
+                        <p className="text-sm text-[#0F2976] mt-2">Transporte</p>
                     </div>
                     <div className="flex flex-col items-center">
                         <IconButton
