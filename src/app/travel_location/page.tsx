@@ -59,6 +59,7 @@ export default function TravelLocation() {
         };
 
         try {
+            
             await api.post("/localizacao", payload);
             setShowSuccess(true);
         } catch (error) {
