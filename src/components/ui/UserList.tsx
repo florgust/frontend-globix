@@ -1,19 +1,22 @@
 import { Check, X } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 interface User {
-  id_usuario: number;
+  id: number;
   nome: string;
   email: string;
-  foto: string;
+  status: number;
+  tipo: string;
+  foto?: string;
 }
 
 interface RequestUser {
-  id_usuario: number;
+  id: number;
   nome: string;
   email: string;
   foto: string;
-  tipo_solicitacao: number;
+  tipo: number;
 }
 
 interface RequestListProps {
@@ -27,27 +30,34 @@ interface UserListProps {
 }
 
 const UserList: React.FC<UserListProps> = ({ usuarios }) => {
-  return (
-        <div className="flex flex-col gap-3 p-4">
-          {usuarios.map((usuario) => (
-            <div
-              key={usuario.id_usuario}
-              className="flex bg-white items-center rounded-2xl shadow-md p-1 w-full h-15"
-            >
-              <img
-            src={usuario.foto}
-            alt={usuario.nome}
-            className="w-9 h-9 object-cover rounded-md ml-1"
-          />
+  console.log("UserList - usuarios recebidos:", usuarios);
 
-          {/* Nome e e-mail */}
-          <div className="ml-4 flex flex-col">
-            <p className="font-bold text-sm">{usuario.nome}</p>
-            <p className="text-xs text-gray-500">{usuario.email}</p>
-          </div>
+  return (
+    <div className="flex flex-col gap-3 p-4">
+      {usuarios.map((usuario, idx) => {
+        console.log(`UserList - usuario[${idx}]:`, usuario);
+        return (
+          <div
+            key={usuario.id}
+            className="flex bg-white items-center rounded-2xl shadow-md p-1 w-full h-15"
+          >
+            <Image
+              src={usuario.foto ?? "/images-travel/images-user/default.png"}
+              alt={usuario.nome}
+              width={36}
+              height={36}
+              className="w-9 h-9 object-cover rounded-md ml-1"
+            />
+
+            {/* Nome e e-mail */}
+            <div className="ml-4 flex flex-col">
+              <p className="font-bold text-sm">{usuario.nome}</p>
+              <p className="text-xs text-gray-500">{usuario.email}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
@@ -56,12 +66,14 @@ const RequestList: React.FC<RequestListProps> = ({ solicitacoes, onAccept, onDen
     <div className="flex flex-col gap-3 p-4">
       {solicitacoes.map((solicitacao) => (
         <div
-          key={solicitacao.id_usuario}
+          key={solicitacao.id}
           className="flex bg-white items-center rounded-2xl shadow-md p-2 w-full h-20"
         >
-          <img
-            src={solicitacao.foto}
+          <Image
+            src={solicitacao.foto || "/user.png"}
             alt={solicitacao.nome}
+            width={48}
+            height={48}
             className="w-12 h-12 object-cover rounded-md ml-2"
           />
 
@@ -75,15 +87,15 @@ const RequestList: React.FC<RequestListProps> = ({ solicitacoes, onAccept, onDen
           <div className="flex gap-2">
             <button
               className="bg-green-500 rounded-full p-2 hover:bg-green-600 cursor-pointer"
-              onClick={() => onAccept(solicitacao.id_usuario)}
+              onClick={() => onAccept(solicitacao.id)}
             >
-              <Check className="text-white w-5 h-5 "/>
+              <Check className="text-white w-5 h-5 " />
             </button>
             <button
               className="bg-red-400 rounded-full p-2 hover:bg-red-600 cursor-pointer"
-              onClick={() => onDeny(solicitacao.id_usuario)}
+              onClick={() => onDeny(solicitacao.id)}
             >
-              <X className="text-white w-5 h-5 "/>
+              <X className="text-white w-5 h-5 " />
             </button>
           </div>
         </div>
