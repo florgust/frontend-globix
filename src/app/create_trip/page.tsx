@@ -48,6 +48,9 @@ export default function CreateTripPage() {
         try {
             const response = await api.post('/viagem', payload);
             localStorage.setItem("viagemEmCriacao", JSON.stringify(response.data));
+
+            const idViagem = response.data.id; // Ajuste conforme o nome do campo retornado
+            await api.post(`/solicitacao/criador/${criadorId}/${idViagem}`);
             setShowSuccess(true);
         } catch (error) {
             console.error("Erro ao criar viagem:", error);
