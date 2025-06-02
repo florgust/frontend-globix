@@ -2,65 +2,21 @@
 import React, { useState } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
-import { FiTrash2 } from "react-icons/fi";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Itinerary } from "@/components/ui/Itinerary";
 
-const initialItineraries = [
-    {
-        day: 1,
-        date: "20/04/2025",
-        activities: [
-            {
-                time: "08:00",
-                title: "Café da Manhã",
-                description: "Buffet de café da manhã no hotel",
-                type: "Alimentação",
-            },
-            {
-                time: "11:00",
-                title: "Pegar uma praia Ihul",
-                description: "Praia de Rifânia muito boa",
-                type: "Passeio",
-            },
-            {
-                time: "17:00",
-                title: "Barzinho pra curtir",
-                description: "Bar Rifânia Top demais",
-                type: "Passeio",
-            },
-        ],
-    },
-    {
-        day: 2,
-        date: "21/04/2025",
-        activities: [
-            {
-                time: "08:00",
-                title: "Café da Manhã",
-                description: "Buffet de café da manhã no hotel",
-                type: "Alimentação",
-            },
-            {
-                time: "11:00",
-                title: "Pegar uma praia Ihul",
-                description: "Praia de Rifânia muito boa",
-                type: "Passeio",
-            },
-            {
-                time: "17:00",
-                title: "Barzinho pra curtir",
-                description: "Bar Rifânia Top demais",
-                type: "Passeio",
-            },
-        ],
-    },
-    {
-        day: 3,
-        date: "22/04/2025",
-        activities: [],
-    },
-];
+
+interface Activity {
+    time: string;
+    title: string;
+    description: string;
+    type: string;
+}
+
+interface ItineraryDay {
+    day: number;
+    date: string;
+    activities: Activity[];
+}
 
 const eventTypes = [
     "Alimentação",
@@ -71,7 +27,7 @@ const eventTypes = [
 ];
 
 export default function TripItinerary() {
-    const [itineraries, setItineraries] = useState(initialItineraries);
+    const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
 
     // Form state
@@ -170,11 +126,11 @@ export default function TripItinerary() {
             prev.map((it, idx) =>
                 idx === currentPage
                     ? {
-                          ...it,
-                          activities: it.activities.filter(
-                              (_, i) => i !== activityIdx
-                          ),
-                      }
+                        ...it,
+                        activities: it.activities.filter(
+                            (_, i) => i !== activityIdx
+                        ),
+                    }
                     : it
             )
         );
@@ -182,11 +138,13 @@ export default function TripItinerary() {
 
     // Remove entire day
     const handleRemoveDay = (dayIdx: number) => {
-        if (itineraries.length <= 1) return;
         setItineraries((prev) => prev.filter((_, idx) => idx !== dayIdx));
-        if (currentPage >= itineraries.length - 1) {
-            setCurrentPage(itineraries.length - 2);
-        }
+        // Ajusta a página atual para não ficar fora do índice
+        setCurrentPage((prevPage) => {
+            if (dayIdx === 0) return 0;
+            if (prevPage >= itineraries.length - 1) return itineraries.length - 2 >= 0 ? itineraries.length - 2 : 0;
+            return prevPage;
+        });
     };
 
     // Pagination
@@ -199,35 +157,35 @@ export default function TripItinerary() {
     };
 
     // Add new day
-    const handleAddDay = () => {
-        const nextDay = itineraries.length + 1;
-        const nextDate = new Date(itineraries[itineraries.length - 1].date
-            .split("/")
-            .reverse()
-            .join("-"));
-        nextDate.setDate(nextDate.getDate() + 1);
-        const formattedDate = nextDate
-            .toLocaleDateString("pt-BR")
-            .split("/")
-            .join("/");
-        setItineraries([
-            ...itineraries,
-            { day: nextDay, date: formattedDate, activities: [] },
-        ]);
-        setCurrentPage(itineraries.length);
-    };
+    // const handleAddDay = () => {
+    //     const nextDay = itineraries.length + 1;
+    //     const nextDate = new Date(itineraries[itineraries.length - 1].date
+    //         .split("/")
+    //         .reverse()
+    //         .join("-"));
+    //     nextDate.setDate(nextDate.getDate() + 1);
+    //     const formattedDate = nextDate
+    //         .toLocaleDateString("pt-BR")
+    //         .split("/")
+    //         .join("/");
+    //     setItineraries([
+    //         ...itineraries,
+    //         { day: nextDay, date: formattedDate, activities: [] },
+    //     ]);
+    //     setCurrentPage(itineraries.length);
+    // };
 
-    // Format date for input
-    const getInputDate = (dateStr: string) => {
-        const [day, month, year] = dateStr.split("/");
-        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    };
+    // // Format date for input
+    // const getInputDate = (dateStr: string) => {
+    //     const [day, month, year] = dateStr.split("/");
+    //     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    // };
 
-    // Format date for display
-    const getDisplayDate = (dateStr: string) => {
-        const [year, month, day] = dateStr.split("-");
-        return `${day}/${month}/${year}`;
-    };
+    // // Format date for display
+    // const getDisplayDate = (dateStr: string) => {
+    //     const [year, month, day] = dateStr.split("-");
+    //     return `${day}/${month}/${year}`;
+    // };
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">

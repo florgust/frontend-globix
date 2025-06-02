@@ -25,7 +25,6 @@ interface ItineraryProps {
     setCurrentPage: (idx: number) => void;
 }
 
-// Troque para export function Itinerary
 export function Itinerary({
     itineraries,
     currentPage,
@@ -35,6 +34,28 @@ export function Itinerary({
     handleNext,
     setCurrentPage,
 }: ItineraryProps) {
+    if (!itineraries.length) {
+        return (
+            <div className="flex flex-col w-1/2">
+                <div className="font-bold text-[#292D32] text-lg mb-2">
+                    Atividades
+                </div>
+                <div className="rounded-xl mb-2 border-2 border-[#00FF4D] p-0">
+                    <div className="flex items-center justify-between bg-[#A7FF84] rounded-t-xl px-4 py-2 m-0">
+                        <span className="font-bold text-[#0F2976] text-base">
+                            Nenhum dia cadastrado
+                        </span>
+                    </div>
+                    <div className="flex flex-col px-0 py-0 max-h-[22rem] overflow-y-auto">
+                        <span className="text-[#0F2976] text-center py-4">
+                            Nenhuma atividade cadastrada.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col w-1/2">
             <div className="font-bold text-[#292D32] text-lg mb-2">
@@ -93,9 +114,8 @@ export function Itinerary({
                 {/* Paginação DENTRO da borda verde */}
                 <div className="flex items-center justify-center gap-4 mt-2 px-4 pb-3">
                     <button
-                        className={`p-2 rounded-full text-[#0F2976] ${
-                            currentPage === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                        }`}
+                        className={`p-2 rounded-full text-[#0F2976] ${currentPage === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                            }`}
                         onClick={currentPage === 0 ? undefined : handlePrev}
                         disabled={currentPage === 0}
                         tabIndex={currentPage === 0 ? -1 : 0}
@@ -105,22 +125,20 @@ export function Itinerary({
                     {itineraries.map((_, idx) => (
                         <button
                             key={idx}
-                            className={`w-8 h-8 font-bold rounded-md cursor-pointer ${
-                                idx === currentPage
-                                    ? "bg-[#092064] text-[#A7FF84]"
-                                    : "bg-[#A7FF84] text-[#0F2976] hover:bg-[#86EE60]"
-                            }`}
+                            className={`w-8 h-8 font-bold rounded-md cursor-pointer ${idx === currentPage
+                                ? "bg-[#092064] text-[#A7FF84]"
+                                : "bg-[#A7FF84] text-[#0F2976] hover:bg-[#86EE60]"
+                                }`}
                             onClick={() => setCurrentPage(idx)}
                         >
                             {idx + 1}
                         </button>
                     ))}
                     <button
-                        className={`p-2 rounded-full text-[#0F2976] ${
-                            currentPage === itineraries.length - 1
-                                ? "opacity-50 cursor-not-allowed"
-                                : "cursor-pointer"
-                        }`}
+                        className={`p-2 rounded-full text-[#0F2976] ${currentPage === itineraries.length - 1
+                            ? "opacity-50 cursor-not-allowed"
+                            : "cursor-pointer"
+                            }`}
                         onClick={
                             currentPage === itineraries.length - 1
                                 ? undefined
