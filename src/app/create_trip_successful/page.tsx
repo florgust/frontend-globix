@@ -4,8 +4,17 @@ import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import Cookies from "js-cookie";
 
+interface Trip {
+    nome: string;
+    dataInicio: string;
+    dataFim: string;
+    tipo: string;
+    quantidadeParticipante: number;
+    // Adicione outros campos se necessário
+}
+
 export default function TripTransport() {
-    const [trip, setTrip] = useState<any>(null);
+    const [trip, setTrip] = useState<Trip | null>(null);
     const [organizer, setOrganizer] = useState<string>("");
     const [isMounted, setIsMounted] = useState(false);
 
@@ -56,17 +65,18 @@ export default function TripTransport() {
 
                 {/* Faixa de ícones e círculo de sucesso */}
                 <div className="relative flex items-center justify-center w-full">
-                    <img
-                        src="/images-trip_successful/GroupSuccessful.png"
-                        alt="Ícones de viagem"
-                        className="w-full max-w-6xl h-[120px] object-cover rounded-t-lg"
-                        style={{ zIndex: 1 }}
-                    />
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[6rem] h-[6rem] bg-green-500 rounded-full z-10">
+                    <div className="absolute top-19 flex items-center justify-center w-[6rem] h-[6rem] bg-green-500 rounded-full z-10">
                         <img
                             src="/images-trip_successful/certo.svg"
                             alt="Success Icon"
-                            className="w-[3.5rem] h-[3.5rem]"
+                            className="w-[8.3925rem] h-[8.3925rem]"
+                        />
+                    </div>
+                    <div className="absolute top-14 flex items-center justify-center w-[60rem] h-[10rem] z-10">
+                        <img
+                            src="/images-trip_successful/GroupSuccessful.png"
+                            alt="Success Icon"
+                            className="w-[60.3925rem] h-[15.3925rem]"
                         />
                     </div>
                 </div>
@@ -134,13 +144,13 @@ export default function TripTransport() {
 
                     <div className="flex justify-center mt-6 space-x-4 gap-5">
                         <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
-                            <span className="font-bold text-sm text-[#092064]">Página inicial</span>
+                            <a href="/home_page" className="font-bold text-sm text-[#092064]">Página inicial</a>
                         </button>
                         <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
                             <span className="font-bold text-sm text-[#092064]">Convidar participantes</span>
                         </button>
                         <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
-                            <span className="font-bold text-sm text-[#092064]">Mais detalhes</span>
+                            <a className="font-bold text-sm text-[#092064]">Mais detalhes</a>
                         </button>
                         <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
                             <span className="font-bold text-sm text-[#092064]">Editar</span>
