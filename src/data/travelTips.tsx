@@ -1,0 +1,30 @@
+const travelTips = [
+  "Always keep a copy of your passport and important documents.",
+  "Learn a few basic phrases in the local language.",
+  "Pack light and bring versatile clothing.",
+  "Stay hydrated, especially in hot climates.",
+  "Use a money belt or hidden pouch for valuables.",
+  "Research local customs and etiquette.",
+  "Keep your phone charged and have a portable charger.",
+  "Try local foods, but be cautious with street food.",
+  "Use public transportation to save money and experience the city.",
+  "Always have a backup plan for accommodations.",
+  "Stay connected with friends or family back home.",
+  "Be aware of your surroundings and stay safe.",
+  "Take lots of photos, but also enjoy the moment.",
+  "Use travel apps to help navigate and find attractions.",
+  "Keep your luggage locked and secure.",
+  "Respect the environment and local wildlife.",
+  "Check the weather before you pack.",
+  "Carry a reusable water bottle to reduce plastic waste.",
+  "Be flexible with your itinerary.",
+  "Join local tours to learn more about the area.",
+  "Keep an open mind and embrace new experiences.",
+  "Use sunscreen to protect your skin.",
+  "Stay organized with a travel planner or app.",
+  "Try to blend in with the locals.",
+  "Take time to relax and enjoy your trip.",
+  "Always have some cash on hand for small purchases."
+];
+
+export default travelTips;
