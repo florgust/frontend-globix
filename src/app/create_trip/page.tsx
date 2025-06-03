@@ -6,6 +6,9 @@ import { ImagePlus, Minus, Plus } from 'lucide-react';
 import { useRouter } from "next/navigation"; // Importa o useRouter
 import DatePickerHtml from '@/components/ui/DatePickerHtml';
 import api from "@/utils/axios"; // Importa o axios configurado
+import SuccessModal from '@/components/ui/modals/ModalSuccess';
+import Cookies from "js-cookie"; // Adicione este import
+
 
 export default function CreateTripPage() {
     const [selectedOption, setSelectedOption] = useState("public");
@@ -15,6 +18,7 @@ export default function CreateTripPage() {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const router = useRouter();
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const handleCreateTrip = async () => {
         if (!tripName || !tripDescription || !startDate || !endDate || count <= 0) {
@@ -22,24 +26,41 @@ export default function CreateTripPage() {
             return;
         }
 
+        // Pegue o usuário do cookie
+        const usuarioCookie = Cookies.get("usuario");
+        if (!usuarioCookie) {
+            alert("Usuário não autenticado.");
+            return;
+        }
+        const usuarioObj = JSON.parse(usuarioCookie);
+        const criadorId = usuarioObj.id;
+
         const payload = {
             nome: tripName,
             descricao: tripDescription,
             dataInicio: startDate,
             dataFim: endDate,
-            criadorId: 1, // Substitua pelo ID do criador autenticado
+            criadorId, // Agora usando o ID do usuário autenticado
             tipo: selectedOption === "public" ? "publica" : "privada",
             quantidadeParticipante: count,
         };
 
         try {
-            await api.post('/viagem', payload);
-            alert("Viagem criada com sucesso!");
-            router.push("/travel_location"); // Redireciona para a próxima página
+            const response = await api.post('/viagem', payload);
+            localStorage.setItem("viagemEmCriacao", JSON.stringify(response.data));
+
+            const idViagem = response.data.id; // Ajuste conforme o nome do campo retornado
+            await api.post(`/solicitacao/criador/${criadorId}/${idViagem}`);
+            setShowSuccess(true);
         } catch (error) {
             console.error("Erro ao criar viagem:", error);
             alert("Ocorreu um erro ao criar a viagem. Tente novamente.");
         }
+    };
+
+    const handleCloseModal = () => {
+        setShowSuccess(false);
+        router.push("/travel_location");
     };
 
     return (
@@ -174,13 +195,18 @@ export default function CreateTripPage() {
                     </div>
                 </div>
 
-                <div className='w-full flex flex-col items-center justify-center mt-15 mt-15'>
+                <div className='w-full flex flex-col items-center justify-center mt-15'>
                     <button
                         onClick={handleCreateTrip}
-                        className="absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-3/5 h-20 text-3xl cursor-pointer"
+                        className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-3/5 h-20 text-3xl cursor-pointer"
                     >
                         Próximo
                     </button>
+                    <SuccessModal
+                        isOpen={showSuccess}
+                        message="Viagem criada com sucesso!"
+                        onClose={handleCloseModal}
+                    />
                 </div>
 
                 <div className='flex flex-col items-center mt-20' />

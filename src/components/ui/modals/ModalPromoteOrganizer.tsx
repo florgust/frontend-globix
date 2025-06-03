@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { ChevronLeft, Search } from "lucide-react";
 
-interface User {
-    id_usuario: number;
+interface Usuario {
+    id: number;
     nome: string;
     email: string;
+    status: number;
     tipo: string;
-    foto: string;
+    foto?: string;
 }
 
 
-
-function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove }: { isOpen: boolean; onClose: () => void; usuarios: User[]; onPromote: (id_usuario: number) => void; onRemove: (id_usuario: number) => void; }) {
+function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove }: Readonly<{ isOpen: boolean; onClose: () => void; usuarios: Usuario[]; onPromote: (id: number) => void; onRemove: (id: number) => void; }>) {
     const [search, setSearch] = useState("");
 
     const usuariosFiltrados = usuarios.filter(usuario =>
@@ -98,7 +98,7 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
 
                             return (
                                 <div
-                                    key={usuario.id_usuario}
+                                    key={usuario.id}
                                     className={`flex items-center border border-[#0F2976] bg-white w-full ${borderRadius}`}
                                 >
                                     <div className="flex items-center h-15 ml-2 flex-1 min-w-0">
@@ -122,7 +122,7 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
                                         {usuario.tipo === "Participante" && (
                                             <button
                                                 className="px-3 py-2 bg-[#0F2976] text-white rounded-full hover:bg-blue-900"
-                                                onClick={() => onPromote(usuario.id_usuario)}
+                                                onClick={() => onPromote(usuario.id)}
                                             >
                                                 promover
                                             </button>
@@ -130,7 +130,7 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
                                         {usuario.tipo === "OrganizadorPromovido" && (
                                             <button
                                                 className="px-4 py-2 bg-[#76120F] text-white rounded-full hover:bg-red-800"
-                                                onClick={() => onRemove(usuario.id_usuario)}
+                                                onClick={() => onRemove(usuario.id)}
                                             >
                                                 remover
                                             </button>

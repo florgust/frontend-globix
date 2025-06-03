@@ -7,14 +7,6 @@ interface ModalBudgetProps {
     onNavigate: (target: 'details' | 'itinerary' | 'transport') => void;
 }
 
-const colorMap = [
-    "bg-[#00B894]", // Transporte
-    "bg-[#0984E3]", // Hospedagem
-    "bg-[#FDCB6E]", // Alimentação
-    "bg-[#E17055]", // Passeios
-    "bg-[#636E72]", // Outros
-];
-
 const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }) => {
     if (!isOpen) return null;
 
@@ -140,7 +132,7 @@ const ModalBudget: React.FC<ModalBudgetProps> = ({ isOpen, onClose, onNavigate }
                                     { label: "Alimentação", color: "bg-[#FDCB6E]" },
                                     { label: "Passeios", color: "bg-[#E17055]" },
                                     { label: "Outros", color: "bg-[#636E72]" },
-                                ].map((item, idx) => (
+                                ].map((item) => (
                                     <div key={item.label} className="flex items-center gap-2 text-sm">
                                         <span className={`inline-block w-4 h-4 rounded-full ${item.color}`}></span>
                                         {item.label}
