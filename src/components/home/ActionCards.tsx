@@ -2,6 +2,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ModalJoinTrip from "@/components/ui/modals/ModalJoinTrip";
+import Cookies from "js-cookie";
+import api from "@/utils/axios";
+import axios from "axios";
 
 export default function ActionCards() {
   const router = useRouter();
@@ -10,16 +13,51 @@ export default function ActionCards() {
   const [openModal, setOpenModal] = useState(false);
   const [tripCode, setTripCode] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleJoinTrip = () => {
+  const handleJoinTrip = async () => {
     if (!tripCode.trim()) {
       setAlertMessage("Por favor, insira um código válido.");
       return;
     }
 
-    setAlertMessage(""); 
-    setOpenModal(false);
-    setTripCode("");
+    try {
+      // 1. Verificar se a viagem existe
+      const { data: viagem } = await api.get(`/viagem/codigo/${tripCode}`);
+
+      // 2. Pegar usuário do cookie
+      const usuarioCookie = Cookies.get("usuario");
+      if (!usuarioCookie) {
+        setAlertMessage("Usuário não autenticado.");
+        return;
+      }
+      const usuarioObj = JSON.parse(usuarioCookie);
+      const userId = usuarioObj.id;
+
+      // 3. Enviar solicitação de participação
+      await api.post(`/solicitacao/${userId}/${viagem.id}`);
+      setAlertMessage("");
+      setShowSuccess(true);
+      setTripCode("");
+      setOpenModal(false);
+
+      // Exibe o modal de sucesso por 3 segundos
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          setAlertMessage("Viagem não encontrada. Verifique o código inserido.");
+          return;
+        }
+        const message = error.response?.data?.error ?? "Erro ao participar da viagem.";
+        setAlertMessage(message);
+        return;
+      }
+      setAlertMessage("Erro inesperado. Tente novamente.");
+      return;
+    }
   };
 
   return (
