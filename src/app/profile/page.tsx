@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import api from "@/utils/axios";
 import ModalProfileEdit from "@/components/ui/modals/ModalProfileEdit";
+import ModalPasswordEdit from "@/components/ui/modals/ModalPasswordEdit";
 
 export default function Profile() {
     const [trips, setTrips] = useState<Trip[]>([]);
@@ -43,7 +44,12 @@ export default function Profile() {
             }
         }
     }, []);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
+    const handleOpenPasswordModal = () => setIsPasswordModalOpen(true);
+    const handleClosePasswordModal = () => setIsPasswordModalOpen(false);
 
     return (
         <div className="flex h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
@@ -106,8 +112,18 @@ export default function Profile() {
                 </div>
             </div>
 
-            {/* Modal */}
-            <ModalProfileEdit isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            {/* Modal de editar perfil */}
+            <ModalProfileEdit
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onOpenPassword={handleOpenPasswordModal}
+            />
+
+            {/* Modal de editar senha */}
+            <ModalPasswordEdit
+                isOpen={isPasswordModalOpen}
+                onClose={handleClosePasswordModal}
+            />
         </div>
     );
 }

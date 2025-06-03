@@ -1,17 +1,23 @@
 'use client';
 
 import SidebarMenu from '@/components/ui/SidebarMenu';
-import { UserList, RequestList } from '@/components/ui/UserList';
+import { UserList } from '@/components/ui/UserList';
 import { IconButton } from '@/components/ui/button';
-import ModalEditTrip from '@/components/ui/modals/ModalEditTrip';
 import { ModalItinerary } from '@/components/ui/modals/ModalItinerary';
 import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
-import { ModalPromoteOrganizer } from '@/components/ui/modals/ModalPromoteOrganizer';
 import ModalTransport from '@/components/ui/modals/ModalTransport';
-import ModalBudget from '@/components/ui/modals/ModalBudget';
-import { List, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Trip } from '@/types/trip';
 import api from '@/utils/axios';
+import { List } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import ModalBudget from '@/components/ui/modals/ModalBudget';
+
+interface UsuarioViagem {
+    idViagem: number;
+    idUsuario: number;
+    papel: string;
+    status: number;
+}
 
 interface Usuario {
     id: number;
@@ -22,142 +28,17 @@ interface Usuario {
     foto?: string;
 }
 
-interface SolicitacaoViagem {
-    idUsuario: number;
-    papel: string;
-    status: number;
-}
-
-interface Itinerario {
-    id: number;
-    idViagem: number;
-    tipoEvento: string;
-    titulo: string;
-    dataHora: string;
-    descricao: string;
-}
-
-interface Trip {
-    id: number;
-    nome: string;
-    descricao?: string;
-    imagem?: string;
-    data_inicio?: string;
-    data_fim?: string;
-    itinerario?: Itinerario[]; // Tipar se desejar
-}
-
 export default function DetailsPage() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
     const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
     const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
     const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
     const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
 
-
     const [trip, setTrip] = useState<Trip | null>(null);
-    const [convidados, setConvidados] = useState<Usuario[]>([]);
-    const [solicitacoes, setSolicitacoes] = useState<Usuario[]>([]);
     const [organizadores, setOrganizadores] = useState<Usuario[]>([]);
+    const [convidados, setConvidados] = useState<Usuario[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeButton, setActiveButton] = useState("convidados");
-    const [imagens] = useState([
-        "/images-home_page/carousel/carrossel.png",
-    ]);
-
-    useEffect(() => {
-        async function fetchData() {
-            if (typeof window !== "undefined") {
-                const storedTrip = localStorage.getItem("selectedTrip");
-                if (storedTrip) {
-                    const tripObj = JSON.parse(storedTrip);
-                    setTrip(tripObj);
-
-                    // Buscar solicitações da viagem
-                    const { data: solicitacoesData } = await api.get(`/solicitacoes/viagem/${tripObj.id}`);
-                    // Buscar dados completos dos usuários
-                    const usuariosPromises = solicitacoesData.map(async (sol: SolicitacaoViagem) => {
-                        const { data: usuario } = await api.get(`/usuario/${sol.idUsuario}`);
-                        return {
-                            ...usuario,
-                            papel: sol.papel,
-                            status: sol.status
-                        };
-                    });
-                    const usuariosCompletos = await Promise.all(usuariosPromises);
-
-                    setOrganizadores(
-                        usuariosCompletos.filter(
-                            u => ["organizador", "organizadorpromovido"].includes((u.papel ?? "").toLowerCase())
-                        )
-                    );
-                    setConvidados(
-                        usuariosCompletos
-                            .filter(
-                                u => u.status == 1 && !["organizador", "organizadorpromovido"].includes((u.papel ?? "").toLowerCase())
-                            )
-                            .map(u => ({
-                                ...u,
-                                foto: u.foto ?? "/user.png"
-                            }))
-                    );
-                    setSolicitacoes(
-                        usuariosCompletos
-                            .filter(u => u.status === 0)
-                            .map(u => ({
-                                ...u,
-                                foto: u.foto ?? "/user.png"
-                            }))
-                    );
-                }
-                setLoading(false);
-            }
-        }
-        fetchData();
-    }, []);
-
-    const closeAllModals = () => {
-        setIsTransportModalOpen(false);
-        setIsMoreDetailsModalOpen(false);
-        setIsItineraryModalOpen(false);
-        setIsBudgetModalOpen(false);
-    };
-
-
-    // async function promoverUsuario(id_usuario: number) {
-    //     await fetch(`/api/usuarios/${id_usuario}/promover`, {
-    //         method: "POST",
-    //     });
-    // }
-
-    // async function removerUsuario(id_usuario: number) {
-    //     await fetch(`/api/usuarios/${id_usuario}/remover`, {
-    //         method: "POST",
-    //     });
-    // }
-
-    // const handleEdit = (option: string) => {
-    //     console.log(`Opção selecionada para edição: ${option}`);
-    //     setIsEditModalOpen(false);
-    // };
-
-    const handleAccept = async (id: number) => {
-        await api.put(`solicitacao/${trip?.id}/${id}/status`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-        });
-
-        const usuarioAceito = solicitacoes.find((solicitacao) => solicitacao.id === id);
-        if (usuarioAceito) {
-            setConvidados([...convidados, usuarioAceito]);
-            setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id !== id));
-        }
-    };
-
-    const handleDeny = (id: number) => {
-        setSolicitacoes(solicitacoes.filter((solicitacao) => solicitacao.id !== id)); // Remove das solicitações
-    };
 
     const detalhesViagem = {
         itinerario: [
@@ -388,6 +269,61 @@ export default function DetailsPage() {
         ]
     };
 
+    useEffect(() => {
+        async function fetchData() {
+            if (typeof window !== "undefined") {
+                const storedTrip = localStorage.getItem("selectedTrip");
+                if (storedTrip) {
+                    const tripObj = JSON.parse(storedTrip);
+                    setTrip(tripObj);
+
+                    // 1. Buscar solicitações da viagem
+                    console.log("Buscando solicitações para a viagem:", tripObj.id);
+                    const { data: solicitacoes } = await api.get(`/solicitacoes/viagem/${tripObj.id}`);
+                    console.log("Solicitações encontradas:", solicitacoes);
+
+                    // 2. Buscar dados completos dos usuários
+                    const usuariosPromises = solicitacoes.map(async (sol: UsuarioViagem) => {
+                        const { data: usuario } = await api.get(`/usuario/${sol.idUsuario}`);
+                        return {
+                            ...usuario,
+                            papel: sol.papel,
+                            status: sol.status
+                        };
+                    });
+                    const usuariosCompletos: Usuario[] = await Promise.all(usuariosPromises);
+                    console.log("Usuários completos:", usuariosCompletos);
+
+                    // 3. Separar organizadores e convidados
+                    setOrganizadores(
+                        usuariosCompletos.filter(
+                            u => ["organizador", "organizadorpromovido"].includes((u.tipo || "").toLowerCase())
+                        )
+                    );
+                    setConvidados(
+                        usuariosCompletos
+                            .filter(
+                                u => u.status == 1 && !["organizador", "organizadorpromovido"].includes((u.tipo || "").toLowerCase())
+                            )
+                            .map(u => ({
+                                ...u,
+                                foto: u.foto || "/user.png"
+                            }))
+                    );
+                }
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, []);
+
+    const closeAllModals = () => {
+        setIsTransportModalOpen(false);
+        setIsMoreDetailsModalOpen(false);
+        setIsItineraryModalOpen(false);
+        setIsBudgetModalOpen(false);
+    };
+
     if (loading) {
         return (
             <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] items-center justify-center">
@@ -432,103 +368,29 @@ export default function DetailsPage() {
                                             <p className="mt-2 text-sm text-[#292D32]">{usuario.nome}</p>
                                         </div>
                                     ))}
-                                    {/* Botão para adicionar mais Organizadores Promovidos */}
-                                    {imagens.length < 6 && (
-                                        <div className='flex flex-col w-full items-center'>
-                                            <button
-                                                onClick={() => setIsModalOpen(true)}
-                                                className="w-19 shadow-md h-19 flex items-center justify-center bg-gray-200 rounded-full text-gray-500 hover:bg-gray-300 cursor-pointer"
-                                            >
-                                                <Plus className='w-12 h-12 text-[#0F2976]' />
-                                            </button>
-                                            <p className="mt-2 text-xs text-[#292D32] whitespace-nowrap">Adicionar Organizador</p>
-                                        </div>
-                                    )}
-                                    <ModalPromoteOrganizer
-                                        isOpen={isModalOpen}
-                                        onClose={() => setIsModalOpen(false)}
-                                        usuarios={convidados}
-                                        onPromote={async (id) => {
-                                            // Atualiza o tipo do usuário para "OrganizadorPromovido"
-                                            // await promoverUsuario(id); // Implemente se necessário
-                                            setConvidados(convidados.map(usuario =>
-                                                usuario.id === id
-                                                    ? { ...usuario, tipo: "OrganizadorPromovido" }
-                                                    : usuario
-                                            ));
-                                            setIsModalOpen(false);
-                                        }}
-                                        onRemove={async (id) => {
-                                            // await removerUsuario(id); // Implemente se necessário
-                                            setConvidados(convidados.map(usuario =>
-                                                usuario.id === id
-                                                    ? { ...usuario, tipo: "Participante" }
-                                                    : usuario
-                                            ));
-                                        }}
-                                    />
                                 </div>
                             </div>
 
                             {/* Div com o gradiente */}
                             <div className="flex flex-col relative items-center justify-center w-full h-100 sm:w-2/3 sm:h-3/3">
-                                <div className="relative w-3/5 flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
-                                    <div className={`absolute top-0 left-0 h-12 w-1/2 bg-[#1C4CDC] transition-all duration-300
-                                        ${activeButton === "convidados" ? "rounded-l-full" : "left-1/2 rounded-r-full"}`}
-                                    ></div>
-                                    <div className="relative flex w-full">
+                                <div className="relative w-[15rem] flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
+                                    <div className="flex w-full justify-center items-center">
                                         <button
-                                            className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300  ${activeButton === "convidados"
-                                                ? "text-white "
-                                                : "text-[#0F2976] cursor-pointer"
-                                                }`}
-                                            onClick={() => setActiveButton("convidados")}
+                                            className="z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 text-[#0F2976] flex justify-center items-center"
                                         >
                                             Convidados
                                         </button>
-                                        <button
-                                            className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${activeButton === "solicitacoes"
-                                                ? "text-white"
-                                                : "text-[#0F2976] cursor-pointer"
-                                                }`}
-                                            onClick={() => setActiveButton("solicitacoes")}
-                                        >
-                                            Solicitações
-                                        </button>
                                     </div>
                                 </div>
-                                {activeButton === "convidados" && (
-                                    <div
-                                        style={{
-                                            scrollbarWidth: "thin",
-                                            scrollbarColor: "#fffff #0F2976",
-                                        }}
-                                        className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
-                                    >
-                                        <UserList usuarios={convidados} />
-                                    </div>
-                                )}
-                                {activeButton === "solicitacoes" && (
-                                    <div
-                                        style={{
-                                            scrollbarWidth: "thin",
-                                            scrollbarColor: "#fffff #0F2976",
-                                        }}
-                                        className="w-3/5 p-4 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
-                                    >
-                                        <RequestList
-                                            solicitacoes={solicitacoes.map(s => ({
-                                                id: s.id,
-                                                nome: s.nome,
-                                                email: s.email,
-                                                foto: s.foto ?? "/user.png", // garante que nunca será undefined
-                                                tipo: 1 // ou outro valor adequado
-                                            }))}
-                                            onAccept={handleAccept}
-                                            onDeny={handleDeny}
-                                        />
-                                    </div>
-                                )}
+                                <div
+                                    style={{
+                                        scrollbarWidth: "thin",
+                                        scrollbarColor: "#fffff #0F2976",
+                                    }}
+                                    className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
+                                >
+                                    <UserList usuarios={convidados} />
+                                </div>
                             </div>
 
                             {/* Div com os botões */}
@@ -590,7 +452,7 @@ export default function DetailsPage() {
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
                                                 if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
-                                            itinerario={detalhesViagem.itinerario || []}
+                                            itinerario={detalhesViagem.itinerario}
                                         />
                                     </div>
                                 </div>
@@ -599,7 +461,7 @@ export default function DetailsPage() {
                                         <div className="flex flex-col items-center">
                                             <IconButton
                                                 icon={<img src="\images-travel\Icons\IconGreenBudget.png"
-                                                    className="w-w-20 h-20" />}
+                                                className="w-w-20 h-20" />}
                                                 onClick={() => setIsBudgetModalOpen(true)}
                                             />
                                             <p className="text-sm text-gray-500 mt-4">Orçamento</p>
@@ -632,23 +494,13 @@ export default function DetailsPage() {
                                         />
                                         <p className="text-sm text-gray-500 mt-2">Avisos</p>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                         <div className='w-full flex justify-between mt-8'>
-                            <button className='text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer'
-                                onClick={() => setIsEditModalOpen(true)}
-                            >
-                                Editar
+                            <button className='text-2xl font-bold bg-[#FF2626] text-[#FFFFFF] rounded-full w-60 py-3 hover:bg-gray-500 cursor-pointer'>
+                                Sair da viagem
                             </button>
-                            <button className='text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer'>
-                                Encerrar Viagem
-                            </button>
-                            <ModalEditTrip
-                                isOpen={isEditModalOpen}
-                                onClose={() => setIsEditModalOpen(false)}
-                                onEdit={() => setIsEditModalOpen(false)}
-                            />
                         </div>
                     </div>
                 </div>

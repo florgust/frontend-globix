@@ -2,22 +2,16 @@
 import React, { useState, useEffect } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
-import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
 import { X } from "lucide-react";
 import api from "@/utils/axios";
-import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Image from "next/image";
 
 export default function TravelTransport() {
-    const router = useRouter();
     const [openModal, setOpenModal] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null); // Transporte atualmente selecionado
     const [description, setDescription] = useState(""); // Descrição do transporte selecionado
     const [confirmedOption, setConfirmedOption] = useState<string | null>(null); // Transporte confirmado
     const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({}); // Armazena as descrições de cada transporte
-    const [showSuccess, setShowSuccess] = useState(false);
-
     const [placeholders] = useState({
         avião: "Informe informações importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
         ônibus: "Informe informações importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
@@ -48,34 +42,20 @@ export default function TravelTransport() {
             return;
         }
 
-        // Buscar id da viagem do localStorage
-        const viagemStr = localStorage.getItem("viagemEmCriacao");
-        if (!viagemStr) {
-            alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
-            return;
-        }
-        const viagem = JSON.parse(viagemStr);
-        const viagemId = viagem.id ?? viagem.id_viagem; // ajuste conforme o campo retornado pelo backend
-
         try {
             const payload = {
-                viagemId,
+                viagemId: 1, // Substitua pelo ID da viagem correspondente
                 tipoTransporte: confirmedOption,
                 descricao: descriptions[confirmedOption],
             };
 
             await api.post('/transporte', payload);
 
-            setShowSuccess(true);
+            alert("Transporte atualizado com sucesso!");
         } catch (error) {
             console.error("Erro ao salvar o transporte:", error);
             alert("Ocorreu um erro ao salvar o transporte. Tente novamente.");
         }
-    };
-
-    const handleCloseModalSuccess = () => {
-        setShowSuccess(false);
-        router.push("/trip_budget");
     };
 
     useEffect(() => {
@@ -111,8 +91,8 @@ export default function TravelTransport() {
             <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <HeaderPages />
 
-                <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem - Transporte</h1>
-                <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-20" />
+                <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Editar transporte da viagem</h1>
+                <div className="flex flex-col items-center w-9/10 border border-2 border-[#092064] mt-3 mb-20" />
 
                 <div className="flex flex-col items-center w-3/5 h-2/5 mt-8 p-4 border-2 border-[#00FF4D] rounded-4xl shadow-lg">
                     <h1 className="text-white font-quicksand font-bold text-[2.5rem] leading-[1] tracking-[0] text-center mt-5">
@@ -122,7 +102,7 @@ export default function TravelTransport() {
                     <div className="flex items-center justify-center space-x-6 mt-auto mb-10">
                         <Modal isOpen={openModal}>
                             <div className="flex flex-col items-center justify-center h-full">
-                                <h1 className="text-[#0F2976] text-4xl text-center mb-10">Insira a descrição do Transporte:</h1>
+                                <h1 className="text-[#0F2976] text-4xl mb-3 text-center mb-10">Insira a descrição do Transporte:</h1>
                                 <textarea
                                     placeholder={selectedOption ? placeholders[selectedOption as keyof typeof placeholders] : ""}
                                     value={description}
@@ -147,35 +127,26 @@ export default function TravelTransport() {
                         </Modal>
 
                         <div className="flex space-x-6 gap-5">
-                            {["avião", "ônibus", "carro", "trem", "navio"].map((item) => (
-                                <button
-                                    key={item}
-                                    type="button"
-                                    className="flex flex-col items-center cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+                            {["avião", "ônibus", "carro", "trem", "navio"].map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col items-center cursor-pointer"
                                     onClick={() => handleTransportClick(item)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Enter" || e.key === " ") {
-                                            e.preventDefault();
-                                            handleTransportClick(item);
-                                        }
-                                    }}
                                 >
                                     <div
                                         className={`hover:scale-110 transition-transform w-[6.125rem] h-[6.125rem] flex items-center justify-center rounded-full ${confirmedOption === item ? "bg-[#00FF4D]" : "bg-white"
                                             }`}
                                     >
-                                        <Image
+                                        <img
                                             src={`/images-travel_transport/${item}.svg`}
                                             alt={item.charAt(0).toUpperCase() + item.slice(1)}
-                                            width={70}
-                                            height={70}
                                             className="w-[4.375rem] h-[4.375rem]"
                                         />
                                     </div>
                                     <span className="text-white mt-2">
                                         {item.charAt(0).toUpperCase() + item.slice(1)}
                                     </span>
-                                </button>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -186,20 +157,15 @@ export default function TravelTransport() {
                     <button
                         onClick={handleFinalSave}
                         disabled={!confirmedOption || !descriptions[confirmedOption]}
-                        className={`absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl ${!confirmedOption || !descriptions[confirmedOption]
-                            ? "cursor-not-allowed"
-                            : "cursor-pointer"
+                        className={`absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-2/4 h-20 text-3xl ${!confirmedOption || !descriptions[confirmedOption]
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
                             }`}
                     >
-                        Salvar
+                        Atualizar
                     </button>
                 </div>
             </div>
-            <SuccessModal
-                isOpen={showSuccess}
-                message="Transporte salvo com sucesso!"
-                onClose={handleCloseModalSuccess}
-            />
         </div>
     );
 }

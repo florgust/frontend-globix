@@ -13,7 +13,7 @@ interface ItineraryItem {
 interface ModalItineraryProps {
     isOpen: boolean;
     onClose: () => void;
-    onNavigate: (target: 'transport' | 'details') => void;
+    onNavigate: (target: 'transport' | 'details' | 'budget') => void;
     itinerario: ItineraryItem[];
 }
 
@@ -147,7 +147,7 @@ function ModalItinerary({ isOpen, onClose, onNavigate, itinerario }: ModalItiner
                             icon={<img src="/images-travel/Icons/IconGreenBudget.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Orçamento clicado!")}
+                            onClick={() => onNavigate('budget')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Orçamento</p>
                     </div>

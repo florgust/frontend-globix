@@ -11,11 +11,11 @@ const ModalEditTrip: React.FC<ModalEditTripProps> = ({ isOpen, onClose }) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
     const options = [
-        { label: "Viagem", icon: "/images-travel/Icons/IconBlueTrip.png", value: "viagem", link: "/editar_viagem" },
-        { label: "Transporte", icon: "/images-travel/Icons/IconBlueTransport.png", value: "transporte", link: "/editar_transporte" },
+        { label: "Viagem", icon: "/images-travel/Icons/IconBlueTrip.png", value: "viagem", link: "/create_trip_edit" },
+        { label: "Transporte", icon: "/images-travel/Icons/IconBlueTransport.png", value: "transporte", link: "/trip_transport_edit" },
         { label: "Itinerários", icon: "/images-travel/Icons/IconBlueItinerary.png", value: "itinerarios", link: "/editar_itinerarios" },
-        { label: "Localização", icon: "/images-travel/Icons/IconBlueLocation.png", value: "localizacao", link: "/editar_localizacao" },
-        { label: "Orçamento", icon: "/images-travel/Icons/IconBlueBudget.png", value: "orcamento", link: "/editar_orcamento" },
+        { label: "Localização", icon: "/images-travel/Icons/IconBlueLocation.png", value: "localizacao", link: "/trip_location_edit" },
+        { label: "Orçamento", icon: "/images-travel/Icons/IconBlueBudget.png", value: "orcamento", link: "/trip_budget_edit" },
         { label: "Usuários", icon: "/images-travel/Icons/IconBlueUsers.png", value: "usuarios", link: "/editar_usuarios" },
     ];
 
