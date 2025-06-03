@@ -65,19 +65,19 @@ export default function CalendarCard() {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="bg-white/90 rounded-2xl shadow-lg px-6 py-4 w-[100%] h-[29vh] flex flex-col">
+    <div className="bg-white rounded-2xl shadow-lg px-6 py-4 w-[100%] h-[29vh] flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <button className="p-1 rounded hover:bg-gray-100" onClick={prevMonth}>
-          <ChevronLeft size={20} className="text-[#1C4CDC] cursor-pointer" />
+          <ChevronLeft size={20} className="text-[#0F2976] cursor-pointer" />
         </button>
-        <span className="font-semibold text-[#1C4CDC]">
+        <span className="font-semibold text-[#0F2976]">
           {monthNames[month]} {year}
         </span>
         <button className="p-1 rounded hover:bg-gray-100" onClick={nextMonth}>
-          <ChevronRight size={20} className="text-[#1C4CDC] cursor-pointer" />
+          <ChevronRight size={20} className="text-[#0F2976] cursor-pointer" />
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-[#1C4CDC] mb-1">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-[#0F2976] mb-1">
         {weekDays.map((wd) => (
           <span key={wd}>{wd}</span>
         ))}
@@ -89,8 +89,8 @@ export default function CalendarCard() {
               key={idx}
               className={`py-1 rounded-full transition ${
                 isNextTripDay(day)
-                  ? "bg-[#B0FAC6] text-[#1C4CDC] font-bold border-2 border-[#00C86B]"
-                  : "text-[#1C4CDC] hover:bg-[#F0F9FF] cursor-pointer"
+                  ? "bg-[#B0FAC6] text-[#0F2976] font-bold border-2 border-[#0F2976]"
+                  : "text-[#0F2976] hover:bg-[#F0F9FF] cursor-pointer"
               }`}
             >
               {day}

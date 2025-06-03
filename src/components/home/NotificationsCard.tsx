@@ -27,7 +27,7 @@ export default function NotificationsCard() {
 
   return (
     <div className="bg-white/90 rounded-2xl shadow-lg px-6 py-3 w-[85.5%] h-[19vh] flex flex-col">
-      <h2 className="text-[#1C4CDC] text-2xl font-bold mb-2">Notificações Recentes</h2>
+      <h2 className="text-[#0F2976] text-2xl font-bold mb-2">Notificações Recentes</h2>
       {lastNotifications.length > 0 ? (
         <ul className="text-[#333] text-2sm space-y-1">
           {lastNotifications.map((notification) => (

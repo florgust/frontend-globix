@@ -33,7 +33,7 @@ export default function TravelSummariesCard() {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg px-0 py-0 w-[100%] h-[28vh] flex flex-col">
-      <h2 className="text-black text-xl font-bold px-6 pt-4 pb-2 text-center">Resumos de Viagens</h2>
+      <h2 className="text-[#0F2976] text-xl font-bold px-6 pt-4 pb-2 text-center">Resumos de Viagens</h2>
       <div className="flex flex-col items-center px-4">
         <Image
           src={trip.image}
@@ -46,7 +46,7 @@ export default function TravelSummariesCard() {
         <div className="w-full px-4 flex flex-col items-center">
           <div className="text-black font-bold text-base text-center">{trip.title}</div>
           <div className="text-[#333] text-sm mb-2 text-center">{trip.period}</div>
-          <button className="bg-[#1C4CDC] text-white text-xs font-semibold rounded-lg px-4 py-2 w-[50%] mx-auto">
+          <button className="bg-[#0F2976] text-white text-xs font-semibold rounded-lg px-4 py-2 w-[50%] mx-auto">
             Ver Detalhes
           </button>
         </div>

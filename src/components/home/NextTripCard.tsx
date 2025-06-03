@@ -41,18 +41,18 @@ export default function NextTripCard() {
         background: "linear-gradient(180deg, #FFFFFF 0%, #CAFFB5 99.99%, #A7FF84 100%)"
       }}
     >
-      <h2 className="text-[#1C4CDC] text-lg font-extrabold mb-1">Próxima Viagem</h2>
-      <div className="text-black text-2xl font-bold mb-2">Faltam 10 dias para a viagem!</div>
+      <h2 className="text-[#0F2976] text-lg font-extrabold mb-1">Próxima Viagem</h2>
+      <div className="text-[#292D32] text-2xl font-bold mb-2">Faltam 10 dias para a viagem!</div>
       <div className="w-full border-b border-black mb-3" />
-      <div className="text-[#333] text-xs mb-2">Antes de partir, não esqueça de:</div>
-      <ul className="text-[#333] text-2sm space-y-3 pl-1">
+      <div className="text-[#0F2976] text-xs mb-2">Antes de partir, não esqueça de:</div>
+      <ul className="text-[#292D32] text-2sm space-y-3 pl-1">
         {checklist.map((item, idx) => (
           <li key={idx} className="flex items-center gap-3 py-1">
             <input
               type="checkbox"
               checked={checked[idx]}
               onChange={() => handleCheck(idx)}
-              className="accent-[#393f61] w-4 h-4 rounded border-gray-300 cursor-pointer"
+              className="accent-[#0F2976] w-4 h-4 rounded border-gray-300 cursor-pointer"
             />
             <span>{item}</span>
           </li>

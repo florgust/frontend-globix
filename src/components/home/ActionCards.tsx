@@ -16,11 +16,10 @@ export default function ActionCards() {
       setAlertMessage("Por favor, insira um código válido.");
       return;
     }
-    // Simulação de validação
-    setAlertMessage(""); // Limpa alerta se sucesso
+
+    setAlertMessage(""); 
     setOpenModal(false);
     setTripCode("");
-    // Aqui você pode adicionar a lógica de integração futura
   };
 
   return (

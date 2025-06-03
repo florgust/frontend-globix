@@ -53,10 +53,11 @@ export default function TravelTipsCard() {
         background: "linear-gradient(360deg, #4182F9 0%, #90B6FB 0.01%, #BDD4FD 0.02%, #FFFFFF 100%)"
       }}
     >
-      <h2 className="text-[#1C4CDC] text-2xl font-bold mb-1">Dicas de Viagem</h2>
-      <ul className="text-[#333] text-2sm space-y-3">
+      <h2 className="text-[#0F2976] text-2xl font-bold mb-1">Dicas de Viagem</h2>
+      <ul className="text-[#333] text-2sm">
         {randomTips.map((tip, idx) => (
-          <li key={idx} className="flex items-center gap-3 py-3">
+          <li key={idx} 
+      className={`flex items-center gap-3 py-3 ${idx !== randomTips.length - 1 ? "border-b border-[#BDD4FD]" : ""}`}>
             <Image
               src={icons[idx] || icons[0]}
               alt="Ícone dica"
