@@ -13,7 +13,6 @@ export default function ActionCards() {
   const [openModal, setOpenModal] = useState(false);
   const [tripCode, setTripCode] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleJoinTrip = async () => {
     if (!tripCode.trim()) {
@@ -37,13 +36,11 @@ export default function ActionCards() {
       // 3. Enviar solicitação de participação
       await api.post(`/solicitacao/${userId}/${viagem.id}`);
       setAlertMessage("");
-      setShowSuccess(true);
       setTripCode("");
       setOpenModal(false);
 
       // Exibe o modal de sucesso por 3 segundos
       setTimeout(() => {
-        setShowSuccess(false);
       }, 3000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
