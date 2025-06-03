@@ -8,6 +8,7 @@ import { ModalItinerary } from '@/components/ui/modals/ModalItinerary';
 import ModalMoreDetails from '@/components/ui/modals/ModalMoreDetails';
 import { ModalPromoteOrganizer } from '@/components/ui/modals/ModalPromoteOrganizer';
 import ModalTransport from '@/components/ui/modals/ModalTransport';
+import ModalBudget from '@/components/ui/modals/ModalBudget';
 import { List, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import api from '@/utils/axios';
@@ -52,6 +53,8 @@ export default function DetailsPage() {
     const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
     const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
     const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
+    const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
+
 
     const [trip, setTrip] = useState<Trip | null>(null);
     const [convidados, setConvidados] = useState<Usuario[]>([]);
@@ -118,6 +121,7 @@ export default function DetailsPage() {
         setIsTransportModalOpen(false);
         setIsMoreDetailsModalOpen(false);
         setIsItineraryModalOpen(false);
+        setIsBudgetModalOpen(false);
     };
 
 
@@ -156,88 +160,6 @@ export default function DetailsPage() {
     };
 
     const detalhesViagem = {
-        viagem: {
-            id_viagem: 1,
-            nome: "Viagem Rifaina",
-            criador_id: 1,
-            descricao: "Uma viagem incrível para Rifaina, cheia de aventuras e diversão.",
-            data_inicio: "2025-06-01",
-            data_fim: "2025-06-07",
-            imagem_capa: "/images-home_page/carousel/rifaina-capa.png"
-        },
-        usuario_viagem: [
-            {
-                id_usuario: 1,
-                id_viagem: 1,
-                papel: "Organizador",
-            },
-            {
-                id_usuario: 2,
-                id_viagem: 1,
-                papel: "Participante"
-            },
-            {
-                id_usuario: 3,
-                id_viagem: 1,
-                papel: "OrganizadorPromovido",
-            }
-        ],
-        usuario: [
-            {
-                id_usuario: 1,
-                nome: "Mauro Borges",
-                email: "mauro@email.com.br",
-                tipo: "Organizador",
-                foto: "/images-travel/images-user/user_mauro.png",
-            },
-            {
-                id_usuario: 2,
-                nome: "Lucas Silva Souza",
-                email: "lucas@email.com.br",
-                tipo: "OrganizadorPromovido",
-                foto: "/images-travel/images-user/user_patrick.png",
-            },
-            {
-                id_usuario: 3,
-                nome: "Joana",
-                email: "joana@email.com.br",
-                tipo: "Participante",
-                foto: "/images-travel/images-user/user_patrick.png",
-            },
-            {
-                id_usuario: 4,
-                nome: "Luan",
-                email: "luan@email.com.br",
-                tipo: "Participante",
-                foto: "/images-travel/images-user/user_luan.png",
-            },
-        ],
-        solicitacoes: [
-            {
-                "id_usuario": 5,
-                "nome": "Ana Paula",
-                "email": "ana.paula@email.com.br",
-                "tipo": "Solicitante",
-                "foto": "/images-travel/images-user/user_ana.png",
-                "tipo_solicitacao": 1,
-            },
-            {
-                "id_usuario": 6,
-                "nome": "Carlos Eduardo",
-                "email": "carlos.eduardo@email.com.br",
-                "tipo": "Solicitante",
-                "foto": "/images-travel/images-user/user_carlos.png",
-                "tipo_solicitacao": 1,
-            },
-            {
-                "id_usuario": 7,
-                "nome": "Fernanda Lima",
-                "email": "fernanda.lima@email.com.br",
-                "tipo": "Solicitante",
-                "foto": "/images-travel/images-user/user_fernanda.png",
-                "tipo_solicitacao": 1,
-            }
-        ],
         itinerario: [
             {
                 "id": 1,
@@ -628,6 +550,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -647,6 +570,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -664,19 +588,33 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'transport') setIsTransportModalOpen(true);
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                             itinerario={detalhesViagem.itinerario || []}
                                         />
                                     </div>
                                 </div>
                                 <div className="flex gap-4 mt-5">
-                                    <div className="flex flex-col items-center">
-                                        <IconButton
-                                            icon={<img src="/images-travel/Icons/IconGreenBudget.png"
-                                                className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                    <div>
+                                        <div className="flex flex-col items-center">
+                                            <IconButton
+                                                icon={<img src="\images-travel\Icons\IconGreenBudget.png"
+                                                    className="w-w-20 h-20" />}
+                                                onClick={() => setIsBudgetModalOpen(true)}
+                                            />
+                                            <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                                        </div>
+
+                                        <ModalBudget
+                                            isOpen={isBudgetModalOpen}
+                                            onClose={() => setIsBudgetModalOpen(false)}
+                                            onNavigate={(target) => {
+                                                closeAllModals();
+                                                if (target === 'itinerary') setIsItineraryModalOpen(true);
+                                                if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                            }}
                                         />
-                                        <p className="text-sm text-gray-500 mt-2">Orçamento</p>
                                     </div>
                                     <div className="flex flex-col items-center">
                                         <IconButton
@@ -694,7 +632,7 @@ export default function DetailsPage() {
                                         />
                                         <p className="text-sm text-gray-500 mt-2">Avisos</p>
                                     </div>
-                                </div>
+                                </div>                                
                             </div>
                         </div>
                         <div className='w-full flex justify-between mt-8'>

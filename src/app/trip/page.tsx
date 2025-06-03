@@ -10,6 +10,7 @@ import { Trip } from '@/types/trip';
 import api from '@/utils/axios';
 import { List } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import ModalBudget from '@/components/ui/modals/ModalBudget';
 
 interface UsuarioViagem {
     idViagem: number;
@@ -32,6 +33,7 @@ export default function DetailsPage() {
     const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
     const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
     const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
+    const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
 
     const [trip, setTrip] = useState<Trip | null>(null);
     const [organizadores, setOrganizadores] = useState<Usuario[]>([]);
@@ -319,6 +321,7 @@ export default function DetailsPage() {
         setIsTransportModalOpen(false);
         setIsMoreDetailsModalOpen(false);
         setIsItineraryModalOpen(false);
+        setIsBudgetModalOpen(false);
     };
 
     if (loading) {
@@ -409,6 +412,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -428,6 +432,7 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                         />
                                     </div>
@@ -445,19 +450,33 @@ export default function DetailsPage() {
                                                 closeAllModals();
                                                 if (target === 'transport') setIsTransportModalOpen(true);
                                                 if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                                if (target === 'budget') setIsBudgetModalOpen(true);
                                             }}
                                             itinerario={detalhesViagem.itinerario}
                                         />
                                     </div>
                                 </div>
                                 <div className="flex gap-4 mt-5">
-                                    <div className="flex flex-col items-center">
-                                        <IconButton
-                                            icon={<img src="/images-travel/Icons/IconGreenBudget.png"
-                                                className="w-20 h-20" />}
-                                            onClick={() => alert("Botão clicado!")}
+                                    <div>
+                                        <div className="flex flex-col items-center">
+                                            <IconButton
+                                                icon={<img src="\images-travel\Icons\IconGreenBudget.png"
+                                                className="w-w-20 h-20" />}
+                                                onClick={() => setIsBudgetModalOpen(true)}
+                                            />
+                                            <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                                        </div>
+
+                                        <ModalBudget
+                                            isOpen={isBudgetModalOpen}
+                                            onClose={() => setIsBudgetModalOpen(false)}
+                                            onNavigate={(target) => {
+                                                closeAllModals();
+                                                if (target === 'itinerary') setIsItineraryModalOpen(true);
+                                                if (target === 'transport') setIsTransportModalOpen(true);
+                                                if (target === 'details') setIsMoreDetailsModalOpen(true);
+                                            }}
                                         />
-                                        <p className="text-sm text-gray-500 mt-2">Orçamento</p>
                                     </div>
                                     <div className="flex flex-col items-center">
                                         <IconButton
