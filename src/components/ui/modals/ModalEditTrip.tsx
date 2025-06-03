@@ -15,7 +15,7 @@ const ModalEditTrip: React.FC<ModalEditTripProps> = ({ isOpen, onClose }) => {
         { label: "Transporte", icon: "/images-travel/Icons/IconBlueTransport.png", value: "transporte", link: "/trip_transport_edit" },
         { label: "Itinerários", icon: "/images-travel/Icons/IconBlueItinerary.png", value: "itinerarios", link: "/editar_itinerarios" },
         { label: "Localização", icon: "/images-travel/Icons/IconBlueLocation.png", value: "localizacao", link: "/trip_location_edit" },
-        { label: "Orçamento", icon: "/images-travel/Icons/IconBlueBudget.png", value: "orcamento", link: "/editar_orcamento" },
+        { label: "Orçamento", icon: "/images-travel/Icons/IconBlueBudget.png", value: "orcamento", link: "/trip_budget_edit" },
         { label: "Usuários", icon: "/images-travel/Icons/IconBlueUsers.png", value: "usuarios", link: "/editar_usuarios" },
     ];
 
