@@ -19,6 +19,7 @@ interface RequestUser {
   tipo: number;
 }
 
+
 interface RequestListProps {
   solicitacoes: RequestUser[];
   onAccept: (id_usuario: number) => void;
