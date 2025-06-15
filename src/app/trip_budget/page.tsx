@@ -52,7 +52,7 @@ export default function TripBudget() {
 
     const handleCloseModal = () => {
         setShowSuccess(false);
-        router.push("/create_trip_successful");
+        router.push("/trip_itinerary"); // Redireciona para a próxima página
     };
 
     const handleCategoryChange = (id: number, value: string) => {
