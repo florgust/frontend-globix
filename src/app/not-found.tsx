@@ -5,6 +5,7 @@ import { HeaderPages } from "@/components/ui/header";
 import Footer from "@/components/ui/Footer";
 import { useRouter } from "next/navigation";
 
+
 export default function NotFound() {
     const router = useRouter();
 
