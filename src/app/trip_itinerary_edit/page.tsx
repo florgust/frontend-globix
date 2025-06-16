@@ -17,6 +17,15 @@ interface Activity {
   isNew?: boolean;
 }
 
+interface ApiItinerary {
+  id: number;
+  viagemId: number;
+  tipoEvento: string;
+  titulo: string;
+  dataHora: string;
+  descricao: string;
+}
+
 interface ItineraryDay {
   day: number;
   date: string;
@@ -86,7 +95,7 @@ export default function TripItinerary() {
     getComparableDate(a.date).localeCompare(getComparableDate(b.date));
 
   // Função para transformar resposta da API em formato do estado
-  const mapApiToItineraries = (apiData: any[]): ItineraryDay[] => {
+  const mapApiToItineraries = (apiData: ApiItinerary[]): ItineraryDay[] => {
     const grouped: { [date: string]: Activity[] } = {};
     apiData.forEach((item) => {
       const [dateStr, timeStr] = item.dataHora.split("T");
@@ -121,10 +130,10 @@ export default function TripItinerary() {
   // Buscar itinerários ao carregar a tela
   useEffect(() => {
     const fetchItinerarios = async () => {
-      const viagemStr = localStorage.getItem("viagemEmCriacao");
-      if (!viagemStr) return;
-      const viagem = JSON.parse(viagemStr);
-      const viagemId = viagem.id;
+      const selectedTripStr = localStorage.getItem("selectedTrip");
+      if (!selectedTripStr) return;
+      const selectedTrip = JSON.parse(selectedTripStr);
+      const viagemId = selectedTrip.id;
       try {
         const response = await api.get(`/itinerarios/viagem/${viagemId}`);
         setItineraries(mapApiToItineraries(response.data));
@@ -315,13 +324,13 @@ export default function TripItinerary() {
 
   // Salvar no backend
   const handleSaveItinerary = async () => {
-    const viagemStr = localStorage.getItem("viagemEmCriacao");
-    if (!viagemStr) {
+    const selectedTripStr = localStorage.getItem("selectedTrip");
+    if (!selectedTripStr) {
       alert("Viagem não encontrada.");
       return;
     }
-    const viagem = JSON.parse(viagemStr);
-    const viagemId = viagem.id;
+    const selectedTrip = JSON.parse(selectedTripStr);
+    const viagemId = selectedTrip.id;
 
     try {
       for (const day of itineraries) {
