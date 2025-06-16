@@ -12,7 +12,11 @@ import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import api from "@/utils/axios";
-import { mapApiToItineraries, ItineraryDay, ItineraryItem } from "@/utils/itineraryUtils";
+import {
+  mapApiToItineraries,
+  ItineraryDay,
+  ItineraryItem,
+} from "@/utils/itineraryUtils";
 
 interface Usuario {
   id: number;
@@ -47,6 +51,15 @@ interface Trip {
   data_fim?: string;
   itinerario?: Itinerario[]; // Tipar se desejar
 }
+interface Orcamento {
+  id: number;
+  viagemId: number;
+  categoria: string;
+  custo: string;
+  observacao: string;
+  dataCriacao: string;
+  dataAtualizacao: string;
+}
 
 export default function DetailsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,6 +69,7 @@ export default function DetailsPage() {
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
+  const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);
 
   const [trip, setTrip] = useState<Trip | null>(null);
   const [convidados, setConvidados] = useState<Usuario[]>([]);
@@ -189,6 +203,22 @@ export default function DetailsPage() {
       }
     };
     fetchItinerarios();
+  }, []);
+
+  useEffect(() => {
+    async function fetchOrcamentos() {
+      const storedTrip = localStorage.getItem("selectedTrip");
+      if (storedTrip) {
+        const tripObj = JSON.parse(storedTrip);
+        try {
+          const { data } = await api.get(`/orcamentos/viagem/${tripObj.id}`);
+          setOrcamentos(data);
+        } catch (error) {
+          console.error("Erro ao buscar orçamentos:", error);
+        }
+      }
+    }
+    fetchOrcamentos();
   }, []);
 
   if (loading) {
@@ -481,6 +511,7 @@ export default function DetailsPage() {
                         if (target === "details")
                           setIsMoreDetailsModalOpen(true);
                       }}
+                      orcamentos={orcamentos}
                     />
                   </div>
                   <div className="flex flex-col items-center">
