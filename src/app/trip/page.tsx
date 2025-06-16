@@ -33,17 +33,39 @@ interface Usuario {
   foto?: string;
 }
 
+interface Orcamento {
+  id: number;
+  viagemId: number;
+  categoria: string;
+  custo: string;
+  observacao: string;
+  dataCriacao: string;
+  dataAtualizacao: string;
+}
+
 export default function DetailsPage() {
   const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
+  const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);
 
   const [trip, setTrip] = useState<Trip | null>(null);
   const [organizadores, setOrganizadores] = useState<Usuario[]>([]);
   const [convidados, setConvidados] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const storedTrip = localStorage.getItem("selectedTrip");
+    if (storedTrip) {
+      const tripObj = JSON.parse(storedTrip);
+      api
+        .get(`/orcamentos/viagem/${tripObj.id}`)
+        .then(({ data }) => setOrcamentos(data))
+        .catch((err) => console.error("Erro ao buscar orçamentos:", err));
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -339,6 +361,7 @@ export default function DetailsPage() {
                         if (target === "details")
                           setIsMoreDetailsModalOpen(true);
                       }}
+                      orcamentos={orcamentos}
                     />
                   </div>
                   <div className="flex flex-col items-center">
