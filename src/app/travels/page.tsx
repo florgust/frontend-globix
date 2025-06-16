@@ -43,8 +43,28 @@ interface Trip {
     descricao?: string;
     imagem?: string;
     data_inicio?: string;
+    dataInicio?: string;
     data_fim?: string;
-    itinerario?: Itinerario[]; // Tipar se desejar
+    dataFim?: string;
+    tipo?: string;
+    dataCriacao?: string;
+    data_criacao?: string;
+    quantidadeParticipante?: number;
+    quantidade_participante?: number;
+    itinerario?: Itinerario[];
+}
+
+interface ModalMoreDetailsTrip {
+    nome: string;
+    descricao: string;
+    destino: string;
+    dataInicio: string;
+    dataFim: string;
+    tipo: string;
+    quantidadeParticipante: number;
+    organizador: string;
+    dataCriacao: string;
+    imagemOrganizador?: string;
 }
 
 export default function DetailsPage() {
@@ -122,6 +142,46 @@ export default function DetailsPage() {
         setIsMoreDetailsModalOpen(false);
         setIsItineraryModalOpen(false);
         setIsBudgetModalOpen(false);
+    };
+
+    // 1. Extrai o destino do nome da viagem
+    function extractDestino(nomeViagem: string): string {
+        if (!nomeViagem) return "";
+        // Tenta extrair após "para"
+        const match = nomeViagem.match(/para\s+(.+)/i);
+        if (match) return match[1].trim();
+        // Se não encontrar "para", retorna o nome todo (removendo "Viagem" se houver)
+        return nomeViagem.replace(/^viagem\s*/i, "").trim();
+    }
+
+    // 2. Formata datas do backend para yyyy-mm-dd
+    function parseDate(dateStr?: string): string {
+        if (!dateStr) return "";
+        // Aceita tanto "2025-05-01T09:56:31.944-03:00" quanto "2025-05-01"
+        return dateStr.split("T")[0];
+    }
+
+    // 3. Pega a data de criação da viagem
+    function getDataCriacao(trip: any): string {
+        return trip?.dataCriacao || trip?.data_criacao || "";
+    }
+
+    // 4. Pega a quantidade de participantes (igual create_trip_successful)
+    function getQuantidadeParticipante(trip: any): number {
+        return trip?.quantidadeParticipante ?? trip?.quantidade_participante ?? convidados.length;
+    }
+
+    const modalTripDetails: ModalMoreDetailsTrip = {
+        nome: trip?.nome || "",
+        descricao: trip?.descricao || "",
+        destino: extractDestino(trip?.nome || ""),
+        dataInicio: parseDate(trip?.data_inicio || trip?.dataInicio),
+        dataFim: parseDate(trip?.data_fim || trip?.dataFim),
+        tipo: trip?.tipo || "",
+        quantidadeParticipante: trip?.quantidadeParticipante ?? trip?.quantidade_participante ?? convidados.length,
+        organizador: organizadores[0]?.nome || "",
+        dataCriacao: parseDate(trip?.data_criacao || trip?.dataCriacao),
+        imagemOrganizador: organizadores[0]?.foto || "/images-travel/images-user/user_mauro.png",
     };
 
 
@@ -551,7 +611,9 @@ export default function DetailsPage() {
                                                 if (target === 'itinerary') setIsItineraryModalOpen(true);
                                                 if (target === 'transport') setIsTransportModalOpen(true);
                                                 if (target === 'budget') setIsBudgetModalOpen(true);
+                                                // Adicione outros casos conforme necessário
                                             }}
+                                            trip={modalTripDetails}
                                         />
                                     </div>
                                     <div className="flex flex-col items-center">
@@ -632,7 +694,7 @@ export default function DetailsPage() {
                                         />
                                         <p className="text-sm text-gray-500 mt-2">Avisos</p>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                         <div className='w-full flex justify-between mt-8'>

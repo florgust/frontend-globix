@@ -4,11 +4,30 @@ import { IconButton } from "@/components/ui/button";
 interface ModalMoreDetailsProps {
     isOpen: boolean;
     onClose: () => void;
-    onNavigate: (target: 'transport' | 'itinerary' | 'budget') => void;
+    onNavigate: (target: 'transport' | 'itinerary' | 'budget' | 'messages' | 'alerts') => void;
+    trip: {
+        nome: string;
+        descricao: string;
+        destino: string;
+        dataInicio: string;
+        dataFim: string;
+        tipo: string;
+        quantidadeParticipante: number;
+        organizador: string;
+        dataCriacao: string;
+        imagemOrganizador?: string;
+    };
 }
 
-const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, onNavigate }) => {
+const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, onNavigate, trip }) => {
     if (!isOpen) return null;
+
+    // Função para formatar datas
+    const formatDate = (dateStr: string) => {
+        if (!dateStr) return "";
+        const [year, month, day] = dateStr.split("-");
+        return `${day}/${month}/${year}`;
+    };
 
     return (
         <div
@@ -45,10 +64,10 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                     >
                         {/* Header */}
                         <h1 className="text-4xl font-bold text-center text-[#0F2976] mb-4">
-                            Viagem para Rifaina
+                            {trip.nome}
                         </h1>
                         <p className="text-center text-lg text-[#3B4449] mb-8">
-                            Nesta viagem à Rifaina você vai aproveitar o sol e curtir banhos de mar. Ideal para quem busca relaxar e recarregar as energias com paisagens incríveis.
+                            {trip.descricao || "Descrição não informada"}
                         </p>
 
                         {/* Informações */}
@@ -56,25 +75,25 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/LocationIcon.png" alt="Ícone de localização" className="w-8 h-8" />
-                                    Destino: <span className="font-bold">Uberaba → Rifaina</span>
+                                    Destino: <span className="font-bold">{trip.destino || "Destino não informado"}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/CalendarIcon.png" alt="Ícone de calendário" className="w-8 h-8" />
-                                    Data: <span className="font-bold">20/05/2025 a 25/05/2025</span>
+                                    Data: <span className="font-bold">{formatDate(trip.dataInicio)} a {formatDate(trip.dataFim)}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/PlanetIcon.png" alt="Ícone de tipo público" className="w-8 h-8" />
-                                    Tipo: <span className="font-bold">Pública</span>
+                                    Tipo: <span className="font-bold">{trip.tipo === "publica" ? "Pública" : "Privada"}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/UsersIcon.png" alt="Ícone de vagas" className="w-8 h-8" />
-                                    Vagas: <span className="font-bold">10 disponíveis</span>
+                                    Vagas: <span className="font-bold">{trip.quantidadeParticipante} disponíveis</span>
                                 </p>
                             </div>
                         </div>
@@ -82,13 +101,13 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                         {/* Organizador */}
                         <div className="flex items-center mt-6">
                             <img
-                                src="/images-travel/images-user/user_mauro.png"
+                                src={trip.imagemOrganizador || "/images-travel/images-user/user_mauro.png"}
                                 alt="Organizador"
                                 className="w-16 h-16 rounded-full"
                             />
                             <div className="ml-4">
-                                <p className="text-xs text-[#3B4449]">Organizador: <span className="font-bold">Mauro Borges</span></p>
-                                <p className="text-xs text-[#3B4449]">Viagem criada: <span className="font-bold">20/05/2025</span></p>
+                                <p className="text-xs text-[#3B4449]">Organizador: <span className="font-bold">{trip.organizador}</span></p>
+                                <p className="text-xs text-[#3B4449]">Viagem criada: <span className="font-bold">{formatDate(trip.dataCriacao)}</span></p>
                                 <a href="#" className="text-xs text-[#1C4CDC] underline">
                                     Ver Perfil
                                 </a>
@@ -131,7 +150,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                             icon={<img src="/images-travel/Icons/IconMessage.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Mensagens clicado!")}
+                            onClick={() => onNavigate('messages')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
                     </div>
@@ -140,7 +159,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                             icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Avisos clicado!")}
+                            onClick={() => onNavigate('alerts')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
                     </div>
