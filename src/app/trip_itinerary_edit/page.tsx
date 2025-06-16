@@ -209,7 +209,17 @@ export default function TripItinerary() {
   };
 
   // Remove activity
-  const handleRemoveActivity = (activityIdx: number) => {
+  const handleRemoveActivity = async (activityIdx: number) => {
+    const activity = itineraries[currentPage].activities[activityIdx];
+    if (activity.id) {
+      try {
+        await api.delete(`/itinerario/${activity.id}`);
+      } catch (error) {
+        alert("Erro ao excluir atividade!");
+        console.error(error);
+        return;
+      }
+    }
     setItineraries((prev) =>
       prev.map((it, idx) =>
         idx === currentPage
@@ -224,7 +234,22 @@ export default function TripItinerary() {
   };
 
   // Remove entire day
-  const handleRemoveDay = (dayIdx: number) => {
+  const handleRemoveDay = async (dayIdx: number) => {
+    const day = itineraries[dayIdx];
+    // Remove cada atividade do backend
+    await Promise.all(
+      day.activities
+        .filter((activity) => activity.id) // só remove se tiver id
+        .map((activity) =>
+          api
+            .delete(`/itinerario/${activity.id}`)
+            .catch((err) =>
+              console.error(`Erro ao remover atividade ${activity.id}:`, err)
+            )
+        )
+    );
+
+    // Atualiza o estado local
     setItineraries((prev) => prev.filter((_, idx) => idx !== dayIdx));
     setCurrentPage((prevPage) => {
       if (dayIdx === 0) return 0;
