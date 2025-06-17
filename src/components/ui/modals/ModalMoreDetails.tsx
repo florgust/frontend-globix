@@ -1,14 +1,16 @@
 import React from "react";
 import { IconButton } from "@/components/ui/button";
+import { ModalMoreDetailsTrip } from "@/utils/moreDetailsUtils";
 
 interface ModalMoreDetailsProps {
     isOpen: boolean;
     onClose: () => void;
     onNavigate: (target: 'transport' | 'itinerary' | 'budget') => void;
+    trip?: ModalMoreDetailsTrip | null;
 }
 
-const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, onNavigate }) => {
-    if (!isOpen) return null;
+const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, onNavigate, trip }) => {
+    if (!isOpen || !trip) return null;
 
     return (
         <div
@@ -41,40 +43,42 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                     {/* Conteúdo dentro do quadrado */}
                     <div
                         style={{ backgroundColor: "rgba(0, 255, 77, 0.17)" }}
-                        className="w-[90%] max-w-3xl p-2 rounded-lg shadow-md mt-3"
+                        className="w-[90%] max-w-3xl p-5 rounded-lg shadow-md mt-3"
                     >
                         {/* Header */}
                         <h1 className="text-4xl font-bold text-center text-[#0F2976] mb-4">
-                            Viagem para Rifaina
+                            {trip.nome}
                         </h1>
-                        <p className="text-center text-lg text-[#3B4449] mb-8">
-                            Nesta viagem à Rifaina você vai aproveitar o sol e curtir banhos de mar. Ideal para quem busca relaxar e recarregar as energias com paisagens incríveis.
+                        <p className="text-center text-lg text-[#3B4449] mb-4">
+                            {trip.descricao}
                         </p>
+
+                        <hr className="my-4 border-t-2 border-[#0F2976] w-[100%] mx-auto rounded" />
 
                         {/* Informações */}
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/LocationIcon.png" alt="Ícone de localização" className="w-8 h-8" />
-                                    Destino: <span className="font-bold">Uberaba → Rifaina</span>
+                                    Destino: <span className="font-bold">{trip.destino}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/CalendarIcon.png" alt="Ícone de calendário" className="w-8 h-8" />
-                                    Data: <span className="font-bold">20/05/2025 a 25/05/2025</span>
+                                    Data: <span className="font-bold">{trip.dataInicio} a {trip.dataFim}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/PlanetIcon.png" alt="Ícone de tipo público" className="w-8 h-8" />
-                                    Tipo: <span className="font-bold">Pública</span>
+                                    Tipo: <span className="font-bold">{trip.tipo}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/UsersIcon.png" alt="Ícone de vagas" className="w-8 h-8" />
-                                    Vagas: <span className="font-bold">10 disponíveis</span>
+                                    Vagas: <span className="font-bold">{trip.quantidadeParticipante} disponíveis</span>
                                 </p>
                             </div>
                         </div>
@@ -82,14 +86,14 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                         {/* Organizador */}
                         <div className="flex items-center mt-6">
                             <img
-                                src="/images-travel/images-user/user_mauro.png"
+                                src={trip.imagemOrganizador || "/images-profile/mauro.svg"}
                                 alt="Organizador"
                                 className="w-16 h-16 rounded-full"
                             />
                             <div className="ml-4">
-                                <p className="text-xs text-[#3B4449]">Organizador: <span className="font-bold">Mauro Borges</span></p>
-                                <p className="text-xs text-[#3B4449]">Viagem criada: <span className="font-bold">20/05/2025</span></p>
-                                <a href="#" className="text-xs text-[#1C4CDC] underline">
+                                <p className="text-xs text-[#3B4449]">Organizador: <span className="font-bold">{trip.organizador}</span></p>
+                                <p className="text-xs text-[#3B4449]">Viagem criada: <span className="font-bold">{trip.dataCriacao}</span></p>
+                                <a href="/profile" className="text-xs text-[#1C4CDC] underline">
                                     Ver Perfil
                                 </a>
                             </div>
