@@ -17,6 +17,10 @@ import {
   ItineraryDay,
   ItineraryItem,
 } from "@/utils/itineraryUtils";
+import {
+  ModalMoreDetailsTrip,
+  mapToModalMoreDetailsTrip,
+} from "@/utils/moreDetailsUtils";
 
 interface Usuario {
   id: number;
@@ -68,6 +72,7 @@ export default function DetailsPage() {
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
+  const [moreDetailsTrip, setMoreDetailsTrip] = useState<ModalMoreDetailsTrip | null>(null);
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
   const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);
 
@@ -188,6 +193,28 @@ export default function DetailsPage() {
       solicitacoes.filter((solicitacao) => solicitacao.id !== id)
     ); // Remove das solicitações
   };
+
+  useEffect(() => {
+    const fetchMoreDetails = async () => {
+      const storedTrip = localStorage.getItem("selectedTrip");
+      if (!storedTrip) return;
+      const tripObj = JSON.parse(storedTrip);
+      const viagemId = tripObj.id;
+
+      try {
+        // Busca os dados atualizados da viagem pelo ID
+        const { data } = await api.get(`/viagem/${viagemId}`);
+
+        // Monta o objeto para o modal usando apenas os campos necessários
+        setMoreDetailsTrip(
+          mapToModalMoreDetailsTrip(data, organizadores, convidados)
+        );
+      } catch (error) {
+        console.error("Erro ao buscar detalhes da viagem:", error);
+      }
+    };
+    fetchMoreDetails();
+  }, [organizadores, convidados]);
 
   useEffect(() => {
     const fetchItinerarios = async () => {
@@ -339,29 +366,26 @@ export default function DetailsPage() {
                 <div className="relative w-3/5 flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
                   <div
                     className={`absolute top-0 left-0 h-12 w-1/2 bg-[#1C4CDC] transition-all duration-300
-                                        ${
-                                          activeButton === "convidados"
-                                            ? "rounded-l-full"
-                                            : "left-1/2 rounded-r-full"
-                                        }`}
+                                        ${activeButton === "convidados"
+                        ? "rounded-l-full"
+                        : "left-1/2 rounded-r-full"
+                      }`}
                   ></div>
                   <div className="relative flex w-full">
                     <button
-                      className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300  ${
-                        activeButton === "convidados"
-                          ? "text-white "
-                          : "text-[#0F2976] cursor-pointer"
-                      }`}
+                      className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300  ${activeButton === "convidados"
+                        ? "text-white "
+                        : "text-[#0F2976] cursor-pointer"
+                        }`}
                       onClick={() => setActiveButton("convidados")}
                     >
                       Convidados
                     </button>
                     <button
-                      className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${
-                        activeButton === "solicitacoes"
-                          ? "text-white"
-                          : "text-[#0F2976] cursor-pointer"
-                      }`}
+                      className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${activeButton === "solicitacoes"
+                        ? "text-white"
+                        : "text-[#0F2976] cursor-pointer"
+                        }`}
                       onClick={() => setActiveButton("solicitacoes")}
                     >
                       Solicitações
@@ -423,12 +447,11 @@ export default function DetailsPage() {
                       onClose={() => setIsMoreDetailsModalOpen(false)}
                       onNavigate={(target) => {
                         closeAllModals();
-                        if (target === "itinerary")
-                          setIsItineraryModalOpen(true);
-                        if (target === "transport")
-                          setIsTransportModalOpen(true);
+                        if (target === "itinerary") setIsItineraryModalOpen(true);
+                        if (target === "transport") setIsTransportModalOpen(true);
                         if (target === "budget") setIsBudgetModalOpen(true);
                       }}
+                      trip={moreDetailsTrip}
                     />
                   </div>
                   <div className="flex flex-col items-center">
