@@ -20,6 +20,10 @@ import {
   ModalMoreDetailsTrip,
   mapToModalMoreDetailsTrip,
 } from "@/utils/moreDetailsUtils";
+import {
+  TransportLocation,
+  mapToTransportLocation,
+} from "@/utils/transportUtils";
 
 interface UsuarioViagem {
   idViagem: number;
@@ -51,9 +55,10 @@ export default function DetailsPage() {
   const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
-  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
   const [moreDetailsTrip, setMoreDetailsTrip] = useState<ModalMoreDetailsTrip | null>(null);
+  const [transportData, setTransportData] = useState<TransportLocation | null>(null);
   const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);
 
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -162,6 +167,24 @@ export default function DetailsPage() {
     };
     fetchMoreDetails();
   }, [organizadores, convidados]);
+
+  useEffect(() => {
+    const fetchTransportAndLocation = async () => {
+      const storedTrip = localStorage.getItem("selectedTrip");
+      if (!storedTrip) return;
+      const tripObj = JSON.parse(storedTrip);
+      const viagemId = tripObj.id;
+
+      try {
+        const { data: transporte } = await api.get(`/transporte/viagem/${viagemId}`);
+        const { data: localizacao } = await api.get(`/localizacao/viagem/${viagemId}`);
+        setTransportData(mapToTransportLocation(transporte, localizacao));
+      } catch (error) {
+        console.error("Erro ao buscar transporte/localização:", error);
+      }
+    };
+    fetchTransportAndLocation();
+  }, []);
 
   useEffect(() => {
     const fetchItinerarios = async () => {
@@ -326,12 +349,11 @@ export default function DetailsPage() {
                       onClose={() => setIsTransportModalOpen(false)}
                       onNavigate={(target) => {
                         closeAllModals();
-                        if (target === "itinerary")
-                          setIsItineraryModalOpen(true);
-                        if (target === "details")
-                          setIsMoreDetailsModalOpen(true);
+                        if (target === "itinerary") setIsItineraryModalOpen(true);
+                        if (target === "details") setIsMoreDetailsModalOpen(true);
                         if (target === "budget") setIsBudgetModalOpen(true);
                       }}
+                      transportData={transportData}
                     />
                   </div>
                   <div className="flex flex-col items-center">
