@@ -5,92 +5,111 @@ import { HeaderPages } from "@/components/ui/header";
 import { Modal } from "@/components/ui/modal";
 import { X } from "lucide-react";
 import api from "@/utils/axios";
+import SuccessModal from "@/components/ui/modals/ModalSuccess";
+import { useRouter } from "next/navigation";
 
-export default function TravelTransport() {
+const transportTypes = ["avião", "ônibus", "carro", "trem", "navio"];
+
+export default function TripTransportEdit() {
     const [openModal, setOpenModal] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string | null>(null); // Transporte atualmente selecionado
-    const [description, setDescription] = useState(""); // Descrição do transporte selecionado
-    const [confirmedOption, setConfirmedOption] = useState<string | null>(null); // Transporte confirmado
-    const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({}); // Armazena as descrições de cada transporte
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [description, setDescription] = useState("");
+    const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
+    const [transporteId, setTransporteId] = useState<number | null>(null);
+    const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({});
+    const [showSuccess, setShowSuccess] = useState(false);
+    const router = useRouter();
+
     const [placeholders] = useState({
-        avião: "Informe informações importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
-        ônibus: "Informe informações importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
-        carro: "Informe informações importantes sobre o carro, como: Modelo, marca, cor, capacidade de passageiros e condições gerais do veículo.",
-        trem: "Informe informações importantes sobre o transporte ferroviário, como: Nome da companhia ferroviária, tipo de trem e serviços disponíveis.",
-        navio: "Informe informações importantes sobre o transporte marítimo, como: Nome da companhia marítima, tipo de embarcação e comodidades disponíveis.",
+        avião: "Informe dados importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
+        ônibus: "Informe dados importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
+        carro: "Informe dados importantes sobre o carro, como: Modelo, marca, cor, capacidade de passageiros e condições gerais do veículo.",
+        trem: "Informe dados importantes sobre o transporte ferroviário, como: Nome da companhia ferroviária, tipo de trem e serviços disponíveis.",
+        navio: "Informe dados importantes sobre o transporte marítimo, como: Nome da companhia marítima, tipo de embarcação e comodidades disponíveis.",
     });
 
-    // Função para buscar transporte do back-end
-    const fetchTransporte = async () => {
-        try {
-            const response = await api.get('/transportes');
-            const transporte = response.data;
+    // Carrega transporte já salvo ao abrir a página
+    useEffect(() => {
+        const fetchTransporte = async () => {
+            try {
+                const selectedTripStr = localStorage.getItem("selectedTrip");
+                if (!selectedTripStr) return;
+                const selectedTrip = JSON.parse(selectedTripStr);
+                const viagemId = selectedTrip.id;
 
-            if (transporte) {
-                setConfirmedOption(transporte.tipoTransporte);
-                setDescriptions({ [transporte.tipoTransporte]: transporte.descricao });
+                const response = await api.get(`/transporte/viagem/${viagemId}`);
+                const transporte = Array.isArray(response.data) ? response.data[0] : response.data;
+                if (transporte) {
+                    setTransporteId(transporte.id); // Salve o id do transporte
+                    setConfirmedOption(transporte.tipoTransporte || transporte.tipo_transporte);
+                    setSelectedOption(transporte.tipoTransporte || transporte.tipo_transporte);
+                    setDescriptions({ [transporte.tipoTransporte || transporte.tipo_transporte]: transporte.descricao });
+                }
+            } catch (error) {
+                console.error("Erro ao buscar transporte:", error);
             }
-        } catch (error) {
-            console.error("Erro ao buscar transporte:", error);
+        };
+        fetchTransporte();
+    }, []);
+
+    // Atualiza descrição ao abrir modal
+    const handleTransportClick = (item: string) => {
+        setSelectedOption(item);
+        setDescription(descriptions[item] || "");
+        setOpenModal(true);
+    };
+
+    const handleSaveAndExit = () => {
+        if (selectedOption) {
+            setDescriptions({
+                [selectedOption]: description,
+            });
+            setConfirmedOption(selectedOption);
+            setOpenModal(false);
         }
     };
 
-    // Função para salvar transporte no back-end
+    const handleCloseModal = () => {
+        setOpenModal(false);
+        setDescription("");
+    };
+
+    // Atualiza transporte (PUT)
     const handleFinalSave = async () => {
         if (!confirmedOption || !descriptions[confirmedOption]) {
             alert("Selecione um transporte e preencha a descrição antes de salvar.");
             return;
         }
 
+        if (!transporteId) {
+            alert("Transporte não encontrado para atualizar.");
+            return;
+        }
+
+        const payload = {
+            tipoTransporte: confirmedOption,
+            descricao: descriptions[confirmedOption],
+        };
+
         try {
-            const payload = {
-                viagemId: 1, // Substitua pelo ID da viagem correspondente
-                tipoTransporte: confirmedOption,
-                descricao: descriptions[confirmedOption],
-            };
-
-            await api.post('/transporte', payload);
-
-            alert("Transporte atualizado com sucesso!");
+            await api.put(`/transporte/${transporteId}`, payload);
+            setShowSuccess(true);
         } catch (error) {
-            console.error("Erro ao salvar o transporte:", error);
-            alert("Ocorreu um erro ao salvar o transporte. Tente novamente.");
+            console.error("Erro ao atualizar o transporte:", error);
+            alert("Ocorreu um erro ao atualizar o transporte. Tente novamente.");
         }
     };
 
-    useEffect(() => {
-        fetchTransporte(); // Busca o transporte ao carregar a página
-    }, []);
-
-    const handleTransportClick = (item: string) => {
-        setSelectedOption(item); // Define o transporte selecionado
-        setDescription(descriptions[item] || ""); // Carrega a descrição salva, se existir
-        setOpenModal(true); // Abre o modal
-    };
-
-    const handleSaveAndExit = () => {
-        if (selectedOption) {
-            // Atualiza o estado para manter apenas a descrição do transporte selecionado
-            setDescriptions({
-                [selectedOption]: description, // Salva apenas a descrição do transporte selecionado
-            });
-            setConfirmedOption(selectedOption); // Confirma o transporte selecionado
-            setOpenModal(false); // Fecha o modal
-        }
-    };
-
-    const handleCloseModal = () => {
-        setOpenModal(false); // Fecha o modal sem confirmar
-        setDescription(""); // Limpa a descrição temporária
+    const handleCloseModalSuccess = () => {
+        setShowSuccess(false);
+        router.push("/travels");
     };
 
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
             <SidebarMenu />
-
             <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <HeaderPages />
-
                 <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Editar transporte da viagem</h1>
                 <div className="flex flex-col items-center w-9/10 border border-2 border-[#092064] mt-3 mb-20" />
 
@@ -127,7 +146,7 @@ export default function TravelTransport() {
                         </Modal>
 
                         <div className="flex space-x-6 gap-5">
-                            {["avião", "ônibus", "carro", "trem", "navio"].map((item, index) => (
+                            {transportTypes.map((item, index) => (
                                 <div
                                     key={index}
                                     className="flex flex-col items-center cursor-pointer"
@@ -158,14 +177,19 @@ export default function TravelTransport() {
                         onClick={handleFinalSave}
                         disabled={!confirmedOption || !descriptions[confirmedOption]}
                         className={`absolute bg-[#00FF4D] text-[#0F2976] font-bold text-2xl rounded-lg w-2/4 h-20 text-3xl ${!confirmedOption || !descriptions[confirmedOption]
-                                ? "cursor-not-allowed"
-                                : "cursor-pointer"
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer"
                             }`}
                     >
                         Atualizar
                     </button>
                 </div>
             </div>
+            <SuccessModal
+                isOpen={showSuccess}
+                message="Transporte atualizado com sucesso!"
+                onClose={handleCloseModalSuccess}
+            />
         </div>
     );
 }
