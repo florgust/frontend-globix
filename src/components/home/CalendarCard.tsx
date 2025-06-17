@@ -23,6 +23,13 @@ function parseDate(dateStr: string): Date | null {
   return isNaN(date.getTime()) ? null : date;
 }
 
+interface TripApiResponse {
+  id: number;
+  data_inicio?: string;
+  dataInicio?: string;
+  nome: string;
+}
+
 interface TripStart {
   id: number;
   date: Date;
@@ -37,13 +44,13 @@ export default function CalendarCard() {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const { data } = await api.get("/viagens");
+        const { data } = await api.get<TripApiResponse[]>("/viagens");
         const trips: TripStart[] = (data || [])
-          .map((trip: any) => {
-            const date = parseDate(trip.data_inicio || trip.dataInicio);
+          .map((trip: TripApiResponse) => {
+            const date = parseDate(trip.data_inicio || trip.dataInicio || "");
             return date ? { id: trip.id, date, nome: trip.nome } : null;
           })
-          .filter(Boolean) as TripStart[];
+          .filter((t): t is TripStart => t !== null);
         setTripStartDates(trips);
       } catch (error) {
         console.error("Erro ao buscar viagens:", error);
