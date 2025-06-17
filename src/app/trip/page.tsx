@@ -16,6 +16,10 @@ import {
   ItineraryDay,
   ItineraryItem,
 } from "@/utils/itineraryUtils";
+import {
+  ModalMoreDetailsTrip,
+  mapToModalMoreDetailsTrip,
+} from "@/utils/moreDetailsUtils";
 
 interface UsuarioViagem {
   idViagem: number;
@@ -49,6 +53,7 @@ export default function DetailsPage() {
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
+  const [moreDetailsTrip, setMoreDetailsTrip] = useState<ModalMoreDetailsTrip | null>(null);
   const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);
 
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -135,6 +140,28 @@ export default function DetailsPage() {
     setIsItineraryModalOpen(false);
     setIsBudgetModalOpen(false);
   };
+
+  useEffect(() => {
+    const fetchMoreDetails = async () => {
+      const storedTrip = localStorage.getItem("selectedTrip");
+      if (!storedTrip) return;
+      const tripObj = JSON.parse(storedTrip);
+      const viagemId = tripObj.id;
+
+      try {
+        // Busca os dados atualizados da viagem pelo ID
+        const { data } = await api.get(`/viagem/${viagemId}`);
+
+        // Monta o objeto para o modal usando apenas os campos necessários
+        setMoreDetailsTrip(
+          mapToModalMoreDetailsTrip(data, organizadores, convidados)
+        );
+      } catch (error) {
+        console.error("Erro ao buscar detalhes da viagem:", error);
+      }
+    };
+    fetchMoreDetails();
+  }, [organizadores, convidados]);
 
   useEffect(() => {
     const fetchItinerarios = async () => {
@@ -273,12 +300,11 @@ export default function DetailsPage() {
                       onClose={() => setIsMoreDetailsModalOpen(false)}
                       onNavigate={(target) => {
                         closeAllModals();
-                        if (target === "itinerary")
-                          setIsItineraryModalOpen(true);
-                        if (target === "transport")
-                          setIsTransportModalOpen(true);
+                        if (target === "itinerary") setIsItineraryModalOpen(true);
+                        if (target === "transport") setIsTransportModalOpen(true);
                         if (target === "budget") setIsBudgetModalOpen(true);
                       }}
+                      trip={moreDetailsTrip}
                     />
                   </div>
                   <div className="flex flex-col items-center">
