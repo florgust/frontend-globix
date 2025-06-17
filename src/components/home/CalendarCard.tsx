@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "@/utils/axios";
 
 // Utilitário para obter o número de dias no mês
 function getDaysInMonth(month: number, year: number) {
@@ -11,18 +12,49 @@ function getFirstDayOfWeek(month: number, year: number) {
   return new Date(year, month, 1).getDay();
 }
 
-// Simulação: data da próxima viagem (será integrada futuramente)
-const nextTripDate = new Date(2025, 6, 21); // 21 de julho de 2025 (mês começa em 0)
+// Função para converter string de data do backend para Date
+function parseDate(dateStr: string): Date | null {
+  if (!dateStr) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? null : date;
+}
+
+interface TripStart {
+  id: number;
+  date: Date;
+  nome: string;
+}
 
 export default function CalendarCard() {
-  // Estado do mês e ano exibidos
-  const [month, setMonth] = useState(6); // Julho (0 = Janeiro)
-  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [tripStartDates, setTripStartDates] = useState<TripStart[]>([]);
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const { data } = await api.get("/viagens");
+        const trips: TripStart[] = (data || [])
+          .map((trip: any) => {
+            const date = parseDate(trip.data_inicio || trip.dataInicio);
+            return date ? { id: trip.id, date, nome: trip.nome } : null;
+          })
+          .filter(Boolean) as TripStart[];
+        setTripStartDates(trips);
+      } catch (error) {
+        console.error("Erro ao buscar viagens:", error);
+      }
+    };
+    fetchTrips();
+  }, []);
 
   const daysInMonth = getDaysInMonth(month, year);
   const firstDayOfWeek = getFirstDayOfWeek(month, year);
 
-  // Gera os dias do calendário, incluindo espaços em branco antes do 1º dia
   const calendarDays = [];
   for (let i = 0; i < firstDayOfWeek; i++) {
     calendarDays.push(null);
@@ -31,7 +63,26 @@ export default function CalendarCard() {
     calendarDays.push(day);
   }
 
-  // Funções para navegar entre meses
+  // Retorna o nome da viagem que começa nesse dia (ou "")
+  const getTripNameByDay = (day: number): string => {
+    const trip = tripStartDates.find(
+      (trip) =>
+        trip.date.getDate() === day &&
+        trip.date.getMonth() === month &&
+        trip.date.getFullYear() === year
+    );
+    return trip ? trip.nome : "";
+  };
+
+  const isTripStartDay = (day: number) => !!getTripNameByDay(day);
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const prevMonth = () => {
     if (month === 0) {
       setMonth(11);
@@ -48,21 +99,6 @@ export default function CalendarCard() {
       setMonth(month + 1);
     }
   };
-
-  // Verifica se o dia é o da próxima viagem
-  const isNextTripDay = (day: number) =>
-    day === nextTripDate.getDate() &&
-    month === nextTripDate.getMonth() &&
-    year === nextTripDate.getFullYear();
-
-  // Nomes dos meses
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  // Nomes dos dias da semana
-  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <div className="bg-white rounded-2xl shadow-lg px-6 py-4 w-[100%] h-[29vh] flex flex-col">
@@ -87,11 +123,11 @@ export default function CalendarCard() {
           day ? (
             <span
               key={idx}
-              className={`py-1 rounded-full transition ${
-                isNextTripDay(day)
-                  ? "bg-[#B0FAC6] text-[#0F2976] font-bold border-2 border-[#0F2976]"
-                  : "text-[#0F2976] hover:bg-[#F0F9FF] cursor-pointer"
-              }`}
+              className={`py-1 rounded-full transition ${isTripStartDay(day)
+                  ? "bg-[#B0FAC6] text-[#0F2976] font-bold border-2 border-[#0F2976] cursor-help"
+                  : "text-[#0F2976] hover:bg-[#F0F9FF] cursor-default"
+                }`}
+              title={getTripNameByDay(day)}
             >
               {day}
             </span>
