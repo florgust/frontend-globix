@@ -11,6 +11,22 @@ export interface ModalMoreDetailsTrip {
     imagemOrganizador?: string;
 }
 
+// Tipo para os dados crus da viagem vindos do backend
+export interface RawTrip {
+    nome: string;
+    descricao?: string;
+    data_inicio?: string;
+    dataInicio?: string;
+    data_fim?: string;
+    dataFim?: string;
+    tipo?: string;
+    quantidadeParticipante?: number;
+    quantidade_participante?: number;
+    dataCriacao?: string;
+    data_criacao?: string;
+    // Outros campos que possam vir do backend...
+}
+
 // Função utilitária para extrair destino
 export function extractDestino(nomeViagem: string): string {
     if (!nomeViagem) return "";
@@ -31,20 +47,20 @@ export function formatDate(dateStr?: string): string {
 }
 
 // Função para pegar a data de criação da viagem formatada
-export function getDataCriacao(trip: any): string {
-    return formatDate(trip?.dataCriacao || trip?.data_criacao);
+export function getDataCriacao(trip: RawTrip): string {
+    return formatDate(trip.dataCriacao || trip.data_criacao);
 }
 
 // Função para pegar a quantidade de participantes
-export function getQuantidadeParticipante(trip: any, convidados: any[]): number {
-    return trip?.quantidadeParticipante ?? trip?.quantidade_participante ?? convidados.length;
+export function getQuantidadeParticipante(trip: RawTrip, convidados: { id: number }[]): number {
+    return trip.quantidadeParticipante ?? trip.quantidade_participante ?? convidados.length;
 }
 
 // Função para mapear qualquer objeto de viagem para ModalMoreDetailsTrip
 export function mapToModalMoreDetailsTrip(
-    tripObj: any,
+    tripObj: RawTrip,
     organizadores: { nome?: string; foto?: string }[] = [],
-    convidados: any[] = []
+    convidados: { id: number }[] = []
 ): ModalMoreDetailsTrip {
     const organizador = organizadores[0];
     const tipo =
