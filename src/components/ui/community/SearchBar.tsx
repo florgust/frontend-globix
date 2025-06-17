@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function SearchBarWithFilters() {
+export default function BarraDePesquisa() {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
@@ -20,7 +20,7 @@ export default function SearchBarWithFilters() {
         className="bg-transparent outline-none text-white placeholder:text-blue-100 flex-1 text-lg"
       />
       <button
-        className={`px-4 py-1 rounded-lg font-semibold text-white transition ${
+        className={`px-4 py-1 rounded-lg font-semibold text-white transition cursor-pointer ${
           activeFilter === "recentes"
             ? "bg-blue-800 bg-opacity-80"
             : "bg-blue-600 bg-opacity-60 hover:bg-opacity-80"
@@ -30,7 +30,7 @@ export default function SearchBarWithFilters() {
         Recentes
       </button>
       <button
-        className={`px-4 py-1 rounded-lg font-semibold text-white transition ${
+        className={`px-4 py-1 rounded-lg font-semibold text-white transition cursor-pointer ${
           activeFilter === "populares"
             ? "bg-blue-800 bg-opacity-80"
             : "bg-blue-600 bg-opacity-60 hover:bg-opacity-80"
