@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface DatePickerHtmlProps {
-  onChange: (date: string) => void; // Define o tipo da propriedade onChange
+  date?: string;
+  onChange: (date: string) => void;
 }
 
-export default function DatePickerHtml({ onChange }: DatePickerHtmlProps) {
-  const [selectedDate, setSelectedDate] = useState("");
-
+export default function DatePickerHtml({ date, onChange }: DatePickerHtmlProps) {
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = e.target.value;
-    setSelectedDate(date);
-    onChange(date); // Chama a função passada como propriedade
+    onChange(e.target.value);
   };
 
   return (
@@ -18,7 +15,7 @@ export default function DatePickerHtml({ onChange }: DatePickerHtmlProps) {
       <input
         type="date"
         id="meeting-date"
-        value={selectedDate}
+        value={date}
         onChange={handleDateChange}
         className="w-full h-full p-2 bg-[#B1FF91] border border-[#092064] text-[#0F2976] rounded-tr-2xl rounded-br-2xl"
       />
