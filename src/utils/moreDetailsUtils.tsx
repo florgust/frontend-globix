@@ -38,7 +38,14 @@ export function extractDestino(nomeViagem: string): string {
 // Função para formatar datas do backend para dd/MM/yyyy
 export function formatDate(dateStr?: string): string {
     if (!dateStr) return "";
-    const date = new Date(dateStr);
+    let date: Date;
+    // Se vier só a data (yyyy-mm-dd), cria como local
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        const [year, month, day] = dateStr.split("-").map(Number);
+        date = new Date(year, month - 1, day);
+    } else {
+        date = new Date(dateStr);
+    }
     if (isNaN(date.getTime())) return "";
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
