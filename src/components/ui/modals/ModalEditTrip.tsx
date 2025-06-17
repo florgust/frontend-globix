@@ -35,7 +35,7 @@ const ModalEditTrip: React.FC<ModalEditTripProps> = ({ isOpen, onClose }) => {
                     }}
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
                 >
-                    <X className="w-8 h-8" />
+                    <X className="w-8 h-8 cursor-pointer" />
                 </button>
 
                 <h1 className="text-4xl font-bold text-center text-[#0F2976] mb-4">
@@ -77,7 +77,7 @@ const ModalEditTrip: React.FC<ModalEditTripProps> = ({ isOpen, onClose }) => {
                     }}
                     disabled={!selectedOption}
                     className={`mt-8 flex items-center justify-center ${selectedOption ? "bg-[#0F2976] hover:bg-[#0D215E]" : "bg-gray-400 cursor-not-allowed"
-                        } text-white font-bold text-xl px-6 py-3 rounded-3xl w-1/3 mx-auto transition-all duration-300`}
+                        } text-white font-bold cursor-pointer text-xl px-6 py-3 rounded-3xl w-1/3 mx-auto transition-all duration-300`}
                 >
                     Editar
                 </button>
