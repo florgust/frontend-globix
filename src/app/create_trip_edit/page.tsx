@@ -56,6 +56,7 @@ export default function EditTripPage() {
 
     fetchTrip();
   }, []);
+  
 
   const handleEditTrip = async () => {
     const selectedTripStr = localStorage.getItem("selectedTrip");
