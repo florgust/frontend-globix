@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "@/utils/axios";
 
 // Utilitário para obter o número de dias no mês
 function getDaysInMonth(month: number, year: number) {
@@ -11,13 +12,40 @@ function getFirstDayOfWeek(month: number, year: number) {
   return new Date(year, month, 1).getDay();
 }
 
-// Simulação: data da próxima viagem (será integrada futuramente)
-const nextTripDate = new Date(2025, 6, 21); // 21 de julho de 2025 (mês começa em 0)
+// Função para converter string de data do backend para Date
+function parseDate(dateStr: string): Date | null {
+  if (!dateStr) return null;
+  // Se vier só a data (yyyy-mm-dd), crie como local
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day); // <-- sem UTC!
+  }
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? null : date;
+}
 
 export default function CalendarCard() {
   // Estado do mês e ano exibidos
-  const [month, setMonth] = useState(6); // Julho (0 = Janeiro)
-  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [tripStartDates, setTripStartDates] = useState<Date[]>([]);
+
+  // Buscar viagens do backend ao montar
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const { data } = await api.get("/viagens"); // ajuste o endpoint se necessário
+        // Supondo que cada viagem tem data_inicio ou dataInicio
+        const dates: Date[] = (data || [])
+          .map((trip: any) => parseDate(trip.data_inicio || trip.dataInicio))
+          .filter((d: Date | null) => d !== null) as Date[];
+        setTripStartDates(dates);
+      } catch (error) {
+        console.error("Erro ao buscar viagens:", error);
+      }
+    };
+    fetchTrips();
+  }, []);
 
   const daysInMonth = getDaysInMonth(month, year);
   const firstDayOfWeek = getFirstDayOfWeek(month, year);
@@ -49,11 +77,14 @@ export default function CalendarCard() {
     }
   };
 
-  // Verifica se o dia é o da próxima viagem
-  const isNextTripDay = (day: number) =>
-    day === nextTripDate.getDate() &&
-    month === nextTripDate.getMonth() &&
-    year === nextTripDate.getFullYear();
+  // Verifica se o dia é o início de alguma viagem
+  const isTripStartDay = (day: number) =>
+    tripStartDates.some(
+      (date) =>
+        date.getDate() === day &&
+        date.getMonth() === month &&
+        date.getFullYear() === year
+    );
 
   // Nomes dos meses
   const monthNames = [
@@ -87,11 +118,11 @@ export default function CalendarCard() {
           day ? (
             <span
               key={idx}
-              className={`py-1 rounded-full transition ${
-                isNextTripDay(day)
+              className={`py-1 rounded-full transition ${isTripStartDay(day)
                   ? "bg-[#B0FAC6] text-[#0F2976] font-bold border-2 border-[#0F2976]"
                   : "text-[#0F2976] hover:bg-[#F0F9FF] cursor-pointer"
-              }`}
+                }`}
+              title={isTripStartDay(day) ? "Início de viagem" : ""}
             >
               {day}
             </span>
