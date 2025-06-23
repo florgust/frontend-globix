@@ -300,16 +300,16 @@ export default function DetailsPage() {
           className="ml-auto mr-5 mt-5"
         />
 
-        <div className="absolute top-17 ml-5 items-center justify-center w-1/5 h-18 p-4 bg-[#1C4CDC]" />
+        <div className="absolute top-17 ml-5 items-center justify-center w-2/6 h-20 p-4 bg-[#1C4CDC]" />
 
-        <div className="absolute top-15 items-center justify-center w-1/5 h-18 p-4 bg-white">
-          <h1 className="text-4xl font-bold text-center text-[#0F2976]">
+        <div className="absolute top-15 items-center justify-center w-2/6 h-20 p-4 bg-white">
+          <h1 className="text-4xl font-bold text-center text-[#0F2976] truncate">
             {trip?.nome}
           </h1>
         </div>
 
         {/* div branca */}
-        <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-190 mt-25 mb-30">
+        <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
           {/* capa */}
           <img
             src={trip?.imagem || "/images-travel/capa.png"}
@@ -569,7 +569,7 @@ export default function DetailsPage() {
                       }
                       onClick={() => alert("Botão clicado!")}
                     />
-                    <p className="text-sm text-gray-500 mt-2">Mensagem</p>
+                    <p className="text-sm text-gray-500 mt-4">Mensagem</p>
                   </div>
                   <div className="flex flex-col items-center">
                     <IconButton
@@ -581,12 +581,12 @@ export default function DetailsPage() {
                       }
                       onClick={() => alert("Botão clicado!")}
                     />
-                    <p className="text-sm text-gray-500 mt-2">Avisos</p>
+                    <p className="text-sm text-gray-500 mt-4">Avisos</p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-full flex justify-between mt-8">
+            <div className="w-full flex justify-between mt-5">
               <button
                 className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
                 onClick={() => setIsEditModalOpen(true)}

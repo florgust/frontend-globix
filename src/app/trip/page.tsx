@@ -213,7 +213,7 @@ export default function DetailsPage() {
   const eventos: ItineraryItem[] = itineraries.flatMap((day) =>
     day.activities.map((activity) => ({
       id: activity.id ?? 0,
-      idViagem: 0, // ajuste se tiver esse dado
+      idViagem: 0, 
       tipoEvento: activity.type,
       titulo: activity.title,
       dataHora: `${day.date.split("/").reverse().join("-")}T${activity.time}`,
@@ -239,16 +239,16 @@ export default function DetailsPage() {
           className="ml-auto mr-5 mt-5"
         />
 
-        <div className="absolute top-17 ml-5 items-center justify-center w-1/5 h-18 p-4 bg-[#1C4CDC]" />
+        <div className="absolute top-17 ml-5 items-center justify-center w-2/6 h-20 p-4 bg-[#1C4CDC]" />
 
-        <div className="absolute top-15 items-center justify-center w-1/5 h-18 p-4 bg-white">
-          <h1 className="text-4xl font-bold text-center text-[#0F2976]">
+        <div className="absolute top-15 items-center justify-center w-2/6 h-20 p-4 bg-white">
+          <h1 className="text-4xl font-bold text-center text-[#0F2976] truncate">
             {trip?.nome}
           </h1>
         </div>
 
         {/* div branca */}
-        <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-190 mt-25 mb-30">
+        <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
           {/* capa */}
           <img
             src={trip?.imagem || "/images-travel/capa.png"}
@@ -437,9 +437,11 @@ export default function DetailsPage() {
                     <p className="text-sm text-gray-500 mt-2">Avisos</p>
                   </div>
                 </div>
+                
               </div>
+              
             </div>
-            <div className="w-full flex justify-between mt-8">
+            <div className="w-full flex justify-between">
               <button className="text-2xl font-bold bg-[#FF2626] text-[#FFFFFF] rounded-full w-60 py-3 hover:bg-gray-500 cursor-pointer">
                 Sair da viagem
               </button>
