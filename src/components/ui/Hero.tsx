@@ -1,12 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation"
 
 export default function Hero() {
+  const router = useRouter();
+
   return (
     <section
       className="text-white px-4 sm:px-8 md:px-12 bg-cover bg-center flex items-center"
       style={{
         backgroundImage: "url('/images-initial/imagem-waves.png')",
-        height: "calc(100vh - 92px)", // Subtraindo a altura do Header (92px)
+        height: "calc(100vh - 92px)", 
       }}
     >
       <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12 xl:gap-20 max-w-6xl w-full mx-auto">
@@ -21,7 +26,10 @@ export default function Hero() {
             Nosso software ajuda você a planejar destinos, <br />gerenciar participantes e
             controlar custos de forma<br /> <span className="font-bold">simples e rápida</span>.
           </p>
-          <button className="bg-[#4F9CF9] hover:bg-blue-600 text-white cursor-pointer font-semibold px-4 md:px-5 py-2 md:py-3 rounded-lg transition flex items-center gap-2 text-sm md:text-base">
+          <button
+            className="bg-[#4F9CF9] hover:bg-blue-600 text-white cursor-pointer font-semibold px-4 md:px-5 py-2 md:py-3 rounded-lg transition flex items-center gap-2 text-sm md:text-base"
+            onClick={() => router.push("/login")}
+          >
             Utilize o<span className="font-black">GLOBIX</span>gratuitamente
             <Image
               src="/images-initial/icone-right.png"
