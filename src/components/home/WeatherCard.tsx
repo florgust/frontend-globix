@@ -21,6 +21,8 @@ const weatherMap: Record<number, { description: string; icon: string }> = {
   80: { description: "Chuva rápida", icon: "09d" },
   81: { description: "Chuva passageira", icon: "09d" },
   82: { description: "Chuva intensa", icon: "09d" },
+  // Ícone padrão para desconhecido
+  [-1]: { description: "Desconhecido", icon: "50d" }, // Use o ícone que preferir como padrão
 };
 
 export default function WeatherCard() {
@@ -43,7 +45,7 @@ export default function WeatherCard() {
       .then((res) => {
         const data = res.data;
         const code = data.current.weather_code;
-        const weatherInfo = weatherMap[code] || { description: "Desconhecido", icon: "01d" };
+        const weatherInfo = weatherMap[code] || weatherMap[-1];
         setWeather({
           temp: Math.round(data.current.temperature_2m),
           description: weatherInfo.description,
@@ -81,7 +83,7 @@ export default function WeatherCard() {
         min: day.min,
         max: day.max,
         code: day.code,
-        ...weatherMap[day.code],
+        ...(weatherMap[day.code] || weatherMap[-1]),
       }
       : weather
         ? {
@@ -89,82 +91,83 @@ export default function WeatherCard() {
           min: weather.temp,
           max: weather.temp,
           code: 0,
-          ...weather,
+          ...(weather || weatherMap[-1]),
         }
         : null;
 
   const handlePrev = () => setForecastIndex((i) => Math.max(i - 1, 0));
   const handleNext = () => setForecastIndex((i) => Math.min(i + 1, forecast.length - 1));
 
-return (
-  <div className="rounded-2xl shadow-lg py-5 w-[100%] h-auto flex flex-col justify-between"
-    style={{
-      background: "linear-gradient(180deg, #4182F9 0%, #A7FF84 100%)"
-    }}
-  >
-    <span className="text-white text-xl font-semibold mb-1 ml-5">Previsão do Tempo</span>
-    {dayWeather ? (
-      <div className="flex items-center justify-between ">
-        <button
-          onClick={handlePrev}
-          disabled={forecastIndex === 0}
-          className="p-1 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft size={34} />
-        </button>
-        <img
-          src={`https://openweathermap.org/img/wn/${dayWeather.icon}@2x.png`}
-          alt="Ícone do clima"
-          className="w-24 h-24 object-cover"
-        />
-        <div className="flex flex-col items-start justify-center flex-1">
-          <span className="text-[#0F2976] text-2xl font-bold mb-3">
-            {(() => {
-              const today = new Date();
-              const forecastDate = new Date(dayWeather.date);
-              today.setHours(0, 0, 0, 0);
-              forecastDate.setHours(0, 0, 0, 0);
-              if (today.getTime() === forecastDate.getTime()) {
-                return "Hoje";
-              }
-              let weekDay = forecastDate.toLocaleDateString("pt-BR", { weekday: "long" });
-              weekDay = weekDay.replace("-feira", "");
-              return weekDay.charAt(0).toUpperCase() + weekDay.slice(1);
-            })()}
-          </span>
-          <div className="text-white text-xl font-extrabold leading-none">
-            {dayWeather.min === dayWeather.max ? (
-              <>
-                {dayWeather.min}
-                <span className="text-xs align-super">°C</span>
-              </>
-            ) : (
-              <>
-                {dayWeather.min}
-                <span className="text-xs align-super">°C</span>
-                {" / "}
-                {dayWeather.max}
-                <span className="text-xs align-super">°C</span>
-              </>
-            )}
+  return (
+    <div className="rounded-2xl shadow-lg py-5 w-[100%] h-auto flex flex-col justify-between"
+      style={{
+        background: "linear-gradient(180deg, #4182F9 0%, #A7FF84 100%)"
+      }}
+    >
+      <span className="text-white text-xl font-semibold mb-1 ml-5">Previsão do Tempo</span>
+      {dayWeather ? (
+        <div className="flex items-center justify-between ">
+          <button
+            onClick={handlePrev}
+            disabled={forecastIndex === 0}
+            className="p-1 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft size={34} />
+          </button>
+          <img
+            src={`https://openweathermap.org/img/wn/${dayWeather.icon ?? weatherMap[-1].icon}@2x.png`}
+            alt="Ícone do clima"
+            className="w-24 h-24 object-cover"
+          />
+          <div className="flex flex-col items-start justify-center flex-1">
+            <span className="text-[#0F2976] text-2xl font-bold mb-3">
+              {(() => {
+                const today = new Date();
+                const forecastDate = new Date(dayWeather.date);
+                today.setHours(0, 0, 0, 0);
+                forecastDate.setHours(0, 0, 0, 0);
+                if (today.getTime() === forecastDate.getTime()) {
+                  return "Hoje";
+                }
+                let weekDay = forecastDate.toLocaleDateString("pt-BR", { weekday: "long" });
+                weekDay = weekDay.replace("-feira", "");
+                return weekDay.charAt(0).toUpperCase() + weekDay.slice(1);
+              })()}
+            </span>
+            <div className="text-white text-xl font-extrabold leading-none">
+              {dayWeather.min === dayWeather.max ? (
+                <>
+                  {dayWeather.min}
+                  <span className="text-xs align-super">°C</span>
+                </>
+              ) : (
+                <>
+                  {dayWeather.min}
+                  <span className="text-xs align-super">°C</span>
+                  {" / "}
+                  {dayWeather.max}
+                  <span className="text-xs align-super">°C</span>
+                </>
+              )}
+            </div>
+            <span className="text-[#0F2976] text-2sm font-lg mt-1 truncate">
+              {(dayWeather.description ?? weatherMap[-1].description).charAt(0).toUpperCase() +
+                (dayWeather.description ?? weatherMap[-1].description).slice(1)}
+            </span>
           </div>
-          <span className="text-[#0F2976] text-2sm font-lg mt-1 truncate">
-            {dayWeather.description.charAt(0).toUpperCase() +
-              dayWeather.description.slice(1)}
-          </span>
+          <button
+            onClick={handleNext}
+            disabled={forecastIndex === forecast.length - 1}
+            className="p-1 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronRight size={34} />
+          </button>
         </div>
-        <button
-          onClick={handleNext}
-          disabled={forecastIndex === forecast.length - 1}
-          className="p-1 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          <ChevronRight size={34} />
-        </button>
-      </div>
-    ) : (
-      <div className="flex justify-center items-center h-32">
-        <span className="text-[#0F2976]">Carregando...</span>
-      </div>
-    )}
-  </div>
-)};
+      ) : (
+        <div className="flex justify-center items-center h-32">
+          <span className="text-[#0F2976]">Carregando...</span>
+        </div>
+      )}
+    </div>
+  )
+};
