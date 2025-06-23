@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import ModalLogout from "./modals/ModalLogout";
 
-const minhasViagens = "/images-home_page/sidebar-menu/my-travels.svg";
 const user = "/images-home_page/sidebar-menu/user.svg";
 const message = "/images-home_page/sidebar-menu/message.svg";
 const setting = "/images-home_page/sidebar-menu/setting.svg";
@@ -16,18 +15,6 @@ const community = "/images-home_page/sidebar-menu/comunity.svg";
 
 const menuItems = [
   { icon: (active: boolean) => <House size={20} color={active ? "#0F2976" : "#D1D5DB"} />, text: "Página Principal", path: "/home_page" },
-  {
-    icon: (active: boolean) => (
-      <Image
-        src={minhasViagens}
-        alt="Minhas Viagens"
-        width={24}
-        height={24}
-        className={`${active ? "" : "grayscale opacity-40"}`}
-        priority
-      />
-    ), text: "Minhas Viagens", path: "/my_trips"
-  },
   {
     icon: (active: boolean) => (
       <Image
