@@ -72,16 +72,20 @@ export const ModalBudget: React.FC<ModalBudgetProps> = ({
       >
         {" "}
         <div className="bg-white rounded-lg p-8 shadow-lg min-w-[700px] max-w-[900px]">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-[#0F2976]">
-              Orçamento da Viagem
-            </h2>
+          <div className="flex items-center justify-between w-full mb-6">
             <button
-              className="text-[#0F2976] text-xl font-bold hover:text-red-600"
               onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 flex items-center"
             >
-              ×
+              <img src="/images-modals/Icons/BackIcon.png" alt="Voltar" className="w-14 h-14 cursor-pointer" />
             </button>
+            <div className="relative">
+              <h2 className="text-4xl font-bold text-[#00FF4D] bg-[#0F2976] px-16 py-2 relative z-10">
+                Orçamento
+              </h2>
+              <div className="absolute top-2 left-2 w-full h-full bg-[#1C4CDC] z-0"></div>
+            </div>
+            <div className="w-8"></div>
           </div>
           <div className="flex flex-row gap-10">
             {/* Tabela */}
