@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import ModalLogout from "./modals/ModalLogout";
 
-const minhasViagens = "/images-home_page/sidebar-menu/my-travels.svg";
 const user = "/images-home_page/sidebar-menu/user.svg";
 const message = "/images-home_page/sidebar-menu/message.svg";
 const setting = "/images-home_page/sidebar-menu/setting.svg";
@@ -19,18 +18,6 @@ const menuItems = [
   {
     icon: (active: boolean) => (
       <Image
-        src={minhasViagens}
-        alt="Minhas Viagens"
-        width={24}
-        height={24}
-        className={`${active ? "" : "grayscale opacity-40"}`}
-        priority
-      />
-    ), text: "Minhas Viagens", path: "/my_trips"
-  },
-  {
-    icon: (active: boolean) => (
-      <Image
         src={community}
         alt="Comunidade"
         width={24}
@@ -38,7 +25,7 @@ const menuItems = [
         className={`${active ? "" : "grayscale opacity-40"}`}
         priority
       />
-    ), text: "Comunidade", path: "/comunidade"
+    ), text: "Comunidade", path: "/community"
   },
   {
     icon: (active: boolean) => (
