@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import DatePickerHtml from "@/components/ui/DatePickerHtml";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-
+import { Alert } from "@/components/ui/Alert";
 interface ViagemPayload {
   nome: string;
   descricao: string;
@@ -28,7 +28,14 @@ export default function EditTripPage() {
   const [criadorId, setCriadorId] = useState<number | null>(null);
   const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
   // Carrega dados da viagem selecionada
   useEffect(() => {
     const fetchTrip = async () => {
@@ -50,24 +57,29 @@ export default function EditTripPage() {
         localStorage.setItem("selectedTrip", JSON.stringify(data));
       } catch (error) {
         console.error("Erro ao buscar dados da viagem:", error);
-        alert("Erro ao carregar dados da viagem.");
+        setAlertMessage("Erro ao carregar dados da viagem.");
       }
     };
 
     fetchTrip();
   }, []);
-  
+
 
   const handleEditTrip = async () => {
     const selectedTripStr = localStorage.getItem("selectedTrip");
     if (!selectedTripStr) {
-      alert("Viagem não encontrada.");
+      setAlertMessage("Viagem não encontrada.");
       return;
     }
     const selectedTrip = JSON.parse(selectedTripStr);
 
     if (!tripName || !tripDescription || !startDate || !endDate || count <= 0) {
-      alert("Preencha todos os campos obrigatórios antes de prosseguir.");
+      setAlertMessage("Preencha todos os campos obrigatórios antes de prosseguir.");
+      return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      setAlertMessage("A data de início não pode ser depois da data final.");
       return;
     }
 
@@ -89,7 +101,7 @@ export default function EditTripPage() {
       setShowSuccess(true);
     } catch (error) {
       console.error("Erro ao editar viagem:", error);
-      alert("Ocorreu um erro ao editar a viagem. Tente novamente.");
+      setAlertMessage("Ocorreu um erro ao editar a viagem. Tente novamente.");
     }
   };
 
@@ -101,6 +113,12 @@ export default function EditTripPage() {
   return (
     <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
       <SidebarMenu />
+
+      {alertMessage && (
+        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert message={alertMessage} type="error" />
+        </div>
+      )}
 
       <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
         <HeaderPages />
@@ -158,11 +176,10 @@ export default function EditTripPage() {
                     onChange={() => setSelectedOption("public")}
                   />
                   <span
-                    className={`px-10 py-4 rounded-tl-3xl rounded-bl-3xl font-medium cursor-pointer ${
-                      selectedOption === "public"
-                        ? "bg-[#0F2976] text-[#00FF4D]"
-                        : "bg-white text-[#0F2976]"
-                    }`}
+                    className={`px-10 py-4 rounded-tl-3xl rounded-bl-3xl font-medium cursor-pointer ${selectedOption === "public"
+                      ? "bg-[#0F2976] text-[#00FF4D]"
+                      : "bg-white text-[#0F2976]"
+                      }`}
                   >
                     Pública
                   </span>
@@ -178,11 +195,10 @@ export default function EditTripPage() {
                     onChange={() => setSelectedOption("private")}
                   />
                   <span
-                    className={`px-10 py-4 rounded-tr-3xl rounded-br-3xl font-medium cursor-pointer ${
-                      selectedOption === "private"
-                        ? "bg-[#0F2976] text-[#00FF4D]"
-                        : "bg-white text-[#0F2976]"
-                    }`}
+                    className={`px-10 py-4 rounded-tr-3xl rounded-br-3xl font-medium cursor-pointer ${selectedOption === "private"
+                      ? "bg-[#0F2976] text-[#00FF4D]"
+                      : "bg-white text-[#0F2976]"
+                      }`}
                   >
                     Privada
                   </span>
