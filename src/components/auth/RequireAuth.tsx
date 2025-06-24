@@ -10,7 +10,7 @@ export default function RequireAuth({ children }: { children: React.ReactNode })
   useEffect(() => {
     const token = Cookies.get("usuario"); 
     if (!token) {
-      router.replace("/not-authenticated");
+      router.replace("/not_authenticated");
     }
   }, [router]);
 

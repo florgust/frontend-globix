@@ -10,9 +10,9 @@ export default function RequireAdmin({ children }: { children: React.ReactNode }
     const token = Cookies.get("token");
     const role = Cookies.get("role"); // ou decodifique o token JWT para pegar a role
     if (!token) {
-      router.replace("/not-authenticated");
+      router.replace("/not_authenticated");
     } else if (role !== "admin") {
-      router.replace("/not-authorized");
+      router.replace("/not_authorized");
     }
   }, [router]);
 
