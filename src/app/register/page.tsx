@@ -82,7 +82,7 @@ export default function RegisterPage() {
         };
 
         try {
-            const response = await api.post('https://globix-afaea8fe15ce.herokuapp.com/usuario', payload, {
+            const response = await api.post('/usuario', payload, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
