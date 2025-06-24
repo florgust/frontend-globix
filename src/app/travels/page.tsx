@@ -11,6 +11,7 @@ import ModalTransport from "@/components/ui/modals/ModalTransport";
 import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import {
   mapApiToItineraries,
@@ -88,6 +89,21 @@ export default function DetailsPage() {
   const [loading, setLoading] = useState(true);
   const [activeButton, setActiveButton] = useState("convidados");
   const [imagens] = useState(["/images-home_page/carousel/carrossel.png"]);
+
+  const router = useRouter();
+  const [isEndTripModalOpen, setIsEndTripModalOpen] = useState(false);
+
+
+  const handleEndTrip = async () => {
+    if (!trip?.id) return;
+    try {
+      await api.delete(`/viagem/${trip.id}`);
+      setIsEndTripModalOpen(false);
+      router.push("/profile");
+    } catch (error) {
+      alert("Erro ao encerrar viagem." + error);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -289,6 +305,35 @@ export default function DetailsPage() {
       descricao: activity.description,
     }))
   );
+
+  function ConfirmEndTripModal({ open, onClose, onConfirm }: { open: boolean, onClose: () => void, onConfirm: () => void }) {
+    if (!open) return null;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+          <h2 className="text-xl font-bold mb-4 text-[#0F2976]">Encerrar Viagem</h2>
+          <p className="mb-6 text-center text-gray-700">
+            Tem certeza que deseja encerrar esta viagem? <br />
+            <span className="font-semibold text-red-600">Esta ação é irreversível.</span>
+          </p>
+          <div className="flex gap-4">
+            <button
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+              onClick={onClose}
+            >
+              Cancelar
+            </button>
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              onClick={onConfirm}
+            >
+              Encerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
@@ -593,9 +638,17 @@ export default function DetailsPage() {
               >
                 Editar
               </button>
-              <button className="text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer">
+              <button
+                className="text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer"
+                onClick={() => setIsEndTripModalOpen(true)}
+              >
                 Encerrar Viagem
               </button>
+              <ConfirmEndTripModal
+                open={isEndTripModalOpen}
+                onClose={() => setIsEndTripModalOpen(false)}
+                onConfirm={handleEndTrip}
+              />
               <ModalEditTrip
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
