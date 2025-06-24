@@ -12,6 +12,7 @@ import { List } from "lucide-react";
 import { useEffect, useState } from "react";
 import ModalBudget from "@/components/ui/modals/ModalBudget";
 import RequireAuth from "@/components/auth/RequireAuth";
+import RequireTripSelected from "@/components/auth/RequireTripSelected";
 import {
   mapApiToItineraries,
   ItineraryDay,
@@ -232,227 +233,229 @@ export default function DetailsPage() {
 
   return (
     <RequireAuth>
-      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-        <SidebarMenu />
+      <RequireTripSelected>
+        <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
+          <SidebarMenu />
 
-        <div className="flex flex-col items-center w-full bg-[#0F2976]">
-          <img
-            src="/images-home_page/logo-globix.png"
-            className="ml-auto mr-5 mt-5"
-          />
-
-          <div className="absolute top-17 ml-5 items-center justify-center w-2/6 h-20 p-4 bg-[#1C4CDC]" />
-
-          <div className="absolute top-15 items-center justify-center w-2/6 h-20 p-4 bg-white">
-            <h1 className="text-4xl font-bold text-center text-[#0F2976] truncate">
-              {trip?.nome}
-            </h1>
-          </div>
-
-          {/* div branca */}
-          <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
-            {/* capa */}
+          <div className="flex flex-col items-center w-full bg-[#0F2976]">
             <img
-              src={trip?.imagem || "/images-travel/capa.png"}
-              alt={trip?.nome || "Capa da viagem"}
-              className="w-full h-80"
+              src="/images-home_page/logo-globix.png"
+              className="ml-auto mr-5 mt-5"
             />
 
-            <div className="p-10 w-full h-full">
-              <div className="flex flex-row w-full justify-between">
-                {/* Div com o Organizador */}
-                <div className="flex relative flex-col items-center w-1/4">
-                  <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
-                    Organizadores
-                  </h2>
-                  <div className="grid grid-cols-2 gap-2 overflow-x-auto h-60">
-                    {organizadores.map((usuario) => (
-                      <div
-                        key={usuario.id}
-                        className="flex flex-col items-center"
-                      >
-                        <img
-                          src={usuario.foto || "/user.png"}
-                          alt={usuario.nome}
-                          className="w-23 h-23 object-cover rounded-full"
-                        />
-                        <p className="mt-2 text-sm text-[#292D32]">
-                          {usuario.nome}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="absolute top-17 ml-5 items-center justify-center w-2/6 h-20 p-4 bg-[#1C4CDC]" />
 
-                {/* Div com o gradiente */}
-                <div className="flex flex-col relative items-center justify-center w-full h-100 sm:w-2/3 sm:h-3/3">
-                  <div className="relative w-[15rem] flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
-                    <div className="flex w-full justify-center items-center">
-                      <button className="z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 text-[#0F2976] flex justify-center items-center">
-                        Convidados
-                      </button>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      scrollbarWidth: "thin",
-                      scrollbarColor: "#fffff #0F2976",
-                    }}
-                    className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
-                  >
-                    <UserList usuarios={convidados} />
-                  </div>
-                </div>
+            <div className="absolute top-15 items-center justify-center w-2/6 h-20 p-4 bg-white">
+              <h1 className="text-4xl font-bold text-center text-[#0F2976] truncate">
+                {trip?.nome}
+              </h1>
+            </div>
 
-                {/* Div com os botões */}
-                <div className="flex relative flex-col items-center h-full w-1/4">
-                  <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
-                    Informações
-                  </h2>
-                  <div className="flex gap-4">
-                    <div>
-                      <div className="flex flex-col items-center">
-                        <IconButton
-                          icon={<List className="w-20 h-20" />}
-                          onClick={() => setIsMoreDetailsModalOpen(true)}
-                        />
-                        <p className="text-sm text-gray-500 mt-4">
-                          Mais Detalhes
-                        </p>
-                      </div>
-                      <ModalMoreDetails
-                        isOpen={isMoreDetailsOpen}
-                        onClose={() => setIsMoreDetailsModalOpen(false)}
-                        onNavigate={(target) => {
-                          closeAllModals();
-                          if (target === "itinerary") setIsItineraryModalOpen(true);
-                          if (target === "transport") setIsTransportModalOpen(true);
-                          if (target === "budget") setIsBudgetModalOpen(true);
-                        }}
-                        trip={moreDetailsTrip}
-                      />
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <IconButton
-                        icon={
+            {/* div branca */}
+            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
+              {/* capa */}
+              <img
+                src={trip?.imagem || "/images-travel/capa.png"}
+                alt={trip?.nome || "Capa da viagem"}
+                className="w-full h-80"
+              />
+
+              <div className="p-10 w-full h-full">
+                <div className="flex flex-row w-full justify-between">
+                  {/* Div com o Organizador */}
+                  <div className="flex relative flex-col items-center w-1/4">
+                    <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
+                      Organizadores
+                    </h2>
+                    <div className="grid grid-cols-2 gap-2 overflow-x-auto h-60">
+                      {organizadores.map((usuario) => (
+                        <div
+                          key={usuario.id}
+                          className="flex flex-col items-center"
+                        >
                           <img
-                            src="/images-travel/Icons/IconGreenTransport.png"
-                            className="w-20 h-20"
+                            src={usuario.foto || "/user.png"}
+                            alt={usuario.nome}
+                            className="w-23 h-23 object-cover rounded-full"
                           />
-                        }
-                        onClick={() => {
-                          closeAllModals();
-                          setIsTransportModalOpen(true);
-                        }}
-                      />
-                      <p className="text-sm text-gray-500 mt-4">Transporte</p>
-                      <ModalTransport
-                        isOpen={isTransportModalOpen}
-                        onClose={() => setIsTransportModalOpen(false)}
-                        onNavigate={(target) => {
-                          closeAllModals();
-                          if (target === "itinerary") setIsItineraryModalOpen(true);
-                          if (target === "details") setIsMoreDetailsModalOpen(true);
-                          if (target === "budget") setIsBudgetModalOpen(true);
-                        }}
-                        transportData={transportData}
-                      />
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <IconButton
-                        icon={
-                          <img
-                            src="/images-travel/Icons/IconGreenItinerary.png"
-                            className="w-w-20 h-20"
-                          />
-                        }
-                        onClick={() => setIsItineraryModalOpen(true)}
-                      />
-                      <p className="text-sm text-gray-500 mt-4">Itinerário</p>
-                      <ModalItinerary
-                        isOpen={isItineraryOpen}
-                        onClose={() => setIsItineraryModalOpen(false)}
-                        onNavigate={(target) => {
-                          closeAllModals();
-                          if (target === "transport")
-                            setIsTransportModalOpen(true);
-                          if (target === "details")
-                            setIsMoreDetailsModalOpen(true);
-                          if (target === "budget") setIsBudgetModalOpen(true);
-                        }}
-                        itinerario={eventos}
-                      />
+                          <p className="mt-2 text-sm text-[#292D32]">
+                            {usuario.nome}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className="flex gap-4 mt-5">
-                    <div>
+
+                  {/* Div com o gradiente */}
+                  <div className="flex flex-col relative items-center justify-center w-full h-100 sm:w-2/3 sm:h-3/3">
+                    <div className="relative w-[15rem] flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
+                      <div className="flex w-full justify-center items-center">
+                        <button className="z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 text-[#0F2976] flex justify-center items-center">
+                          Convidados
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        scrollbarWidth: "thin",
+                        scrollbarColor: "#fffff #0F2976",
+                      }}
+                      className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
+                    >
+                      <UserList usuarios={convidados} />
+                    </div>
+                  </div>
+
+                  {/* Div com os botões */}
+                  <div className="flex relative flex-col items-center h-full w-1/4">
+                    <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
+                      Informações
+                    </h2>
+                    <div className="flex gap-4">
+                      <div>
+                        <div className="flex flex-col items-center">
+                          <IconButton
+                            icon={<List className="w-20 h-20" />}
+                            onClick={() => setIsMoreDetailsModalOpen(true)}
+                          />
+                          <p className="text-sm text-gray-500 mt-4">
+                            Mais Detalhes
+                          </p>
+                        </div>
+                        <ModalMoreDetails
+                          isOpen={isMoreDetailsOpen}
+                          onClose={() => setIsMoreDetailsModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "itinerary") setIsItineraryModalOpen(true);
+                            if (target === "transport") setIsTransportModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
+                          trip={moreDetailsTrip}
+                        />
+                      </div>
                       <div className="flex flex-col items-center">
                         <IconButton
                           icon={
                             <img
-                              src="\images-travel\Icons\IconGreenBudget.png"
+                              src="/images-travel/Icons/IconGreenTransport.png"
+                              className="w-20 h-20"
+                            />
+                          }
+                          onClick={() => {
+                            closeAllModals();
+                            setIsTransportModalOpen(true);
+                          }}
+                        />
+                        <p className="text-sm text-gray-500 mt-4">Transporte</p>
+                        <ModalTransport
+                          isOpen={isTransportModalOpen}
+                          onClose={() => setIsTransportModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "itinerary") setIsItineraryModalOpen(true);
+                            if (target === "details") setIsMoreDetailsModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
+                          transportData={transportData}
+                        />
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconGreenItinerary.png"
                               className="w-w-20 h-20"
                             />
                           }
-                          onClick={() => setIsBudgetModalOpen(true)}
+                          onClick={() => setIsItineraryModalOpen(true)}
                         />
-                        <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                        <p className="text-sm text-gray-500 mt-4">Itinerário</p>
+                        <ModalItinerary
+                          isOpen={isItineraryOpen}
+                          onClose={() => setIsItineraryModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "transport")
+                              setIsTransportModalOpen(true);
+                            if (target === "details")
+                              setIsMoreDetailsModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
+                          itinerario={eventos}
+                        />
                       </div>
+                    </div>
+                    <div className="flex gap-4 mt-5">
+                      <div>
+                        <div className="flex flex-col items-center">
+                          <IconButton
+                            icon={
+                              <img
+                                src="\images-travel\Icons\IconGreenBudget.png"
+                                className="w-w-20 h-20"
+                              />
+                            }
+                            onClick={() => setIsBudgetModalOpen(true)}
+                          />
+                          <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                        </div>
 
-                      <ModalBudget
-                        isOpen={isBudgetModalOpen}
-                        onClose={() => setIsBudgetModalOpen(false)}
-                        onNavigate={(target) => {
-                          closeAllModals();
-                          if (target === "itinerary")
-                            setIsItineraryModalOpen(true);
-                          if (target === "transport")
-                            setIsTransportModalOpen(true);
-                          if (target === "details")
-                            setIsMoreDetailsModalOpen(true);
-                        }}
-                        orcamentos={orcamentos}
-                      />
+                        <ModalBudget
+                          isOpen={isBudgetModalOpen}
+                          onClose={() => setIsBudgetModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "itinerary")
+                              setIsItineraryModalOpen(true);
+                            if (target === "transport")
+                              setIsTransportModalOpen(true);
+                            if (target === "details")
+                              setIsMoreDetailsModalOpen(true);
+                          }}
+                          orcamentos={orcamentos}
+                        />
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconMessage.png"
+                              className="w-20 h-20"
+                            />
+                          }
+                          onClick={() => alert("Botão clicado!")}
+                        />
+                        <p className="text-sm text-gray-500 mt-2">Mensagem</p>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconAlert.png"
+                              className="w-20 h-20"
+                            />
+                          }
+                          onClick={() => alert("Botão clicado!")}
+                        />
+                        <p className="text-sm text-gray-500 mt-2">Avisos</p>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <IconButton
-                        icon={
-                          <img
-                            src="/images-travel/Icons/IconMessage.png"
-                            className="w-20 h-20"
-                          />
-                        }
-                        onClick={() => alert("Botão clicado!")}
-                      />
-                      <p className="text-sm text-gray-500 mt-2">Mensagem</p>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <IconButton
-                        icon={
-                          <img
-                            src="/images-travel/Icons/IconAlert.png"
-                            className="w-20 h-20"
-                          />
-                        }
-                        onClick={() => alert("Botão clicado!")}
-                      />
-                      <p className="text-sm text-gray-500 mt-2">Avisos</p>
-                    </div>
+
                   </div>
 
                 </div>
-
-              </div>
-              <div className="w-full flex justify-between">
-                <button className="text-2xl font-bold bg-[#FF2626] text-[#FFFFFF] rounded-full w-60 py-3 hover:bg-gray-500 cursor-pointer">
-                  Sair da viagem
-                </button>
+                <div className="w-full flex justify-between">
+                  <button className="text-2xl font-bold bg-[#FF2626] text-[#FFFFFF] rounded-full w-60 py-3 hover:bg-gray-500 cursor-pointer">
+                    Sair da viagem
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+          <div className="mt-20"></div>
         </div>
-        <div className="mt-20"></div>
-      </div>
+      </RequireTripSelected>
     </RequireAuth>
   );
 }
