@@ -1,14 +1,14 @@
 "use client"
 import { HeaderPages } from '@/components/ui/header';
 import SidebarMenu from '@/components/ui/SidebarMenu';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImagePlus, Minus, Plus } from 'lucide-react';
 import { useRouter } from "next/navigation"; // Importa o useRouter
 import DatePickerHtml from '@/components/ui/DatePickerHtml';
 import api from "@/utils/axios"; // Importa o axios configurado
 import SuccessModal from '@/components/ui/modals/ModalSuccess';
 import Cookies from "js-cookie"; // Adicione este import
-
+import { Alert } from '@/components/ui/Alert';
 
 export default function CreateTripPage() {
     const [selectedOption, setSelectedOption] = useState("public");
@@ -19,10 +19,24 @@ export default function CreateTripPage() {
     const [endDate, setEndDate] = useState("");
     const router = useRouter();
     const [showSuccess, setShowSuccess] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
+
+    useEffect(() => {
+        if (alertMessage) {
+            const timer = setTimeout(() => setAlertMessage(""), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [alertMessage]);
 
     const handleCreateTrip = async () => {
         if (!tripName || !tripDescription || !startDate || !endDate || count <= 0) {
-            alert("Preencha todos os campos obrigatórios antes de prosseguir.");
+            setAlertMessage("Preencha todos os campos obrigatórios antes de prosseguir.");
+            return;
+        }
+
+        if (new Date(startDate) > new Date(endDate)) {
+            setAlertMessage("A data de início não pode ser depois da data final.");
             return;
         }
 
@@ -67,6 +81,11 @@ export default function CreateTripPage() {
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
             <SidebarMenu />
 
+            {alertMessage && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+                    <Alert message={alertMessage} type="error" />
+                </div>
+            )}
             <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <HeaderPages />
                 <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem</h1>
