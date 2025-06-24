@@ -25,7 +25,7 @@ const menuItems = [
         className={`${active ? "" : "grayscale opacity-40"}`}
         priority
       />
-    ), text: "Comunidade", path: "/comunidade"
+    ), text: "Comunidade", path: "/community"
   },
   {
     icon: (active: boolean) => (
