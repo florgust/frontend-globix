@@ -136,7 +136,7 @@ export default function TripTransport() {
                     </div>
 
                     <p className="mt-4 text-sm text-[#27A450]">
-                        <strong>Itinerário, transporte e localização foram salvos!</strong>
+                        <strong>Localização, transporte, orçamento e itinerário foram salvos!</strong>
                     </p>
                     <p className="mt-2 text-2sm text-[#111315]">
                         Você pode editar qualquer detalhe a qualquer momento.

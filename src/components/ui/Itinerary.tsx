@@ -65,7 +65,7 @@ export function Itinerary({
             Dia {itineraries[currentPage].day} - {itineraries[currentPage].date}
           </span>
           <button
-            className="text-[#0F2976] hover:text-red-600"
+            className="text-[#0F2976] hover:text-red-600 cursor-pointer"
             title="Remover dia"
             onClick={() => handleRemoveDay(currentPage)}
           >
@@ -103,7 +103,7 @@ export function Itinerary({
               <div className="flex items-center gap-4">
                 <span className="text-[#0F2976] text-xs">{act.type}</span>
                 <button
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500 hover:text-red-700 cursor-pointer"
                   title="Remover atividade"
                   onClick={(e) => {
                     e.stopPropagation();
