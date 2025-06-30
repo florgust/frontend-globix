@@ -172,7 +172,7 @@ export default function TripBudget() {
                                         )}
                                         <div className="flex items-center mb-2 gap-6">
                                             <button
-                                                className="text-red-500 mr-2"
+                                                className="text-red-500 mr-2 cursor-pointer"
                                                 onClick={() => handleRemoveCategory(cat.id)}
                                                 title="Remover categoria"
                                             >
