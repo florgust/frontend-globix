@@ -22,7 +22,7 @@ export default function NotAuthenticated() {
 
                 <div className="absolute flex justify-center items-center mt-35 pointer-events-none">
                     <img
-                        src="/images-error_404/error404.svg"
+                        src="/images-error_401/error401.svg"
                         alt="Não autenticado"
                         className="w-180 h-180"
                     />
@@ -39,12 +39,6 @@ export default function NotAuthenticated() {
                             className="w-5 h-5"
                         />
                         <span className="text-lg">Ir para Login</span>
-                    </button>
-                    <button
-                        className="w-72 h-14 border-2 border-[#FFFFFF] rounded-[6.25rem] cursor-pointer hover:scale-110 flex items-center justify-center gap-2 bg-transparent"
-                        onClick={() => router.back()}
-                    >
-                        <span className="text-lg">Voltar para página anterior</span>
                     </button>
                 </div>
                 <Footer />
