@@ -11,6 +11,8 @@ import ModalTransport from "@/components/ui/modals/ModalTransport";
 import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import RequireAuth from "@/components/auth/RequireAuth";
+import RequireTripSelected from "@/components/auth/RequireTripSelected";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import {
@@ -336,258 +338,260 @@ export default function DetailsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-      <SidebarMenu />
+    <RequireAuth>
+      <RequireTripSelected>
+        <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
+          <SidebarMenu />
 
-      <div className="flex flex-col items-center w-full bg-[#0F2976]">
-        <img
-          src="/images-home_page/logo-globix.png"
-          className="ml-auto mr-5 mt-5"
-        />
+          <div className="flex flex-col items-center w-full bg-[#0F2976]">
+            <img
+              src="/images-home_page/logo-globix.png"
+              className="ml-auto mr-5 mt-5"
+            />
 
-        <div className="absolute top-17 ml-5 items-center justify-center w-2/6 h-20 p-4 bg-[#1C4CDC]" />
+            <div className="absolute top-17 ml-5 items-center justify-center w-2/6 h-20 p-4 bg-[#1C4CDC]" />
 
-        <div className="absolute top-15 items-center justify-center w-2/6 h-20 p-4 bg-white">
-          <h1 className="text-4xl font-bold text-center text-[#0F2976] truncate">
-            {trip?.nome}
-          </h1>
-        </div>
+            <div className="absolute top-15 items-center justify-center w-2/6 h-20 p-4 bg-white">
+              <h1 className="text-4xl font-bold text-center text-[#0F2976] truncate">
+                {trip?.nome}
+              </h1>
+            </div>
 
-        {/* div branca */}
-        <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
-          {/* capa */}
-          <img
-            src={trip?.imagem || "/images-travel/capa.png"}
-            alt={trip?.nome || "Capa da viagem"}
-            className="w-full h-80"
-          />
+            {/* div branca */}
+            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
+              {/* capa */}
+              <img
+                src={trip?.imagem || "/images-travel/capa.png"}
+                alt={trip?.nome || "Capa da viagem"}
+                className="w-full h-80"
+              />
 
-          <div className="p-10 w-full h-full">
-            <div className="flex flex-row w-full justify-between">
-              {/* Div com o Organizador */}
-              <div className="flex relative flex-col items-center w-1/4">
-                <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
-                  Organizadores
-                </h2>
-                <div className="grid grid-cols-2 gap-2 overflow-x-auto h-60">
-                  {organizadores.map((usuario) => (
-                    <div
-                      key={usuario.id}
-                      className="flex flex-col items-center"
-                    >
-                      <img
-                        src={usuario.foto || "/user.png"}
-                        alt={usuario.nome}
-                        className="w-23 h-23 object-cover rounded-full"
-                      />
-                      <p className="mt-2 text-sm text-[#292D32]">
-                        {usuario.nome}
-                      </p>
-                    </div>
-                  ))}
-                  {/* Botão para adicionar mais Organizadores Promovidos */}
-                  {imagens.length < 6 && (
-                    <div className="flex flex-col w-full items-center">
-                      <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="w-19 shadow-md h-19 flex items-center justify-center bg-gray-200 rounded-full text-gray-500 hover:bg-gray-300 cursor-pointer"
-                      >
-                        <Plus className="w-12 h-12 text-[#0F2976]" />
-                      </button>
-                      <p className="mt-2 text-xs text-[#292D32] whitespace-nowrap">
-                        Adicionar Organizador
-                      </p>
-                    </div>
-                  )}
-                  <ModalPromoteOrganizer
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    usuarios={convidados}
-                    onPromote={async (id) => {
-                      // Atualiza o tipo do usuário para "OrganizadorPromovido"
-                      // await promoverUsuario(id); // Implemente se necessário
-                      setConvidados(
-                        convidados.map((usuario) =>
-                          usuario.id === id
-                            ? { ...usuario, tipo: "OrganizadorPromovido" }
-                            : usuario
-                        )
-                      );
-                      setIsModalOpen(false);
-                    }}
-                    onRemove={async (id) => {
-                      // await removerUsuario(id); // Implemente se necessário
-                      setConvidados(
-                        convidados.map((usuario) =>
-                          usuario.id === id
-                            ? { ...usuario, tipo: "Participante" }
-                            : usuario
-                        )
-                      );
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Div com o gradiente */}
-              <div className="flex flex-col relative items-center justify-center w-full h-100 sm:w-2/3 sm:h-3/3">
-                <div className="relative w-3/5 flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
-                  <div
-                    className={`absolute top-0 left-0 h-12 w-1/2 bg-[#1C4CDC] transition-all duration-300
-                                        ${activeButton === "convidados"
-                        ? "rounded-l-full"
-                        : "left-1/2 rounded-r-full"
-                      }`}
-                  ></div>
-                  <div className="relative flex w-full">
-                    <button
-                      className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300  ${activeButton === "convidados"
-                        ? "text-white "
-                        : "text-[#0F2976] cursor-pointer"
-                        }`}
-                      onClick={() => setActiveButton("convidados")}
-                    >
-                      Convidados
-                    </button>
-                    <button
-                      className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${activeButton === "solicitacoes"
-                        ? "text-white"
-                        : "text-[#0F2976] cursor-pointer"
-                        }`}
-                      onClick={() => setActiveButton("solicitacoes")}
-                    >
-                      Solicitações
-                    </button>
-                  </div>
-                </div>
-                {activeButton === "convidados" && (
-                  <div
-                    style={{
-                      scrollbarWidth: "thin",
-                      scrollbarColor: "#fffff #0F2976",
-                    }}
-                    className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
-                  >
-                    <UserList usuarios={convidados} />
-                  </div>
-                )}
-                {activeButton === "solicitacoes" && (
-                  <div
-                    style={{
-                      scrollbarWidth: "thin",
-                      scrollbarColor: "#fffff #0F2976",
-                    }}
-                    className="w-3/5 p-4 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
-                  >
-                    <RequestList
-                      solicitacoes={solicitacoes.map((s) => ({
-                        id: s.id,
-                        nome: s.nome,
-                        email: s.email,
-                        foto: s.foto ?? "/user.png", // garante que nunca será undefined
-                        tipo: 1, // ou outro valor adequado
-                      }))}
-                      onAccept={handleAccept}
-                      onDeny={handleDeny}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Div com os botões */}
-              <div className="flex relative flex-col items-center h-full w-1/4">
-                <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
-                  Informações
-                </h2>
-                <div className="flex gap-4">
-                  <div>
-                    <div className="flex flex-col items-center">
-                      <IconButton
-                        icon={<List className="w-20 h-20" />}
-                        onClick={() => setIsMoreDetailsModalOpen(true)}
-                      />
-                      <p className="text-sm text-gray-500 mt-4">
-                        Mais Detalhes
-                      </p>
-                    </div>
-                    <ModalMoreDetails
-                      isOpen={isMoreDetailsOpen}
-                      onClose={() => setIsMoreDetailsModalOpen(false)}
-                      onNavigate={(target) => {
-                        closeAllModals();
-                        if (target === "itinerary") setIsItineraryModalOpen(true);
-                        if (target === "transport") setIsTransportModalOpen(true);
-                        if (target === "budget") setIsBudgetModalOpen(true);
-                      }}
-                      trip={moreDetailsTrip}
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <IconButton
-                      icon={
-                        <img
-                          src="/images-travel/Icons/IconGreenTransport.png"
-                          className="w-20 h-20"
-                        />
-                      }
-                      onClick={() => {
-                        closeAllModals();
-                        setIsTransportModalOpen(true);
-                      }}
-                    />
-                    <p className="text-sm text-gray-500 mt-4">Transporte</p>
-                    <ModalTransport
-                      isOpen={isTransportModalOpen}
-                      onClose={() => setIsTransportModalOpen(false)}
-                      onNavigate={(target) => {
-                        closeAllModals();
-                        if (target === "itinerary") setIsItineraryModalOpen(true);
-                        if (target === "details") setIsMoreDetailsModalOpen(true);
-                        if (target === "budget") setIsBudgetModalOpen(true);
-                      }}
-                      transportData={transportData}
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <IconButton
-                      icon={
-                        <img
-                          src="/images-travel/Icons/IconGreenItinerary.png"
-                          className="w-w-20 h-20"
-                        />
-                      }
-                      onClick={() => setIsItineraryModalOpen(true)}
-                    />
-                    <p className="text-sm text-gray-500 mt-4">Itinerário</p>
-                    <ModalItinerary
-                      isOpen={isItineraryOpen}
-                      onClose={() => setIsItineraryModalOpen(false)}
-                      onNavigate={(target) => {
-                        closeAllModals();
-                        if (target === "transport")
-                          setIsTransportModalOpen(true);
-                        if (target === "details")
-                          setIsMoreDetailsModalOpen(true);
-                        if (target === "budget") setIsBudgetModalOpen(true);
-                      }}
-                      itinerario={eventos}
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-4 mt-5">
-                  <div>
-                    <div className="flex flex-col items-center">
-                      <IconButton
-                        icon={
+              <div className="p-10 w-full h-full">
+                <div className="flex flex-row w-full justify-between">
+                  {/* Div com o Organizador */}
+                  <div className="flex relative flex-col items-center w-1/4">
+                    <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
+                      Organizadores
+                    </h2>
+                    <div className="grid grid-cols-2 gap-2 overflow-x-auto h-60">
+                      {organizadores.map((usuario) => (
+                        <div
+                          key={usuario.id}
+                          className="flex flex-col items-center"
+                        >
                           <img
-                            src="\images-travel\Icons\IconGreenBudget.png"
-                            className="w-w-20 h-20"
+                            src={usuario.foto || "/user.png"}
+                            alt={usuario.nome}
+                            className="w-23 h-23 object-cover rounded-full"
                           />
-                        }
-                        onClick={() => setIsBudgetModalOpen(true)}
+                          <p className="mt-2 text-sm text-[#292D32]">
+                            {usuario.nome}
+                          </p>
+                        </div>
+                      ))}
+                      {/* Botão para adicionar mais Organizadores Promovidos */}
+                      {imagens.length < 6 && (
+                        <div className="flex flex-col w-full items-center">
+                          <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="w-19 shadow-md h-19 flex items-center justify-center bg-gray-200 rounded-full text-gray-500 hover:bg-gray-300 cursor-pointer"
+                          >
+                            <Plus className="w-12 h-12 text-[#0F2976]" />
+                          </button>
+                          <p className="mt-2 text-xs text-[#292D32] whitespace-nowrap">
+                            Adicionar Organizador
+                          </p>
+                        </div>
+                      )}
+                      <ModalPromoteOrganizer
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        usuarios={convidados}
+                        onPromote={async (id) => {
+                          // Atualiza o tipo do usuário para "OrganizadorPromovido"
+                          // await promoverUsuario(id); // Implemente se necessário
+                          setConvidados(
+                            convidados.map((usuario) =>
+                              usuario.id === id
+                                ? { ...usuario, tipo: "OrganizadorPromovido" }
+                                : usuario
+                            )
+                          );
+                          setIsModalOpen(false);
+                        }}
+                        onRemove={async (id) => {
+                          // await removerUsuario(id); // Implemente se necessário
+                          setConvidados(
+                            convidados.map((usuario) =>
+                              usuario.id === id
+                                ? { ...usuario, tipo: "Participante" }
+                                : usuario
+                            )
+                          );
+                        }}
                       />
-                      <p className="text-sm text-gray-500 mt-4">Orçamento</p>
                     </div>
+                  </div>
+
+                  {/* Div com o gradiente */}
+                  <div className="flex flex-col relative items-center justify-center w-full h-100 sm:w-2/3 sm:h-3/3">
+                    <div className="relative w-3/5 flex items-center justify-center bg-[#D9D9D9] rounded-full h-12 mb-10">
+                      <div
+                        className={`absolute top-0 left-0 h-12 w-1/2 bg-[#1C4CDC] transition-all duration-300
+                                        ${activeButton === "convidados"
+                            ? "rounded-l-full"
+                            : "left-1/2 rounded-r-full"
+                          }`}
+                      ></div>
+                      <div className="relative flex w-full">
+                        <button
+                          className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300  ${activeButton === "convidados"
+                            ? "text-white "
+                            : "text-[#0F2976] cursor-pointer"
+                            }`}
+                          onClick={() => setActiveButton("convidados")}
+                        >
+                          Convidados
+                        </button>
+                        <button
+                          className={`z-10 w-1/2 py-2 text-2xl font-bold transition-all duration-300 ${activeButton === "solicitacoes"
+                            ? "text-white"
+                            : "text-[#0F2976] cursor-pointer"
+                            }`}
+                          onClick={() => setActiveButton("solicitacoes")}
+                        >
+                          Solicitações
+                        </button>
+                      </div>
+                    </div>
+                    {activeButton === "convidados" && (
+                      <div
+                        style={{
+                          scrollbarWidth: "thin",
+                          scrollbarColor: "#fffff #0F2976",
+                        }}
+                        className="w-3/5 p-4 pr-20 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
+                      >
+                        <UserList usuarios={convidados} />
+                      </div>
+                    )}
+                    {activeButton === "solicitacoes" && (
+                      <div
+                        style={{
+                          scrollbarWidth: "thin",
+                          scrollbarColor: "#fffff #0F2976",
+                        }}
+                        className="w-3/5 p-4 h-65 bg-gradient-to-b from-[#0F2976] to-[#1C4CDC] rounded-2xl overflow-y-auto"
+                      >
+                        <RequestList
+                          solicitacoes={solicitacoes.map((s) => ({
+                            id: s.id,
+                            nome: s.nome,
+                            email: s.email,
+                            foto: s.foto ?? "/user.png", // garante que nunca será undefined
+                            tipo: 1, // ou outro valor adequado
+                          }))}
+                          onAccept={handleAccept}
+                          onDeny={handleDeny}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Div com os botões */}
+                  <div className="flex relative flex-col items-center h-full w-1/4">
+                    <h2 className="flex items-center justify-center bg-[#D9D9D9] text-[#0F2976] rounded-full py-2 p-5 text-2xl font-bold mb-10">
+                      Informações
+                    </h2>
+                    <div className="flex gap-4">
+                      <div>
+                        <div className="flex flex-col items-center">
+                          <IconButton
+                            icon={<List className="w-20 h-20" />}
+                            onClick={() => setIsMoreDetailsModalOpen(true)}
+                          />
+                          <p className="text-sm text-gray-500 mt-4">
+                            Mais Detalhes
+                          </p>
+                        </div>
+                        <ModalMoreDetails
+                          isOpen={isMoreDetailsOpen}
+                          onClose={() => setIsMoreDetailsModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "itinerary") setIsItineraryModalOpen(true);
+                            if (target === "transport") setIsTransportModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
+                          trip={moreDetailsTrip}
+                        />
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconGreenTransport.png"
+                              className="w-20 h-20"
+                            />
+                          }
+                          onClick={() => {
+                            closeAllModals();
+                            setIsTransportModalOpen(true);
+                          }}
+                        />
+                        <p className="text-sm text-gray-500 mt-4">Transporte</p>
+                        <ModalTransport
+                          isOpen={isTransportModalOpen}
+                          onClose={() => setIsTransportModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "itinerary") setIsItineraryModalOpen(true);
+                            if (target === "details") setIsMoreDetailsModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
+                          transportData={transportData}
+                        />
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconGreenItinerary.png"
+                              className="w-w-20 h-20"
+                            />
+                          }
+                          onClick={() => setIsItineraryModalOpen(true)}
+                        />
+                        <p className="text-sm text-gray-500 mt-4">Itinerário</p>
+                        <ModalItinerary
+                          isOpen={isItineraryOpen}
+                          onClose={() => setIsItineraryModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "transport")
+                              setIsTransportModalOpen(true);
+                            if (target === "details")
+                              setIsMoreDetailsModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
+                          itinerario={eventos}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-4 mt-5">
+                      <div>
+                        <div className="flex flex-col items-center">
+                          <IconButton
+                            icon={
+                              <img
+                                src="\images-travel\Icons\IconGreenBudget.png"
+                                className="w-w-20 h-20"
+                              />
+                            }
+                            onClick={() => setIsBudgetModalOpen(true)}
+                          />
+                          <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                        </div>
 
                     <ModalBudget
                       isOpen={isBudgetModalOpen}
