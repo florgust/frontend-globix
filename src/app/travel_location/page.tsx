@@ -1,17 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import Image from "next/image";
+import { Alert } from '@/components/ui/Alert';
 import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function TravelLocation() {
     const router = useRouter();
     const [showSuccess, setShowSuccess] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
+    useEffect(() => {
+        if (alertMessage) {
+            const timer = setTimeout(() => setAlertMessage(""), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [alertMessage]);
     // Estados para armazenar os dados do formulário
     const [ida, setIda] = useState({
         enderecoPartida: "",
@@ -38,6 +46,15 @@ export default function TravelLocation() {
 
     const handleSave = async () => {
         // Recupera a viagem criada do localStorage
+        if (ida.dataPartida && ida.dataChegada && new Date(ida.dataPartida) > new Date(ida.dataChegada)) {
+            setAlertMessage("Na IDA, a data de partida não pode ser depois da data de chegada.");
+            return;
+        }
+        if (volta.dataPartida && volta.dataChegada && new Date(volta.dataPartida) > new Date(volta.dataChegada)) {
+            setAlertMessage("Na VOLTA, a data de partida não pode ser depois da data de chegada.");
+            return;
+        }
+
         const viagemStr = localStorage.getItem("viagemEmCriacao");
         if (!viagemStr) {
             alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
@@ -78,6 +95,14 @@ export default function TravelLocation() {
         <RequireAuth>
             <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
                 <SidebarMenu />
+
+
+                {/* ALERTA MODAL */}
+                {alertMessage && (
+                    <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+                        <Alert message={alertMessage} type="error" />
+                    </div>
+                )}
 
                 <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                     <HeaderPages />

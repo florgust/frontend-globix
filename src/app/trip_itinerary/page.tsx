@@ -269,7 +269,7 @@ export default function TripItinerary() {
                   Tipo de Evento
                 </label>
                 <select
-                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
+                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none cursor-pointer"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >

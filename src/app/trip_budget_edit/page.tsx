@@ -178,120 +178,120 @@ export default function TripBudgetEdit() {
             </h2>
           </div>
 
-          <div className="w-[80rem] bg-white rounded-b-2xl shadow-lg px-10 py-4">
-            <div className="mb-6">
-              <div className="font-bold text-[2rem] mb-2 text-[#0F2976]">
-                {tripData.name}
-              </div>
-              <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
-                <Image
-                  src="/images-trip_budget/calendario.svg"
-                  alt="Calendário"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6"
-                />
-                <span>
-                  Data: <b className="text-[#0F2976]">{tripData.startDate}</b> até{" "}
-                  <b className="text-[#0F2976]">{tripData.endDate}</b>
-                </span>
-              </div>
-              <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
-                <Image
-                  src="/images-trip_budget/globo.svg"
-                  alt="Globo"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6"
-                />
-                <span>
-                  Local: <b className="text-[#0F2976]">{tripData.location}</b>
-                </span>
-              </div>
-              <div className="flex items-center gap-4 text-[1.3rem]">
-                <Image
-                  src="/images-trip_budget/pessoas.svg"
-                  alt="Pessoas"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6"
-                />
-                <span>
-                  Participantes:{" "}
-                  <b className="text-[#0F2976]">{tripData.participants}</b>
-                </span>
-              </div>
+        <div className="w-[80rem] bg-white rounded-b-2xl shadow-lg px-10 py-4">
+          <div className="mb-6">
+            <div className="font-bold text-[2rem] mb-2 text-[#0F2976]">
+              {tripData.name}
             </div>
-            <div className="flex gap-6">
-              <div className="flex-1">
-                <div className="flex font-bold mb-2">
-                  <span className="w-1/2 text-[#0F2976] ml-3">Categoria</span>
-                  <span className="w-1/2 text-[#0F2976] ml-2">Custo (R$)</span>
-                </div>
-                <div>
-                  {categories.map((cat, idx) => (
-                    <React.Fragment key={cat.id}>
-                      {/* Linha acima da primeira categoria */}
-                      {idx === 0 && (
-                        <hr
-                          className="border-t mb-2"
-                          style={{ borderColor: "#1C4CDC", width: "73%" }}
-                        />
-                      )}
-                      <div className="flex items-center mb-2 gap-6">
-                        <button
-                          className="text-red-500 mr-2"
-                          onClick={() => handleRemoveCategory(cat.id)}
-                          title="Remover categoria"
-                        >
-                          <FiTrash2 />
-                        </button>
-                        <input
-                          className="w-1/5 px-2 py-1 mr-2 rounded text-[#000000] ml-[-30]"
-                          type="text"
-                          value={cat.name}
-                          onChange={(e) =>
-                            handleCategoryNameChange(cat.id, e.target.value)
-                          }
-                          placeholder="Categoria"
-                        />
-                        <div className="w-34" />
-                        {/* Espaçamento ao meio */}
-                        <input
-                          className="w-1/5 border rounded px-2 py-1"
-                          type="number"
-                          min="0"
-                          value={cat.value}
-                          onChange={(e) =>
-                            handleCategoryChange(cat.id, e.target.value)
-                          }
-                          placeholder="R$"
-                        />
-                      </div>
-                      {/* Linha abaixo de todas as categorias */}
+            <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
+              <Image
+                src="/images-trip_budget/calendario.svg"
+                alt="Calendário"
+                width={24}
+                height={24}
+                className="w-6 h-6"
+              />
+              <span>
+                Data: <b className="text-[#0F2976]">{tripData.startDate}</b> até{" "}
+                <b className="text-[#0F2976]">{tripData.endDate}</b>
+              </span>
+            </div>
+            <div className="flex items-center gap-4 mb-1 text-[1.3rem]">
+              <Image
+                src="/images-trip_budget/globo.svg"
+                alt="Globo"
+                width={24}
+                height={24}
+                className="w-6 h-6"
+              />
+              <span>
+                Local: <b className="text-[#0F2976]">{tripData.location}</b>
+              </span>
+            </div>
+            <div className="flex items-center gap-4 text-[1.3rem]">
+              <Image
+                src="/images-trip_budget/pessoas.svg"
+                alt="Pessoas"
+                width={24}
+                height={24}
+                className="w-6 h-6"
+              />
+              <span>
+                Participantes:{" "}
+                <b className="text-[#0F2976]">{tripData.participants}</b>
+              </span>
+            </div>
+          </div>
+          <div className="flex gap-6">
+            <div className="flex-1">
+              <div className="flex font-bold mb-2">
+                <span className="w-1/2 text-[#0F2976] ml-3">Categoria</span>
+                <span className="w-1/2 text-[#0F2976] ml-2">Custo (R$)</span>
+              </div>
+              <div>
+                {categories.map((cat, idx) => (
+                  <React.Fragment key={cat.id}>
+                    {/* Linha acima da primeira categoria */}
+                    {idx === 0 && (
                       <hr
                         className="border-t mb-2"
                         style={{ borderColor: "#1C4CDC", width: "73%" }}
                       />
-                    </React.Fragment>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between mt-4">
-                  <button
-                    className="flex items-center text-[#0F2976] font-bold ml-4 cursor-pointer"
-                    onClick={handleAddCategory}
-                  >
-                    <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#6CFB7B] mr-2">
-                      <Image
-                        src="/images-trip_budget/mais.svg"
-                        alt="Adicionar"
-                        width={16}
-                        height={16}
-                        className="w-4 h-4"
+                    )}
+                    <div className="flex items-center mb-2 gap-6">
+                      <button
+                        className="text-red-500 mr-2 cursor-pointer"
+                        onClick={() => handleRemoveCategory(cat.id)}
+                        title="Remover categoria"
+                      >
+                        <FiTrash2 />
+                      </button>
+                      <input
+                        className="w-1/5 px-2 py-1 mr-2 rounded text-[#000000] ml-[-30]"
+                        type="text"
+                        value={cat.name}
+                        onChange={(e) =>
+                          handleCategoryNameChange(cat.id, e.target.value)
+                        }
+                        placeholder="Categoria"
                       />
-                    </span>
-                    <span>Adicionar Categoria</span>
-                  </button>
+                      <div className="w-34" />
+                      {/* Espaçamento ao meio */}
+                      <input
+                        className="w-1/5 border rounded px-2 py-1"
+                        type="number"
+                        min="0"
+                        value={cat.value}
+                        onChange={(e) =>
+                          handleCategoryChange(cat.id, e.target.value)
+                        }
+                        placeholder="R$"
+                      />
+                    </div>
+                    {/* Linha abaixo de todas as categorias */}
+                    <hr
+                      className="border-t mb-2"
+                      style={{ borderColor: "#1C4CDC", width: "73%" }}
+                    />
+                  </React.Fragment>
+                ))}
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  className="flex items-center text-[#0F2976] font-bold ml-4 cursor-pointer"
+                  onClick={handleAddCategory}
+                >
+                  <span className="w-6 h-6 flex items-center justify-center rounded-full bg-[#6CFB7B] mr-2">
+                    <Image
+                      src="/images-trip_budget/mais.svg"
+                      alt="Adicionar"
+                      width={16}
+                      height={16}
+                      className="w-4 h-4"
+                    />
+                  </span>
+                  <span>Adicionar Categoria</span>
+                </button>
 
                   <div className="flex flex-col gap-1 items-start w-56">
                     <div className="flex justify-start font-bold text-[#000000] ml-[-115]">

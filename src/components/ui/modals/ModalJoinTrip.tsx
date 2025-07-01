@@ -50,7 +50,7 @@ const ModalJoinTrip: React.FC<ModalJoinTripProps> = ({
                 />
                 <button
                     onClick={onConfirm}
-                    className="mt-5 px-10 py-4 bg-[#00FF4D] text-white rounded-lg shadow-lg hover:bg-green-600 transition"
+                    className="mt-5 px-10 py-4 bg-[#00FF4D] text-white rounded-lg shadow-lg hover:bg-green-600 transition cursor-pointer"
                 >
                     Confirmar
                 </button>

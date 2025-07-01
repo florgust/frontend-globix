@@ -13,6 +13,7 @@ import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RequireTripSelected from "@/components/auth/RequireTripSelected";
+import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import {
   mapApiToItineraries,
@@ -90,6 +91,21 @@ export default function DetailsPage() {
   const [loading, setLoading] = useState(true);
   const [activeButton, setActiveButton] = useState("convidados");
   const [imagens] = useState(["/images-home_page/carousel/carrossel.png"]);
+
+  const router = useRouter();
+  const [isEndTripModalOpen, setIsEndTripModalOpen] = useState(false);
+
+
+  const handleEndTrip = async () => {
+    if (!trip?.id) return;
+    try {
+      await api.delete(`/viagem/${trip.id}`);
+      setIsEndTripModalOpen(false);
+      router.push("/profile");
+    } catch (error) {
+      alert("Erro ao encerrar viagem." + error);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -291,6 +307,35 @@ export default function DetailsPage() {
       descricao: activity.description,
     }))
   );
+
+  function ConfirmEndTripModal({ open, onClose, onConfirm }: { open: boolean, onClose: () => void, onConfirm: () => void }) {
+    if (!open) return null;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+          <h2 className="text-xl font-bold mb-4 text-[#0F2976]">Encerrar Viagem</h2>
+          <p className="mb-6 text-center text-gray-700">
+            Tem certeza que deseja encerrar esta viagem? <br />
+            <span className="font-semibold text-red-600">Esta ação é irreversível.</span>
+          </p>
+          <div className="flex gap-4">
+            <button
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+              onClick={onClose}
+            >
+              Cancelar
+            </button>
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              onClick={onConfirm}
+            >
+              Encerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <RequireAuth>
@@ -548,70 +593,76 @@ export default function DetailsPage() {
                           <p className="text-sm text-gray-500 mt-4">Orçamento</p>
                         </div>
 
-                        <ModalBudget
-                          isOpen={isBudgetModalOpen}
-                          onClose={() => setIsBudgetModalOpen(false)}
-                          onNavigate={(target) => {
-                            closeAllModals();
-                            if (target === "itinerary")
-                              setIsItineraryModalOpen(true);
-                            if (target === "transport")
-                              setIsTransportModalOpen(true);
-                            if (target === "details")
-                              setIsMoreDetailsModalOpen(true);
-                          }}
-                          orcamentos={orcamentos}
-                        />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <IconButton
-                          icon={
-                            <img
-                              src="/images-travel/Icons/IconMessage.png"
-                              className="w-20 h-20"
-                            />
-                          }
-                          onClick={() => alert("Botão clicado!")}
-                        />
-                        <p className="text-sm text-gray-500 mt-4">Mensagem</p>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <IconButton
-                          icon={
-                            <img
-                              src="/images-travel/Icons/IconAlert.png"
-                              className="w-20 h-20"
-                            />
-                          }
-                          onClick={() => alert("Botão clicado!")}
-                        />
-                        <p className="text-sm text-gray-500 mt-4">Avisos</p>
-                      </div>
-                    </div>
+                    <ModalBudget
+                      isOpen={isBudgetModalOpen}
+                      onClose={() => setIsBudgetModalOpen(false)}
+                      onNavigate={(target) => {
+                        closeAllModals();
+                        if (target === "itinerary")
+                          setIsItineraryModalOpen(true);
+                        if (target === "transport")
+                          setIsTransportModalOpen(true);
+                        if (target === "details")
+                          setIsMoreDetailsModalOpen(true);
+                      }}
+                      orcamentos={orcamentos}
+                    />
                   </div>
-                </div>
-                <div className="w-full flex justify-between mt-5">
-                  <button
-                    className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
-                    onClick={() => setIsEditModalOpen(true)}
-                  >
-                    Editar
-                  </button>
-                  <button className="text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer">
-                    Encerrar Viagem
-                  </button>
-                  <ModalEditTrip
-                    isOpen={isEditModalOpen}
-                    onClose={() => setIsEditModalOpen(false)}
-                    onEdit={() => setIsEditModalOpen(false)}
-                  />
+                  <div className="flex flex-col items-center">
+                    <IconButton
+                      icon={
+                        <img
+                          src="/images-travel/Icons/IconMessage.png"
+                          className="w-20 h-20"
+                        />
+                      }
+                      onClick={() => alert("Botão clicado!")}
+                    />
+                    <p className="text-sm text-gray-500 mt-4">Mensagem</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <IconButton
+                      icon={
+                        <img
+                          src="/images-travel/Icons/IconAlert.png"
+                          className="w-20 h-20"
+                        />
+                      }
+                      onClick={() => alert("Botão clicado!")}
+                    />
+                    <p className="text-sm text-gray-500 mt-4">Avisos</p>
+                  </div>
                 </div>
               </div>
             </div>
+            <div className="w-full flex justify-between mt-5">
+              <button
+                className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
+                onClick={() => setIsEditModalOpen(true)}
+              >
+                Editar
+              </button>
+              <button
+                className="text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer"
+                onClick={() => setIsEndTripModalOpen(true)}
+              >
+                Encerrar Viagem
+              </button>
+              <ConfirmEndTripModal
+                open={isEndTripModalOpen}
+                onClose={() => setIsEndTripModalOpen(false)}
+                onConfirm={handleEndTrip}
+              />
+              <ModalEditTrip
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                onEdit={() => setIsEditModalOpen(false)}
+              />
+            </div>
           </div>
-          <div className="mt-20"></div>
         </div>
-      </RequireTripSelected>
-    </RequireAuth>
+      </div>
+      <div className="mt-20"></div>
+    </div>
   );
 }
