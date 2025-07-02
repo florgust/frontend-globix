@@ -13,7 +13,7 @@ export default function AboutPage() {
       <main className="bg-[#102976]">
         <section
           id="bem-vindo"
-          className="flex flex-col items-center justify-start h-[50rem] text-white"
+          className="flex flex-col items-center justify-start h-[50rem] text-white scroll-mt-20"
         >
           <hr className="border-t border-white opacity-40 mt-3 w-400" />
           <div className="max-w-4xl w-full">
@@ -97,7 +97,7 @@ export default function AboutPage() {
 
         <section
           id="globuxo"
-          className="flex flex-col items-center justify-center mt-30 text-white relative"
+          className="flex flex-col items-center justify-center mt-30 text-white relative scroll-mt-70"
         >
           <div className="flex flex-col items-center w-full max-w-4xl relative z-10">
             <h2 className="text-5xl font-normal text-center mb-10">Ajudante</h2>
@@ -129,7 +129,7 @@ export default function AboutPage() {
 
         <section
           id="time"
-          className="flex flex-col items-center justify-center min-h-screen text-white relative"
+          className="flex flex-col items-center justify-center min-h-screen text-white relative scroll-mt-10"
         >
           <div className="flex flex-col items-center w-full max-w-6xl relative z-10">
             <h2 className="text-3xl md:text-4xl font-normal text-center mb-12 mt-16">
@@ -238,18 +238,18 @@ export default function AboutPage() {
           </div>
 
           {/* Linha horizontal base */}
-          <hr className="border-t border-white opacity-40 mt-3 w-400 mt-30" />
+          <hr className="border-t border-white opacity-40 w-400 mt-30 mb-25" />
         </section>
 
         <section
-          id="por-que-usar"
-          className="flex flex-col items-center justify-center min-h-screen text-white relative"
+          id="motivos"
+          className="flex flex-col items-center justify-center text-white relative scroll-mt-50"
         >
-          <div className="flex flex-col items-center w-full max-w-6xl relative z-10">
-            <h2 className="text-3xl md:text-4xl font-normal text-center mb-16 mt-16">
+          <div className="flex flex-col items-center max-w-6xl">
+            <h2 className="text-3xl font-normal text-center">
               Por que usar o <span className="font-bold text-[#4e8cff]">GLOBIX?</span>
             </h2>
-            <div className="flex flex-row flex-wrap justify-center gap-12 mb-16">
+            <div className="flex  flex-wrap justify-center gap-12 mt-20">
               {/* Card 1 */}
               <div className="bg-white rounded-xl shadow-lg px-8 py-8 w-[300px] flex flex-col items-center text-[#0b47b8]">
                 <img src="/images-about/por-que-card1.svg" alt="Organização Total" className="w-14 h-14 mb-4" />
@@ -267,19 +267,16 @@ export default function AboutPage() {
                 </div>
               </div>
               {/* Card 3 */}
-              <div className="bg-white rounded-xl shadow-lg px-8 py-8 w-[300px] flex flex-col items-center text-[#0b47b8]">
+              <div className="bg-white rounded-xl shadow-lg py-8 w-[300px] flex flex-col items-center text-[#0b47b8]">
                 <img src="/images-about/por-que-card3.svg" alt="Planejamento prático" className="w-14 h-14 mb-4" />
                 <div className="font-bold text-lg mb-2 text-center">Planejamento prático</div>
                 <div className="text-center text-base font-normal">
                   Uma plataforma onde você consegue acompanhar tudo em um só lugar, de forma visual, intuitiva e eficiente.
                 </div>
               </div>
+              <div className="text-2xl text-white font-normal mt-4 mb-15">e muito mais...</div>
             </div>
-            <div className="text-2xl text-white font-normal mt-4">e muito mais...</div>
           </div>
-        </section>
-        <section>
-
         </section>
       </main>
 
