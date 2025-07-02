@@ -61,6 +61,7 @@ interface Trip {
   data_inicio?: string;
   data_fim?: string;
   itinerario?: Itinerario[]; // Tipar se desejar
+  codigoConvite?: number;
 }
 interface Orcamento {
   id: number;
@@ -78,7 +79,8 @@ export default function DetailsPage() {
   const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
-  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false); // ADICIONE ESTA LINHA
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
   const [moreDetailsTrip, setMoreDetailsTrip] = useState<ModalMoreDetailsTrip | null>(null);
   const [transportData, setTransportData] = useState<TransportLocation | null>(null);
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
@@ -113,7 +115,10 @@ export default function DetailsPage() {
         const storedTrip = localStorage.getItem("selectedTrip");
         if (storedTrip) {
           const tripObj = JSON.parse(storedTrip);
-          setTrip(tripObj);
+          setTrip({
+            ...tripObj,
+            codigoConvite: tripObj.codigoConvite ?? tripObj.codigo_convite,
+          });
 
           // Buscar solicitações da viagem
           const { data: solicitacoesData } = await api.get(
@@ -152,7 +157,7 @@ export default function DetailsPage() {
               )
               .map((u) => ({
                 ...u,
-                foto: u.foto ?? "/user.png",
+                foto: u.foto ?? "/user2.png",
               }))
           );
           setSolicitacoes(
@@ -160,7 +165,7 @@ export default function DetailsPage() {
               .filter((u) => u.status === 0)
               .map((u) => ({
                 ...u,
-                foto: u.foto ?? "/user.png",
+                foto: u.foto ?? "/user2.png",
               }))
           );
         }
@@ -380,7 +385,7 @@ export default function DetailsPage() {
                           className="flex flex-col items-center"
                         >
                           <img
-                            src={usuario.foto || "/user.png"}
+                            src={usuario.foto || "/user2.png"}
                             alt={usuario.nome}
                             className="w-23 h-23 object-cover rounded-full"
                           />
@@ -488,7 +493,7 @@ export default function DetailsPage() {
                             id: s.id,
                             nome: s.nome,
                             email: s.email,
-                            foto: s.foto ?? "/user.png", // garante que nunca será undefined
+                            foto: s.foto ?? "/user2.png", // garante que nunca será undefined
                             tipo: 1, // ou outro valor adequado
                           }))}
                           onAccept={handleAccept}
@@ -593,76 +598,106 @@ export default function DetailsPage() {
                           <p className="text-sm text-gray-500 mt-4">Orçamento</p>
                         </div>
 
-                    <ModalBudget
-                      isOpen={isBudgetModalOpen}
-                      onClose={() => setIsBudgetModalOpen(false)}
-                      onNavigate={(target) => {
-                        closeAllModals();
-                        if (target === "itinerary")
-                          setIsItineraryModalOpen(true);
-                        if (target === "transport")
-                          setIsTransportModalOpen(true);
-                        if (target === "details")
-                          setIsMoreDetailsModalOpen(true);
-                      }}
-                      orcamentos={orcamentos}
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <IconButton
-                      icon={
-                        <img
-                          src="/images-travel/Icons/IconMessage.png"
-                          className="w-20 h-20"
+                        <ModalBudget
+                          isOpen={isBudgetModalOpen}
+                          onClose={() => setIsBudgetModalOpen(false)}
+                          onNavigate={(target) => {
+                            closeAllModals();
+                            if (target === "itinerary")
+                              setIsItineraryModalOpen(true);
+                            if (target === "transport")
+                              setIsTransportModalOpen(true);
+                            if (target === "details")
+                              setIsMoreDetailsModalOpen(true);
+                          }}
+                          orcamentos={orcamentos}
                         />
-                      }
-                      onClick={() => alert("Botão clicado!")}
-                    />
-                    <p className="text-sm text-gray-500 mt-4">Mensagem</p>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <IconButton
-                      icon={
-                        <img
-                          src="/images-travel/Icons/IconAlert.png"
-                          className="w-20 h-20"
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconMessage.png"
+                              className="w-20 h-20"
+                            />
+                          }
+                          onClick={() => alert("Botão clicado!")}
                         />
-                      }
-                      onClick={() => alert("Botão clicado!")}
-                    />
-                    <p className="text-sm text-gray-500 mt-4">Avisos</p>
+                        <p className="text-sm text-gray-500 mt-4">Mensagem</p>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <IconButton
+                          icon={
+                            <img
+                              src="/images-travel/Icons/IconAlert.png"
+                              className="w-20 h-20"
+                            />
+                          }
+                          onClick={() => alert("Botão clicado!")}
+                        />
+                        <p className="text-sm text-gray-500 mt-4">Avisos</p>
+                      </div>
+                    </div>
                   </div>
+                </div>
+                <div className="w-full flex justify-between mt-5">
+                  <button
+                    className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
+                    onClick={() => setIsEditModalOpen(true)}
+                  >
+                    Editar
+                  </button>
+
+                  {trip?.codigoConvite !== undefined && trip?.codigoConvite !== null && (
+                    <div className="relative flex flex-col items-center">                    
+                      <div className="flex items-center">                       
+                        <button
+                          className="flex items-center justify-center text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full px-6 py-3 hover:bg-gray-300 cursor-pointer transition"
+                          onClick={() => {
+                            navigator.clipboard.writeText(String(trip.codigoConvite));
+                            setShowCopied(true);
+                            setTimeout(() => setShowCopied(false), 1500);
+                          }}
+                          style={{ position: "relative" }}
+                        >
+                          Código da Viagem
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 ml-3 text-[#0F2976]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <rect x="9" y="9" width="13" height="13" rx="2" strokeWidth="2" />
+                            <rect x="3" y="3" width="13" height="13" rx="2" strokeWidth="2" />
+                          </svg>
+                        </button>
+                      </div>
+                      {showCopied && (
+                        <span className="absolute top-full text-green-600 font-semibold bg-white px-3  rounded shadow">
+                          Copiado com sucesso!
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    className="text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer"
+                    onClick={() => setIsEndTripModalOpen(true)}
+                  >
+                    Encerrar Viagem
+                  </button>
+                  <ConfirmEndTripModal
+                    open={isEndTripModalOpen}
+                    onClose={() => setIsEndTripModalOpen(false)}
+                    onConfirm={handleEndTrip}
+                  />
+                  <ModalEditTrip
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onEdit={() => setIsEditModalOpen(false)}
+                  />
                 </div>
               </div>
             </div>
-            <div className="w-full flex justify-between mt-5">
-              <button
-                className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
-                onClick={() => setIsEditModalOpen(true)}
-              >
-                Editar
-              </button>
-              <button
-                className="text-2xl font-bold bg-blue-900 text-white rounded-full w-60 py-3 hover:bg-blue-800 cursor-pointer"
-                onClick={() => setIsEndTripModalOpen(true)}
-              >
-                Encerrar Viagem
-              </button>
-              <ConfirmEndTripModal
-                open={isEndTripModalOpen}
-                onClose={() => setIsEndTripModalOpen(false)}
-                onConfirm={handleEndTrip}
-              />
-              <ModalEditTrip
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                onEdit={() => setIsEditModalOpen(false)}
-              />
-            </div>
           </div>
+          <div className="mt-20"></div>
         </div>
-      </div>
-      <div className="mt-20"></div>
-    </div>
+      </RequireTripSelected>
+    </RequireAuth>
   );
 }

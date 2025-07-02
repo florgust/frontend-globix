@@ -58,6 +58,7 @@ export default function DetailsPage() {
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
   const [isItineraryOpen, setIsItineraryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
   const [moreDetailsTrip, setMoreDetailsTrip] = useState<ModalMoreDetailsTrip | null>(null);
   const [transportData, setTransportData] = useState<TransportLocation | null>(null);
@@ -85,7 +86,10 @@ export default function DetailsPage() {
         const storedTrip = localStorage.getItem("selectedTrip");
         if (storedTrip) {
           const tripObj = JSON.parse(storedTrip);
-          setTrip(tripObj);
+          setTrip({
+            ...tripObj,
+            codigoConvite: tripObj.codigoConvite ?? tripObj.codigo_convite,
+          });
 
           // 1. Buscar solicitações da viagem
           console.log("Buscando solicitações para a viagem:", tripObj.id);
@@ -131,7 +135,7 @@ export default function DetailsPage() {
               )
               .map((u) => ({
                 ...u,
-                foto: u.foto || "/user.png",
+                foto: u.foto || "/user2.png",
               }))
           );
         }
@@ -274,7 +278,7 @@ export default function DetailsPage() {
                           className="flex flex-col items-center"
                         >
                           <img
-                            src={usuario.foto || "/user.png"}
+                            src={usuario.foto || "/user2.png"}
                             alt={usuario.nome}
                             className="w-23 h-23 object-cover rounded-full"
                           />
@@ -426,7 +430,7 @@ export default function DetailsPage() {
                           }
                           onClick={() => alert("Botão clicado!")}
                         />
-                        <p className="text-sm text-gray-500 mt-2">Mensagem</p>
+                        <p className="text-sm text-gray-500 mt-4">Mensagem</p>
                       </div>
                       <div className="flex flex-col items-center">
                         <IconButton
@@ -438,17 +442,44 @@ export default function DetailsPage() {
                           }
                           onClick={() => alert("Botão clicado!")}
                         />
-                        <p className="text-sm text-gray-500 mt-2">Avisos</p>
+                        <p className="text-sm text-gray-500 mt-4">Avisos</p>
                       </div>
                     </div>
 
                   </div>
 
                 </div>
-                <div className="w-full flex justify-between">
+                <div className="w-full flex justify-between mt-5">
                   <button className="text-2xl font-bold bg-[#FF2626] text-[#FFFFFF] rounded-full w-60 py-3 hover:bg-gray-500 cursor-pointer">
                     Sair da viagem
                   </button>
+
+                  {trip?.codigoConvite !== undefined && trip?.codigoConvite !== null && (
+                    <div className="relative flex flex-col items-center">
+                      <div className="flex items-center">
+                        <button
+                          className="flex items-center justify-center text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full px-6 py-3 hover:bg-gray-300 cursor-pointer transition"
+                          onClick={() => {
+                            navigator.clipboard.writeText(String(trip.codigoConvite));
+                            setShowCopied(true);
+                            setTimeout(() => setShowCopied(false), 1500);
+                          }}
+                          style={{ position: "relative" }}
+                        >
+                          Código da Viagem
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 ml-3 text-[#0F2976]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <rect x="9" y="9" width="13" height="13" rx="2" strokeWidth="2" />
+                            <rect x="3" y="3" width="13" height="13" rx="2" strokeWidth="2" />
+                          </svg>
+                        </button>
+                      </div>
+                      {showCopied && (
+                        <span className="absolute top-full text-green-600 font-semibold bg-white px-3  rounded shadow">
+                          Copiado com sucesso!
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
