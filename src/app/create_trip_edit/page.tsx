@@ -257,13 +257,9 @@ export default function EditTripPage() {
                 />
               </div>
 
-              <div className="w-full flex flex-col relative items-center justify-center mt-15">
+              <div className="w-full flex flex-col relative items-center justify-center mt-15 cursor-pointer">
                 <div className="absolute bg-white w-3/5 h-40 rounded-md"></div>
-            <div className="w-full flex flex-col relative items-center justify-center mt-15 cursor-pointer">
-              <div className="absolute bg-white w-3/5 h-40 rounded-md"></div>
-
                 <ImagePlus className="absolute w-25 h-25 mb-12" />
-
                 <label
                   htmlFor="file-upload"
                   className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer"
