@@ -11,10 +11,8 @@ import ModalTransport from "@/components/ui/modals/ModalTransport";
 import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import RequireAuth from "@/components/auth/RequireAuth";
-import RequireTripSelected from "@/components/auth/RequireTripSelected";
 import { useRouter } from "next/navigation";
-import api from "@/utils/axios";
+import api, { axios } from "@/utils/axios";
 import {
   mapApiToItineraries,
   ItineraryDay,
@@ -28,13 +26,15 @@ import {
   TransportLocation,
   mapToTransportLocation,
 } from "@/utils/transportUtils";
+import RequireAuth from "@/components/auth/RequireAuth";
+import RequireTripSelected from "@/components/auth/RequireTripSelected";
 
 interface Usuario {
   id: number;
   nome: string;
   email: string;
   status: number;
-  tipo: string;
+  papel: string;
   foto?: string;
 }
 
@@ -188,22 +188,18 @@ export default function DetailsPage() {
     setIsBudgetModalOpen(false);
   };
 
-  // async function promoverUsuario(id_usuario: number) {
-  //     await fetch(`/api/usuarios/${id_usuario}/promover`, {
-  //         method: "POST",
-  //     });
-  // }
+  async function PromoverOuRebaixarOrganizador(tripId: number, id_usuario: number) {
 
-  // async function removerUsuario(id_usuario: number) {
-  //     await fetch(`/api/usuarios/${id_usuario}/remover`, {
-  //         method: "POST",
-  //     });
-  // }
+    const organizadorPrincipal = organizadores.find(org =>
+      org.papel?.toLowerCase() === "organizador"
+    );
+    const idOrganizador = organizadorPrincipal?.id;
+    console.log("Promovendo/Rebaixando organizador:", tripId, id_usuario, idOrganizador);
 
-  // const handleEdit = (option: string) => {
-  //     console.log(`Opção selecionada para edição: ${option}`);
-  //     setIsEditModalOpen(false);
-  // };
+    await api.post(`/solicitacao/promocao/${tripId}/${idOrganizador}`, {
+      idUsuarioSolicitante: id_usuario,
+    });
+  }
 
   const handleAccept = async (id: number) => {
     await api.put(`solicitacao/${trip?.id}/${id}/inserido`, {
@@ -308,6 +304,7 @@ export default function DetailsPage() {
     }
     fetchOrcamentos();
   }, []);
+  console.log("Dados enviados pro modal:", [...organizadores, ...convidados]);
 
   if (loading) {
     return (
@@ -359,6 +356,7 @@ export default function DetailsPage() {
 
   return (
     <RequireAuth>
+
       <RequireTripSelected>
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
           <SidebarMenu />
@@ -400,7 +398,7 @@ export default function DetailsPage() {
                           className="flex flex-col items-center"
                         >
                           <img
-                            src={usuario.foto || "/user2.png"}
+                            src={usuario.foto || "/user.png"}
                             alt={usuario.nome}
                             className="w-23 h-23 object-cover rounded-full"
                           />
@@ -426,25 +424,39 @@ export default function DetailsPage() {
                       <ModalPromoteOrganizer
                         isOpen={isModalOpen}
                         onClose={() => setIsModalOpen(false)}
-                        usuarios={convidados}
+                        usuarios={[...organizadores, ...convidados]}
                         onPromote={async (id) => {
-                          // Atualiza o tipo do usuário para "OrganizadorPromovido"
-                          // await promoverUsuario(id); // Implemente se necessário
+                          console.log("Promovendo organizador:", trip?.id ?? 0, id);
+                          await PromoverOuRebaixarOrganizador(trip?.id ?? 0, id);
                           setConvidados(
                             convidados.map((usuario) =>
                               usuario.id === id
-                                ? { ...usuario, tipo: "OrganizadorPromovido" }
+                                ? { ...usuario, papel: "OrganizadorPromovido" }
                                 : usuario
                             )
                           );
-                          setIsModalOpen(false);
+                          setOrganizadores(prev =>
+                            prev.map(usuario =>
+                              usuario.id === id
+                                ? { ...usuario, papel: "organizadorpromovido" }
+                                : usuario
+                            )
+                          );
                         }}
                         onRemove={async (id) => {
-                          // await removerUsuario(id); // Implemente se necessário
+                          await PromoverOuRebaixarOrganizador(trip?.id ?? 0, id);
+
                           setConvidados(
                             convidados.map((usuario) =>
                               usuario.id === id
-                                ? { ...usuario, tipo: "Participante" }
+                                ? { ...usuario, papel: "Participante" }
+                                : usuario
+                            )
+                          );
+                          setOrganizadores(prev =>
+                            prev.map(usuario =>
+                              usuario.id === id
+                                ? { ...usuario, papel: "participante" }
                                 : usuario
                             )
                           );
@@ -508,8 +520,8 @@ export default function DetailsPage() {
                             id: s.id,
                             nome: s.nome,
                             email: s.email,
-                            foto: s.foto ?? "/user2.png", // garante que nunca será undefined
-                            tipo: 1, // ou outro valor adequado
+                            foto: s.foto ?? "/user.png",
+                            papel: 1,
                           }))}
                           onAccept={handleAccept}
                           onDeny={handleDeny}
