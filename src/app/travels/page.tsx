@@ -12,7 +12,7 @@ import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import api, { axios } from "@/utils/axios";
+import api from "@/utils/axios";
 import {
   mapApiToItineraries,
   ItineraryDay,

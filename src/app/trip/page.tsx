@@ -41,6 +41,7 @@ interface Usuario {
   status: number;
   tipo: string;
   foto?: string;
+  papel: string;
 }
 
 interface Orcamento {
