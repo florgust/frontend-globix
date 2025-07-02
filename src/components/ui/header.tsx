@@ -83,7 +83,7 @@ export function Header() {
           {/* Viagens */}
             <div className="relative">
             <button
-              onClick={() => window.location.href = '/comunidade'}
+              onClick={() => window.location.href = '/community'}
               className="focus:outline-none flex items-center gap-2 cursor-pointer hover:font-bold"
             >
               Comunidade
