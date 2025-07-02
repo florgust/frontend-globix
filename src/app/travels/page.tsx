@@ -42,6 +42,7 @@ interface SolicitacaoViagem {
   idUsuario: number;
   papel: string;
   status: number;
+  inseridoNaViagem: number;
 }
 
 interface Itinerario {
@@ -98,16 +99,20 @@ export default function DetailsPage() {
   const [isEndTripModalOpen, setIsEndTripModalOpen] = useState(false);
 
 
+  // ...existing code...
   const handleEndTrip = async () => {
     if (!trip?.id) return;
     try {
-      await api.delete(`/viagem/${trip.id}`);
+      // Primeiro encerra todas as solicitações da viagem
+      await api.put(`/solicitacao/encerrar/${trip.id}`);
+
       setIsEndTripModalOpen(false);
       router.push("/profile");
     } catch (error) {
       alert("Erro ao encerrar viagem." + error);
     }
   };
+  // ...existing code...
 
   useEffect(() => {
     async function fetchData() {
@@ -134,6 +139,7 @@ export default function DetailsPage() {
                 ...usuario,
                 papel: sol.papel,
                 status: sol.status,
+                inseridoNaViagem: sol.inseridoNaViagem,
               };
             }
           );
@@ -150,7 +156,7 @@ export default function DetailsPage() {
             usuariosCompletos
               .filter(
                 (u) =>
-                  u.status == 1 &&
+                  u.inseridoNaViagem == 1 &&
                   !["organizador", "organizadorpromovido"].includes(
                     (u.papel ?? "").toLowerCase()
                   )
@@ -162,7 +168,7 @@ export default function DetailsPage() {
           );
           setSolicitacoes(
             usuariosCompletos
-              .filter((u) => u.status === 0)
+              .filter((u) => u.inseridoNaViagem == 0)
               .map((u) => ({
                 ...u,
                 foto: u.foto ?? "/user2.png",
@@ -196,7 +202,7 @@ export default function DetailsPage() {
   }
 
   const handleAccept = async (id: number) => {
-    await api.put(`solicitacao/${trip?.id}/${id}/status`, {
+    await api.put(`solicitacao/${trip?.id}/${id}/inserido`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
     });
@@ -213,9 +219,18 @@ export default function DetailsPage() {
   };
 
   const handleDeny = async (id: number) => {
-    console.log("Dados da solicitação:", solicitacoes);
-    console.log("ID sendo enviado:", id);
-    console.log("URL completa:", `/solicitacao/${trip?.id}/${id}/negar`);
+    try {
+      // Chama a API para excluir a solicitação
+      await api.delete(`/solicitacao/${trip?.id}/${id}`);
+
+      // Remove das solicitações na interface
+      setSolicitacoes(
+        solicitacoes.filter((solicitacao) => solicitacao.id !== id)
+      );
+    } catch (error) {
+      console.error("Erro ao negar solicitação:", error);
+      alert("Erro ao negar solicitação");
+    }
   };
 
   useEffect(() => {
