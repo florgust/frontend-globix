@@ -10,6 +10,7 @@ interface TripCardProps {
 const TripCard = ({ trip }: TripCardProps) => {
   const url = trip.papel === "organizador" ? "/travels" : "/trip";
   const router = useRouter();
+  const isEncerrada = trip.status === 0;
 
   const handleDetailsClick = () => {
     if (typeof window !== "undefined") {
@@ -19,7 +20,16 @@ const TripCard = ({ trip }: TripCardProps) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden w-full max-w-xs">
+    <div className={`bg-white rounded-xl shadow-md overflow-hidden w-full max-w-xs relative ${isEncerrada ? 'opacity-50 grayscale' : ''}`}>
+      {/* Overlay sutil para viagens encerradas */}
+      {isEncerrada && (
+        <div className="absolute top-2 right-2 z-10">
+          <span className="text-white font-bold text-xs bg-red-500 px-2 py-1 rounded">
+            ENCERRADA
+          </span>
+        </div>
+      )}
+      
       <div className="relative">
         <Image
           src={trip.imagem}
@@ -43,10 +53,15 @@ const TripCard = ({ trip }: TripCardProps) => {
         <p><strong>Transporte:</strong> {trip.transporte}</p>
         <p><strong>Duração:</strong> {trip.dataInicio} até {trip.dataFim}</p>
         <button
-          className="bg-[#102976] text-white px-3 py-1 rounded-xl mt-2 text-sm hover:bg-[#0a1f5f] cursor-pointer"
-          onClick={handleDetailsClick}
+          className={`px-3 py-1 rounded-xl mt-2 text-sm cursor-pointer ${
+            isEncerrada 
+              ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+              : 'bg-[#102976] text-white hover:bg-[#0a1f5f]'
+          }`}
+          onClick={isEncerrada ? undefined : handleDetailsClick}
+          disabled={isEncerrada}
         >
-          Mais detalhes
+          {isEncerrada ? 'Encerrada' : 'Mais detalhes'}
         </button>
       </div>
     </div>

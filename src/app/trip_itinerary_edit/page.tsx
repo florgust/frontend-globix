@@ -6,6 +6,7 @@ import { Itinerary } from "@/components/ui/Itinerary";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 interface Activity {
   id?: number;
@@ -408,146 +409,148 @@ export default function TripItinerary() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-      <SidebarMenu />
-      <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-        <HeaderPages />
-        <div className="bg-[#0F2976] w-[80rem] rounded-t-2xl px-10 py-6 mt-8">
-          <h2 className="text-3xl font-bold text-white">
-            Editar itinerário da viagem
-          </h2>
-        </div>
-        <div className="w-[80rem] h-[41rem] bg-white rounded-b-2xl shadow-lg px-10 py-8 flex gap-8 flex-col">
-          <div className="flex flex-row gap-8 flex-1">
-            {/* Formulário */}
-            <div className="flex flex-col w-1/2 gap-4">
-              <label className="font-bold text-[#292D32] text-lg">
-                Data e Hora
-              </label>
-              <div className="flex gap-2 items-center">
-                <div className="flex items-center border border-[#00FF4D] rounded-lg px-2 py-1 bg-white">
-                  <input
-                    type="date"
-                    className="outline-none border-none bg-transparent text-[#0F2976] font-bold"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                  />
-                  <input
-                    type="time"
-                    className="outline-none border-none bg-transparent text-[#0F2976] font-bold ml-2"
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
-                  />
+    <RequireAuth>
+      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+        <SidebarMenu />
+        <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+          <HeaderPages />
+          <div className="bg-[#0F2976] w-[80rem] rounded-t-2xl px-10 py-6 mt-8">
+            <h2 className="text-3xl font-bold text-white">
+              Editar itinerário da viagem
+            </h2>
+          </div>
+          <div className="w-[80rem] h-[41rem] bg-white rounded-b-2xl shadow-lg px-10 py-8 flex gap-8 flex-col">
+            <div className="flex flex-row gap-8 flex-1">
+              {/* Formulário */}
+              <div className="flex flex-col w-1/2 gap-4">
+                <label className="font-bold text-[#292D32] text-lg">
+                  Data e Hora
+                </label>
+                <div className="flex gap-2 items-center">
+                  <div className="flex items-center border border-[#00FF4D] rounded-lg px-2 py-1 bg-white">
+                    <input
+                      type="date"
+                      className="outline-none border-none bg-transparent text-[#0F2976] font-bold"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                    />
+                    <input
+                      type="time"
+                      className="outline-none border-none bg-transparent text-[#0F2976] font-bold ml-2"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <label className="font-bold text-[#292D32] text-lg mt-2">
+                  Título
+                </label>
+                <input
+                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] focus:outline-none"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Título do evento"
+                />
+                <label className="font-bold text-[#292D32] text-lg mt-2">
+                  Descrição
+                </label>
+                <textarea
+                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Descrição do evento"
+                />
+                <label className="font-bold text-[#292D32] text-lg mt-2">
+                  Tipo de Evento
+                </label>
+                <select
+                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  {eventTypes.map((ev) => (
+                    <option key={ev} value={ev}>
+                      {ev}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex justify-center">
+                  {editing ? (
+                    <button
+                      className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
+                      onClick={handleEditItinerary}
+                      type="button"
+                      disabled={
+                        !title.trim() ||
+                        !description.trim() ||
+                        !date.trim() ||
+                        !time.trim() ||
+                        !type.trim()
+                      }
+                    >
+                      Salvar Edição
+                    </button>
+                  ) : (
+                    <button
+                      className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
+                      onClick={handleAddItinerary}
+                      type="button"
+                      disabled={
+                        !title.trim() ||
+                        !description.trim() ||
+                        !date.trim() ||
+                        !time.trim() ||
+                        !type.trim()
+                      }
+                    >
+                      <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white mr-2">
+                        <img
+                          src="/images-trip_itinerary/mais.svg"
+                          alt="Adicionar"
+                          className="w-5 h-5"
+                        />
+                      </span>
+                      Adicionar Itinerário
+                    </button>
+                  )}
                 </div>
               </div>
-              <label className="font-bold text-[#292D32] text-lg mt-2">
-                Título
-              </label>
-              <input
-                className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] focus:outline-none"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Título do evento"
+              {/* Linha vertical divisória */}
+              <div className="w-px bg-[#092064] h-[32rem] mx-2" />
+              <Itinerary
+                itineraries={itineraries}
+                currentPage={currentPage}
+                handleRemoveDay={handleRemoveDay}
+                handleRemoveActivity={handleRemoveActivity}
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+                setCurrentPage={setCurrentPage}
+                onSelectActivity={handleSelectActivity}
               />
-              <label className="font-bold text-[#292D32] text-lg mt-2">
-                Descrição
-              </label>
-              <textarea
-                className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Descrição do evento"
-              />
-              <label className="font-bold text-[#292D32] text-lg mt-2">
-                Tipo de Evento
-              </label>
-              <select
-                className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                {eventTypes.map((ev) => (
-                  <option key={ev} value={ev}>
-                    {ev}
-                  </option>
-                ))}
-              </select>
-              <div className="flex justify-center">
-                {editing ? (
-                  <button
-                    className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
-                    onClick={handleEditItinerary}
-                    type="button"
-                    disabled={
-                      !title.trim() ||
-                      !description.trim() ||
-                      !date.trim() ||
-                      !time.trim() ||
-                      !type.trim()
-                    }
-                  >
-                    Salvar Edição
-                  </button>
-                ) : (
-                  <button
-                    className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
-                    onClick={handleAddItinerary}
-                    type="button"
-                    disabled={
-                      !title.trim() ||
-                      !description.trim() ||
-                      !date.trim() ||
-                      !time.trim() ||
-                      !type.trim()
-                    }
-                  >
-                    <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white mr-2">
-                      <img
-                        src="/images-trip_itinerary/mais.svg"
-                        alt="Adicionar"
-                        className="w-5 h-5"
-                      />
-                    </span>
-                    Adicionar Itinerário
-                  </button>
-                )}
-              </div>
             </div>
-            {/* Linha vertical divisória */}
-            <div className="w-px bg-[#092064] h-[32rem] mx-2" />
-            <Itinerary
-              itineraries={itineraries}
-              currentPage={currentPage}
-              handleRemoveDay={handleRemoveDay}
-              handleRemoveActivity={handleRemoveActivity}
-              handlePrev={handlePrev}
-              handleNext={handleNext}
-              setCurrentPage={setCurrentPage}
-              onSelectActivity={handleSelectActivity}
-            />
-          </div>
-          <div className="flex justify-center pb-44">
-            <button
-              className="cursor-pointer transition hover:scale-105 bg-[#A7FF84] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow min-w-[20rem] disabled:opacity-50 disabled:cursor-not-allowed"
-              type="button"
-              disabled={
-                itineraries.length === 0 ||
-                !itineraries.some(
-                  (it) => it.activities && it.activities.length > 0
-                )
-              }
-              onClick={handleSaveItinerary}
-            >
-              Salvar
-            </button>
-            <SuccessModal
-              isOpen={showSuccess}
-              message="Itinerário salvo com sucesso!"
-              onClose={handleCloseModal}
-            />
+            <div className="flex justify-center pb-44">
+              <button
+                className="cursor-pointer transition hover:scale-105 bg-[#A7FF84] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow min-w-[20rem] disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button"
+                disabled={
+                  itineraries.length === 0 ||
+                  !itineraries.some(
+                    (it) => it.activities && it.activities.length > 0
+                  )
+                }
+                onClick={handleSaveItinerary}
+              >
+                Salvar
+              </button>
+              <SuccessModal
+                isOpen={showSuccess}
+                message="Itinerário salvo com sucesso!"
+                onClose={handleCloseModal}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </RequireAuth>
   );
 }
