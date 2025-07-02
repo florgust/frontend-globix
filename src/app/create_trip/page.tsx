@@ -74,6 +74,7 @@ export default function CreateTripPage() {
         }
     };
 
+    
     const handleCloseModal = () => {
         setShowSuccess(false);
         router.push("/travel_location");
