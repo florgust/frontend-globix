@@ -8,5 +8,7 @@ export interface Trip {
   dataFim: string;
   organizador: string;
   transporte: string;
+  codigoConvite: number;
   papel: UserRole;
+  status: number;
 }

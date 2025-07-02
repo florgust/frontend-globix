@@ -6,7 +6,7 @@ interface Usuario {
     nome: string;
     email: string;
     status: number;
-    tipo: string;
+    papel: string;
     foto?: string;
 }
 
@@ -22,6 +22,9 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
         Organizador: "Organizador",
         OrganizadorPromovido: "Organizador Promovido",
         Participante: "Participante",
+        "organizador": "Organizador",
+        "organizadorpromovido": "Organizador Promovido",
+        "participante": "Participante",
     };
 
     if (!isOpen) return null;
@@ -38,7 +41,7 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
                 <div className="flex flex-row items-center w-full h-20 mb-6">
                     <button
                         onClick={onClose}
-                        className="relative absolute text-gray-500 hover:text-gray-700"
+                        className="relative absolute text-gray-500 hover:text-gray-700 cursor-pointer"
                     >
                         <ChevronLeft className="w-15 h-15" />
                     </button>
@@ -95,7 +98,10 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
                                 if (isFirst) borderRadius = "rounded-t-lg";
                                 if (isLast) borderRadius += " rounded-b-lg";
                             }
-
+                            console.log("Usuario:", usuario.nome);
+                            console.log("Tipo recebido:", usuario.papel);
+                            console.log("Tipo no objeto:", typeof usuario.papel);
+                            console.log("Usuario completo:", usuario);
                             return (
                                 <div
                                     key={usuario.id}
@@ -103,7 +109,8 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
                                 >
                                     <div className="flex items-center h-15 ml-2 flex-1 min-w-0">
                                         <img
-                                            src={`https://ui-avatars.com/api/?name=${usuario.nome}&background=0D8ABC&color=fff`}
+                                            src={usuario.foto || "/user.png"}
+                                            // src={`https://ui-avatars.com/api/?name=${usuario.nome}&background=0D8ABC&color=fff`}
                                             alt={usuario.nome}
                                             className="w-12 h-12 rounded-full mr-4"
                                         />
@@ -114,28 +121,31 @@ function ModalPromoteOrganizer({ isOpen, onClose, usuarios, onPromote, onRemove 
 
                                     </div>
 
-                                    <div className="flex items-center w-2/5 justify-start">
-                                        <p className="text-md text-left">{tipoUsuarioLabel[usuario.tipo]}</p>
+                                    <div className="flex items-center w-2/6 justify-start">
+                                        <p className="text-md text-left">{tipoUsuarioLabel[usuario.papel]}</p>
                                     </div>
 
-                                    <div className="flex gap-2 pr-2 min-w-[120px] justify-end">
-                                        {usuario.tipo === "Participante" && (
-                                            <button
-                                                className="px-3 py-2 bg-[#0F2976] text-white rounded-full hover:bg-blue-900"
+                                    <div className="flex gap-2 pr-2 w-[150px] justify-end "> {/* Largura fixa de 150px */}
+                                        {usuario.papel?.toLowerCase() === "participante" && (
+                                            <button className="px-4 py-2 bg-[#0F2976] text-white rounded-full hover:bg-blue-900 cursor-pointer"
                                                 onClick={() => onPromote(usuario.id)}
                                             >
                                                 promover
                                             </button>
                                         )}
-                                        {usuario.tipo === "OrganizadorPromovido" && (
-                                            <button
-                                                className="px-4 py-2 bg-[#76120F] text-white rounded-full hover:bg-red-800"
+                                        {usuario.papel?.toLowerCase() === "organizadorpromovido" && (
+                                            <button className="px-4 py-2 bg-[#76120F] text-white rounded-full hover:bg-red-800 cursor-pointer"
                                                 onClick={() => onRemove(usuario.id)}
                                             >
                                                 remover
                                             </button>
                                         )}
-                                        {/* Se for "Organizador", não mostra botão */}
+                                        {usuario.papel?.toLowerCase() === "organizador" && (
+                                            <div className="px-4 py-2 bg-gray-200 text-gray-600 rounded-full text-center whitespace-nowrap hover:bg-gray-300"
+                                            >
+                                                Organizador Principal
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             );

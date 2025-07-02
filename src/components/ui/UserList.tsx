@@ -7,7 +7,7 @@ interface User {
   nome: string;
   email: string;
   status: number;
-  tipo: string;
+  papel: string;
   foto?: string;
 }
 
@@ -16,7 +16,7 @@ interface RequestUser {
   nome: string;
   email: string;
   foto: string;
-  tipo: number;
+  papel: number;
 }
 
 
