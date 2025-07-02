@@ -81,26 +81,14 @@ export function Header() {
         {/* Navegação principal */}
         <nav className="flex flex-wrap items-center gap-4 md:gap-8 text-sm font-medium min-w-0" ref={menuRef}>
           {/* Viagens */}
-          <div className="relative">
+            <div className="relative">
             <button
-              onClick={() => setOpenMenu(openMenu === 'viagens' ? null : 'viagens')}
+              onClick={() => window.location.href = '/community'}
               className="focus:outline-none flex items-center gap-2 cursor-pointer hover:font-bold"
             >
-              Viagens
-              <Image
-                src="/images-initial/icone-down.png"
-                alt="Ícone de seta para baixo"
-                width={10}
-                height={12}
-              />
+              Comunidade
             </button>
-            {openMenu === 'viagens' && (
-              <ul className="absolute mt-2 bg-white text-[#0D1A3A] rounded shadow p-2 w-36 md:w-40 z-10">
-                <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Planejadas</li>
-                <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Passadas</li>
-              </ul>
-            )}
-          </div>
+            </div>
 
           {/* Sobre Nós */}
           <div className="relative">
@@ -119,8 +107,33 @@ export function Header() {
             </button>
             {openMenu === 'sobre' && (
               <ul className="absolute mt-2 bg-white text-[#0D1A3A] rounded shadow p-2 w-36 md:w-40 z-10">
-                <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Quem Somos</li>
-                <li className="hover:bg-gray-100 px-3 py-1 cursor-pointer">Contato</li>
+                <li
+                  className="hover:bg-gray-100 px-3 py-1 cursor-pointer"
+                  onClick={() => window.location.href = '/about/#bem-vindo'}
+                >
+                  Bem vindo
+                </li>
+
+                <li
+                  className="hover:bg-gray-100 px-3 py-1 cursor-pointer"
+                  onClick={() => window.location.href = '/about/#globuxo'}
+                >
+                  Globuxo
+                </li>
+
+                <li
+                  className="hover:bg-gray-100 px-3 py-1 cursor-pointer"
+                  onClick={() => window.location.href = '/about/#time'}
+                >
+                  Time
+                </li>
+
+                <li
+                  className="hover:bg-gray-100 px-3 py-1 cursor-pointer"
+                  onClick={() => window.location.href = '/about/#motivos'}
+                >
+                  Motivos para usar o Globix
+                </li>
               </ul>
             )}
           </div>
