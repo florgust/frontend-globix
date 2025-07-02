@@ -1,108 +1,146 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SidebarMenu from "../../components/ui/SidebarMenu";
 import { HeaderPages } from "@/components/ui/header";
 import Card from "@/components/ui/community/CardPublicTrip";
 import BarraDePesquisa from "@/components/ui/community/SearchBar";
 import RequireAuth from "@/components/auth/RequireAuth";
+import api from "@/utils/axios";
+import { useRouter } from "next/navigation";
 
-export default function HomePage() {
+interface Organizador {
+  id: number;
+  nome: string;
+  foto?: string;
+}
+interface Viagem {
+  id: number;
+  nome: string;
+  destino: string;
+  dataInicio: string;
+  dataFim: string;
+  tipo: string;
+  foto?: string;
+  organizador?: Organizador;
+}
 
-    return (
-        <RequireAuth>
-            <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-                {/* Sidebar */}
-                <SidebarMenu />
-
-                {/* Main Content */}
-                <div className="flex flex-col w-full overflow-hidden">
-                    <HeaderPages />
-
-                    <main className="flex flex-col items-center w-full max-w-[90%] mx-auto pt-10 px-5 gap-8">
-                        <div className="flex flex-col items-center justify-center">
-                            <h1 className="text-white text-4xl font-bold ">Comunidade Globix</h1>
-                        </div>
-
-                        <div>
-                            <h2 className="text-white text-lg">Participe de Excursões criados por outros viajantes </h2>
-                        </div>
-
-                        <BarraDePesquisa />
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-                                userImage="https://randomuser.me/api/portraits/men/32.jpg"
-                                tripName="Aventura nas Montanhas"
-                                location="Serra do Cipó, MG"
-                                createdAt="há 2 dias"
-                                duration="5 dias"
-                            />
-
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1465156799763-2c087c332922"
-                                userImage="https://randomuser.me/api/portraits/women/44.jpg"
-                                tripName="Praias do Nordeste"
-                                location="Porto de Galinhas, PE"
-                                createdAt="há 5 dias"
-                                duration="7 dias"
-                            />
-
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"
-                                userImage="https://randomuser.me/api/portraits/men/65.jpg"
-                                tripName="Explorando a Amazônia"
-                                location="Manaus, AM"
-                                createdAt="há 1 semana"
-                                duration="10 dias"
-                            />
-
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1519125323398-675f0ddb6308"
-                                userImage="https://randomuser.me/api/portraits/women/68.jpg"
-                                tripName="Caminho das Águas"
-                                location="Foz do Iguaçu, PR"
-                                createdAt="há 3 dias"
-                                duration="4 dias"
-                            />
-
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1502082553048-f009c37129b9"
-                                userImage="https://randomuser.me/api/portraits/men/23.jpg"
-                                tripName="Trilhas no Sul"
-                                location="Gramado, RS"
-                                createdAt="há 2 semanas"
-                                duration="6 dias"
-                            />
-
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1465101046530-73398c7f28ca"
-                                userImage="https://randomuser.me/api/portraits/women/12.jpg"
-                                tripName="Rota das Cachoeiras"
-                                location="Chapada dos Veadeiros, GO"
-                                createdAt="há 4 dias"
-                                duration="8 dias"
-                            />
+export default function CommunityPage() {
+    const [viagens, setViagens] = useState<Viagem[]>([]);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
 
+    // Função para buscar viagens públicas
+    const buscarViagensPublicas = async () => {
+        try {
+            setLoading(true);
+            const { data: todasViagens } = await api.get('/viagens');
+            
+            // Filtrar apenas públicas
+            const viagensPublicas = todasViagens.filter((viagem: Viagem) => 
+                viagem.tipo?.toLowerCase() === 'publica'
+            );
+            
+            setViagens(viagensPublicas);
+        } catch (error) {
+            console.error('Erro ao buscar viagens:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                            <Card
-                                topImage="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
-                                userImage="https://randomuser.me/api/portraits/women/55.jpg"
-                                tripName="Sabores da Itália"
-                                location="Roma, Itália"
-                                createdAt="há 4 dias"
-                                duration="6 dias"
-                            />
+    // Buscar viagens quando o componente carregar
+    useEffect(() => {
+        buscarViagensPublicas();
+    }, []);
 
+    // Função para calcular duração
+    const calcularDuracao = (dataInicio: string, dataFim: string) => {
+        const inicio = new Date(dataInicio);
+        const fim = new Date(dataFim);
+        const diffTime = Math.abs(fim.getTime() - inicio.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return `${diffDays} dias`;
+    };
 
-                        </div>
-                        <div className="mb-20" />
+    // Função para calcular tempo desde criação
+    const calcularTempoDecorrido = (dataInicio: string) => {
+        const agora = new Date();
+        const inicio = new Date(dataInicio);
+        const diffTime = Math.abs(agora.getTime() - inicio.getTime());
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return "hoje";
+        if (diffDays === 1) return "há 1 dia";
+        if (diffDays < 7) return `há ${diffDays} dias`;
+        if (diffDays < 30) return `há ${Math.floor(diffDays / 7)} semana${Math.floor(diffDays / 7) > 1 ? 's' : ''}`;
+        return `há ${Math.floor(diffDays / 30)} mês${Math.floor(diffDays / 30) > 1 ? 'es' : ''}`;
+    };
 
-                    </main>
-                </div>
+    const handleVerDetalhes = (viagemId: number) => {
+        // Salvar a viagem no localStorage para a página de detalhes
+        const viagemSelecionada = viagens.find(v => v.id === viagemId);
+        if (viagemSelecionada) {
+            localStorage.setItem('selectedTrip', JSON.stringify(viagemSelecionada));
+        }
+        
+        // Redirecionar para a página de detalhes
+        router.push('/travels');
+    };
+
+  return (
+    <RequireAuth>
+      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+        {/* Sidebar */}
+        <SidebarMenu />
+
+        {/* Main Content */}
+        <div className="flex flex-col w-full overflow-hidden">
+          <HeaderPages />
+
+          <main className="flex flex-col items-center w-full max-w-[90%] mx-auto pt-10 px-5 gap-8">
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-white text-4xl font-bold ">
+                Comunidade Globix
+              </h1>
             </div>
-        </RequireAuth>
-    );
+
+            <div>
+              <h2 className="text-white text-lg">
+                Participe de Excursões criados por outros viajantes{" "}
+              </h2>
+            </div>
+
+            <BarraDePesquisa />
+
+            {loading ? (
+                            <div className="text-white text-xl">Carregando viagens...</div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                {viagens.length > 0 ? (
+                                    viagens.map((viagem) => (
+                                        <Card
+                                            key={viagem.id}
+                                            topImage={viagem.foto || "https://images.unsplash.com/photo-1506744038136-46273834b3fb"}
+                                            userImage={viagem.organizador?.foto || "https://randomuser.me/api/portraits/men/32.jpg"}
+                                            tripName={viagem.nome}
+                                            location={viagem.destino}
+                                            createdAt={calcularTempoDecorrido(viagem.dataInicio)}
+                                            duration={calcularDuracao(viagem.dataInicio, viagem.dataFim)}
+                                            onVerDetalhes={() => handleVerDetalhes(viagem.id)} // ← Adicionar esta prop
+                                        />
+                                    ))
+                                ) : (
+                                    <div className="col-span-full text-white text-center text-xl">
+                                        Nenhuma viagem pública encontrada
+                                    </div>
+                                )}
+                            </div>
+                        )}
+            <div className="mb-20" />
+          </main>
+        </div>
+      </div>
+    </RequireAuth>
+  );
 }

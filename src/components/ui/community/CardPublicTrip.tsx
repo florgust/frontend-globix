@@ -8,8 +8,8 @@ interface CardProps {
   location: string;
   createdAt: string;
   duration: string;
-  onButtonClick?: () => void;
-  buttonLabel?: string;
+  onVerDetalhes?: () => void; // ← Adicionar esta prop
+
 }
 
 const Card: React.FC<CardProps> = ({
@@ -19,8 +19,7 @@ const Card: React.FC<CardProps> = ({
   location,
   createdAt,
   duration,
-  onButtonClick,
-  buttonLabel = "Ver detalhes",
+  onVerDetalhes,
 }) => (
   <div className="bg-[#102976] rounded-xl w-80 shadow-lg overflow-hidden text-white font-sans">
     <div className="relative flex flex-col items-start px-4 pt-4">
@@ -46,12 +45,12 @@ const Card: React.FC<CardProps> = ({
         <div className="flex items-center justify-between mt-4">
             <span className="text-blue-200 text-xs">{createdAt}</span>
 
-          <button
-            onClick={onButtonClick}
+          <button             
             className="bg-[#A7FF84] hover:bg-green-200 transition rounded px-4 py-2 font-semibold text-[#102976] cursor-pointer"
+            onClick={onVerDetalhes}
           >
-            {buttonLabel}
-          </button>
+                Ver Detalhes
+            </button>
         </div>
       </div>
     </div>
