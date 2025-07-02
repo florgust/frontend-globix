@@ -176,16 +176,16 @@ export default function DetailsPage() {
   };
 
   async function PromoverOuRebaixarOrganizador(tripId: number, id_usuario: number) {
-    
-    const organizadorPrincipal = organizadores.find(org => 
+
+    const organizadorPrincipal = organizadores.find(org =>
       org.papel?.toLowerCase() === "organizador"
     );
     const idOrganizador = organizadorPrincipal?.id;
     console.log("Promovendo/Rebaixando organizador:", tripId, id_usuario, idOrganizador);
 
-     await api.post(`/solicitacao/promocao/${tripId}/${idOrganizador}`, {
-        idUsuarioSolicitante: id_usuario,
-      });
+    await api.post(`/solicitacao/promocao/${tripId}/${idOrganizador}`, {
+      idUsuarioSolicitante: id_usuario,
+    });
   }
 
   const handleAccept = async (id: number) => {
@@ -205,11 +205,11 @@ export default function DetailsPage() {
     }
   };
 
-const handleDeny = async (id: number) => {
-  console.log("Dados da solicitação:", solicitacoes);
-  console.log("ID sendo enviado:", id);
-  console.log("URL completa:", `/solicitacao/${trip?.id}/${id}/negar`);
-};
+  const handleDeny = async (id: number) => {
+    console.log("Dados da solicitação:", solicitacoes);
+    console.log("ID sendo enviado:", id);
+    console.log("URL completa:", `/solicitacao/${trip?.id}/${id}/negar`);
+  };
 
   useEffect(() => {
     const fetchMoreDetails = async () => {
@@ -402,7 +402,7 @@ const handleDeny = async (id: number) => {
                     usuarios={[...organizadores, ...convidados]}
                     onPromote={async (id) => {
                       console.log("Promovendo organizador:", trip?.id ?? 0, id);
-                      await PromoverOuRebaixarOrganizador(trip?.id ?? 0, id );
+                      await PromoverOuRebaixarOrganizador(trip?.id ?? 0, id);
                       setConvidados(
                         convidados.map((usuario) =>
                           usuario.id === id
@@ -410,15 +410,28 @@ const handleDeny = async (id: number) => {
                             : usuario
                         )
                       );
-                      setIsModalOpen(false);
+                      setOrganizadores(prev =>
+                        prev.map(usuario =>
+                          usuario.id === id
+                            ? { ...usuario, papel: "organizadorpromovido" }
+                            : usuario
+                        )
+                      );
                     }}
                     onRemove={async (id) => {
-                      await PromoverOuRebaixarOrganizador(trip?.id ?? 0, id );
+                      await PromoverOuRebaixarOrganizador(trip?.id ?? 0, id);
 
                       setConvidados(
                         convidados.map((usuario) =>
                           usuario.id === id
                             ? { ...usuario, papel: "Participante" }
+                            : usuario
+                        )
+                      );
+                      setOrganizadores(prev =>
+                        prev.map(usuario =>
+                          usuario.id === id
+                            ? { ...usuario, papel: "participante" }
                             : usuario
                         )
                       );
