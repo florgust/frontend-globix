@@ -74,7 +74,7 @@ export default function CommunityPage() {
         if (diffDays === 1) return "há 1 dia";
         if (diffDays < 7) return `há ${diffDays} dias`;
         if (diffDays < 30) return `há ${Math.floor(diffDays / 7)} semana${Math.floor(diffDays / 7) > 1 ? 's' : ''}`;
-        return `há ${Math.floor(diffDays / 30)} mês${Math.floor(diffDays / 30) > 1 ? 'es' : ''}`;
+        return `há ${Math.floor(diffDays / 30)} mes${Math.floor(diffDays / 30) > 1 ? 'es' : ''}`;
     };
 
     const handleVerDetalhes = (viagemId: number) => {
