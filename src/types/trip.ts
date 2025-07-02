@@ -10,4 +10,5 @@ export interface Trip {
   transporte: string;
   codigoConvite: number;
   papel: UserRole;
+  status: number;
 }
