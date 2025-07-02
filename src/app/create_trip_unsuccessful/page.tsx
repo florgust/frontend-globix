@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import {HeaderPages} from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 
 export default function TripTransport() {
     return (
@@ -12,8 +12,8 @@ export default function TripTransport() {
                 <HeaderPages />
 
                 <div className="relative flex items-center justify-center w-full">
-                    <div 
-                        className="absolute top-19 flex items-center justify-center w-[6rem] h-[6rem] rounded-full z-10" 
+                    <div
+                        className="absolute top-19 flex items-center justify-center w-[6rem] h-[6rem] rounded-full z-10"
                         style={{ backgroundImage: "url('/images-trip_unsuccessful/fundo_vermelho.svg')", backgroundSize: "cover" }}
                     >
                         <img
@@ -25,7 +25,7 @@ export default function TripTransport() {
                 </div>
 
                 <div className="flex flex-col items-center justify-center w-full max-w-4xl p-6 mt-30 bg-white rounded-lg shadow-lg">
-                    
+
                     <div className="mt-7">
                         <h1 className="text-[3rem] font-bold text-center text-[#0F2976]">
                             Erro ao criar Viagem! <br></br><br></br>

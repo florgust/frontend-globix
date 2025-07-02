@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import Card from "@/components/ui/community/CardPublicTrip";
 import BarraDePesquisa from "@/components/ui/community/SearchBar";
 
 export default function HomePage() {
-    
+
     return (
         <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
             {/* Sidebar */}

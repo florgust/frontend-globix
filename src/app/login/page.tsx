@@ -1,8 +1,8 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/Checkbox';
-import { GoogleButton } from '@/components/ui/GoogleButton';
+import { Input } from '@/components/common/Input';
+import { Checkbox } from '@/components/common/Checkbox';
+import { GoogleButton } from '@/components/common/GoogleButton';
 import { AuthCard } from '@/components/ui/AuthCard';
 import { ImageCarousel } from '@/components/ui/ImageCarousel';
 import { LoginSuccessModal } from '@/components/ui/modals/ModalLoginSucess';

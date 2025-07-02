@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "../button";
+import { IconButton } from "../../common/Button";
 
 interface Orcamento {
   id: number;

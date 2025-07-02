@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import Image from "next/image";
-import { Alert } from '@/components/ui/Alert';
+import { Alert } from '@/components/common/Alert';
 
 export default function TravelLocation() {
     const router = useRouter();
@@ -87,7 +87,7 @@ export default function TravelLocation() {
 
     const handleCloseModal = () => {
         setShowSuccess(false);
-        router.push("/travel_transport");
+        router.push("/trip_transport");
     };
 
     return (

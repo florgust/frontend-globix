@@ -1,8 +1,8 @@
 "use client";
 
-import SidebarMenu from "@/components/ui/SidebarMenu";
+import SidebarMenu from "@/components/common/SidebarMenu";
 import { UserList } from "@/components/ui/UserList";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import { ModalItinerary } from "@/components/ui/modals/ModalItinerary";
 import ModalMoreDetails from "@/components/ui/modals/ModalMoreDetails";
 import ModalTransport from "@/components/ui/modals/ModalTransport";
@@ -213,7 +213,7 @@ export default function DetailsPage() {
   const eventos: ItineraryItem[] = itineraries.flatMap((day) =>
     day.activities.map((activity) => ({
       id: activity.id ?? 0,
-      idViagem: 0, 
+      idViagem: 0,
       tipoEvento: activity.type,
       titulo: activity.title,
       dataHora: `${day.date.split("/").reverse().join("-")}T${activity.time}`,
@@ -437,9 +437,9 @@ export default function DetailsPage() {
                     <p className="text-sm text-gray-500 mt-2">Avisos</p>
                   </div>
                 </div>
-                
+
               </div>
-              
+
             </div>
             <div className="w-full flex justify-between">
               <button className="text-2xl font-bold bg-[#FF2626] text-[#FFFFFF] rounded-full w-60 py-3 hover:bg-gray-500 cursor-pointer">

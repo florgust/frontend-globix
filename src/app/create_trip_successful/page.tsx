@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import Cookies from "js-cookie";
 
 interface Trip {

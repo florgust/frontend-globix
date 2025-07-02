@@ -1,12 +1,12 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/Checkbox';
-import { GoogleButton } from '@/components/ui/GoogleButton';
+import { Input } from '@/components/common/Input';
+import { Checkbox } from '@/components/common/Checkbox';
+import { GoogleButton } from '@/components/common/GoogleButton';
 import { AuthCard } from '@/components/ui/AuthCard';
 import { ImageCarousel } from '@/components/ui/ImageCarousel';
-import { Alert } from '@/components/ui/Alert';
-import { SuccessAlert } from '@/components/ui/SuccessAlert';
+import { Alert } from '@/components/common/Alert';
+import { SuccessAlert } from '@/components/common/SuccessAlert';
 
 import { useState } from 'react';
 import Image from 'next/image';

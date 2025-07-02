@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import { Itinerary } from "@/components/ui/Itinerary";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import { useRouter } from "next/navigation";
@@ -224,9 +224,9 @@ export default function TripItinerary() {
       prev.map((it, idx) =>
         idx === currentPage
           ? {
-              ...it,
-              activities: it.activities.filter((_, i) => i !== activityIdx),
-            }
+            ...it,
+            activities: it.activities.filter((_, i) => i !== activityIdx),
+          }
           : it
       )
     );

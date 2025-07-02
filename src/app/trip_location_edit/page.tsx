@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import Image from "next/image";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import { Alert } from '@/components/ui/Alert';
+import { Alert } from '@/components/common/Alert';
 
 export default function TravelLocation() {
   const router = useRouter();
@@ -153,7 +153,7 @@ export default function TravelLocation() {
                 IDA
               </h2>
               <Image
-                src="/images-travel_location/linha.svg"
+                src="/images-trip_location/linha.svg"
                 alt="Linha decorativa"
                 width={200}
                 height={8}
