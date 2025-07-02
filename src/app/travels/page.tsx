@@ -176,13 +176,14 @@ export default function DetailsPage() {
   };
 
   async function PromoverOuRebaixarOrganizador(tripId: number, id_usuario: number) {
+    
     const organizadorPrincipal = organizadores.find(org => 
       org.papel?.toLowerCase() === "organizador"
     );
     const idOrganizador = organizadorPrincipal?.id;
     console.log("Promovendo/Rebaixando organizador:", tripId, id_usuario, idOrganizador);
 
-     await axios.post(`/solicitacao/promocao/${tripId}/${idOrganizador}`, {
+     await api.post(`/solicitacao/promocao/${tripId}/${idOrganizador}`, {
         idUsuarioSolicitante: id_usuario,
       });
   }
@@ -208,18 +209,6 @@ const handleDeny = async (id: number) => {
   console.log("Dados da solicitação:", solicitacoes);
   console.log("ID sendo enviado:", id);
   console.log("URL completa:", `/solicitacao/${trip?.id}/${id}/negar`);
-    try {
-        const viagemId = trip?.id;
-        
-        console.log("Negando solicitação - Viagem:", viagemId, "Usuario:", id);
-        
-        await api.put(`/solicitacao/${viagemId}/${id}/negar`);
-        
-        // Remove da lista usando idUsuario
-        console.log("Solicitação negada com sucesso");
-    } catch (error) {
-        console.error("Erro ao negar solicitação:", error);
-    }
 };
 
   useEffect(() => {
