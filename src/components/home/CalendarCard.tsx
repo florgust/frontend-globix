@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import api from "@/utils/axios";
+import Cookies from "js-cookie";
 
 // Utilitário para obter o número de dias no mês
 function getDaysInMonth(month: number, year: number) {
@@ -12,7 +13,7 @@ function getFirstDayOfWeek(month: number, year: number) {
   return new Date(year, month, 1).getDay();
 }
 
-// Função para converter string de data do backend para Date
+// Função para converter string de data do backend para Date (zera hora/min/seg/ms)
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
@@ -20,7 +21,9 @@ function parseDate(dateStr: string): Date | null {
     return new Date(year, month - 1, day);
   }
   const date = new Date(dateStr);
-  return isNaN(date.getTime()) ? null : date;
+  if (isNaN(date.getTime())) return null;
+  date.setHours(0, 0, 0, 0);
+  return date;
 }
 
 interface TripApiResponse {
@@ -44,7 +47,12 @@ export default function CalendarCard() {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const { data } = await api.get<TripApiResponse[]>("/viagens");
+        const usuarioCookie = Cookies.get("usuario");
+        const user = usuarioCookie ? JSON.parse(usuarioCookie) : null;
+        const idUsuario = user?.id;
+        if (!idUsuario) return;
+
+        const { data } = await api.get<TripApiResponse[]>(`/solicitacoes/viagem/card/${idUsuario}`);
         const trips: TripStart[] = (data || [])
           .map((trip: TripApiResponse) => {
             const date = parseDate(trip.data_inicio || trip.dataInicio || "");
@@ -70,18 +78,36 @@ export default function CalendarCard() {
     calendarDays.push(day);
   }
 
+  // Data de hoje zerada
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Retorna o objeto TripStart da viagem que começa nesse dia (ou null)
+  const getTripByDay = (day: number): TripStart | null => {
+    return (
+      tripStartDates.find(
+        (trip) =>
+          trip.date.getDate() === day &&
+          trip.date.getMonth() === month &&
+          trip.date.getFullYear() === year
+      ) || null
+    );
+  };
+
   // Retorna o nome da viagem que começa nesse dia (ou "")
   const getTripNameByDay = (day: number): string => {
-    const trip = tripStartDates.find(
-      (trip) =>
-        trip.date.getDate() === day &&
-        trip.date.getMonth() === month &&
-        trip.date.getFullYear() === year
-    );
+    const trip = getTripByDay(day);
     return trip ? trip.nome : "";
   };
 
-  const isTripStartDay = (day: number) => !!getTripNameByDay(day);
+  // Verifica se é dia de início de viagem
+  const isTripStartDay = (day: number) => !!getTripByDay(day);
+
+  // Verifica se a viagem desse dia já passou
+  const isPastTripDay = (day: number) => {
+    const trip = getTripByDay(day);
+    return trip ? trip.date < today : false;
+  };
 
   // Meses e dias da semana em português
   const monthNames = [
@@ -132,7 +158,9 @@ export default function CalendarCard() {
             <span
               key={idx}
               className={`py-1 rounded-full transition ${isTripStartDay(day)
-                  ? "bg-[#B0FAC6] text-[#0F2976] font-bold border-2 border-[#0F2976] cursor-help"
+                  ? isPastTripDay(day)
+                    ? "bg-red-300 text-[#0F2976] font-bold border-2 border-[#0F2976] cursor-help"
+                    : "bg-[#B0FAC6] text-[#0F2976] font-bold border-2 border-[#0F2976] cursor-help"
                   : "text-[#0F2976] hover:bg-[#F0F9FF] cursor-default"
                 }`}
               title={getTripNameByDay(day)}
