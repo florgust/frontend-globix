@@ -1,6 +1,6 @@
-import { Header }  from "@/components/ui/header";
+import { Header } from "@/components/common/Header";
 import Hero from "@/components/ui/Hero";
-import Footer from "@/components/ui/Footer";
+import Footer from "@/components/common/Footer";
 
 export default function InitialPage() {
   return (

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Tag from "@/components/ui/Tag";
+import Tag from "@/components/common/Tag";
 import { Trip } from "@/types/trip";
 import { useRouter } from "next/navigation";
 

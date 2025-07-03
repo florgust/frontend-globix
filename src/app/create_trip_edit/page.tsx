@@ -1,15 +1,14 @@
 "use client";
-import { HeaderPages } from "@/components/ui/header";
-import SidebarMenu from "@/components/ui/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
+import SidebarMenu from "@/components/common/SidebarMenu";
 import React, { useState, useEffect } from "react";
 import { ImagePlus, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import DatePickerHtml from "@/components/ui/DatePickerHtml";
+import DatePickerHtml from "@/components/common/DatePickerHtml";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import { Alert } from "@/components/ui/Alert";
+import { Alert } from "@/components/common/Alert";
 import RequireAuth from "@/components/auth/RequireAuth";
-
 interface ViagemPayload {
   nome: string;
   descricao: string;

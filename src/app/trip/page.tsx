@@ -1,8 +1,8 @@
 "use client";
 
-import SidebarMenu from "@/components/ui/SidebarMenu";
+import SidebarMenu from "@/components/common/SidebarMenu";
 import { UserList } from "@/components/ui/UserList";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import { ModalItinerary } from "@/components/ui/modals/ModalItinerary";
 import ModalMoreDetails from "@/components/ui/modals/ModalMoreDetails";
 import ModalTransport from "@/components/ui/modals/ModalTransport";

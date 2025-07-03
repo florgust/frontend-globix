@@ -1,8 +1,8 @@
 "use client";
 
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
-import Filters from "@/components/ui/Filters";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
+import Filters from "@/components/common/Filters";
 import TripList from "@/components/ui/TripList";
 import { useTrips } from "@/hooks/useTrips";
 import { Trip } from "@/types/trip";

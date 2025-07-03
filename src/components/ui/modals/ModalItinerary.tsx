@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 
 interface ItineraryItem {
     id: number;

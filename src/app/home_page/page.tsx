@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import GreetingCard from "@/components/home/GreetingCard";
 import ActionCards from "@/components/home/ActionCards";
 import CalendarCard from "@/components/home/CalendarCard";

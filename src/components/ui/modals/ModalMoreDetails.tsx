@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import { ModalMoreDetailsTrip } from "@/utils/moreDetailsUtils";
 
 interface ModalMoreDetailsProps {

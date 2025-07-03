@@ -1,14 +1,14 @@
 "use client"
-import { HeaderPages } from '@/components/ui/header';
-import SidebarMenu from '@/components/ui/SidebarMenu';
+import { HeaderPages } from '@/components/common/Header';
+import SidebarMenu from '@/components/common/SidebarMenu';
 import React, { useState, useEffect } from 'react';
 import { ImagePlus, Minus, Plus } from 'lucide-react';
 import { useRouter } from "next/navigation"; // Importa o useRouter
-import DatePickerHtml from '@/components/ui/DatePickerHtml';
+import DatePickerHtml from '@/components/common/DatePickerHtml';
 import api from "@/utils/axios"; // Importa o axios configurado
 import SuccessModal from '@/components/ui/modals/ModalSuccess';
 import Cookies from "js-cookie"; // Adicione este import
-import { Alert } from '@/components/ui/Alert';
+import { Alert } from '@/components/common/Alert';
 import RequireAuth from "@/components/auth/RequireAuth";
 
 
@@ -77,7 +77,7 @@ export default function CreateTripPage() {
     
     const handleCloseModal = () => {
         setShowSuccess(false);
-        router.push("/travel_location");
+        router.push("/trip_location");
     };
 
     return (
@@ -205,7 +205,7 @@ export default function CreateTripPage() {
 
                             <label
                                 htmlFor="file-upload"
-                                className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer" 
+                                className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer"
                             >
                                 Insira foto da Viagem
                             </label>

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import Card from "@/components/ui/community/CardPublicTrip";
 import BarraDePesquisa from "@/components/ui/community/SearchBar";
 import RequireAuth from "@/components/auth/RequireAuth";

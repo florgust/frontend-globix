@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
-import { Modal } from "@/components/ui/modal";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
+import { Modal } from "@/components/common/Modal";
 import { X } from "lucide-react";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function TripTransport() {
