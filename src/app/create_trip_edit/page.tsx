@@ -8,6 +8,7 @@ import DatePickerHtml from "@/components/common/DatePickerHtml";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import { Alert } from "@/components/common/Alert";
+import RequireAuth from "@/components/auth/RequireAuth";
 interface ViagemPayload {
   nome: string;
   descricao: string;

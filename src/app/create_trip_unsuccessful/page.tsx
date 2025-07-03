@@ -2,6 +2,7 @@
 import React from "react";
 import SidebarMenu from "../../components/common/SidebarMenu";
 import { HeaderPages } from "@/components/common/Header";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function TripTransport() {
     return (

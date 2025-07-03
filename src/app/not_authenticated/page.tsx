@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import SidebarMenu from "@/components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
-import Footer from "@/components/ui/Footer";
+import SidebarMenu from "@/components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
 import { useRouter } from "next/navigation";
 
 export default function NotAuthenticated() {
