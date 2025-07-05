@@ -5,7 +5,7 @@ export const metadata = {
   title: "Globix",
   description: "Seu app de viagens",
   icons: {
-    icon: "/favicon.png", 
+    icon: "/favicon2.png", 
   },
 };
 
