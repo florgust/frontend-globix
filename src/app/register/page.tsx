@@ -127,9 +127,10 @@ export default function RegisterPage() {
                 <Image
                     src="/register/logo-globix.png"
                     alt="Logo Globix"
-                    width={220}
-                    height={60}
-                    className="mb-6"
+                    width={290}
+                    height={90}
+                    className="mb-4 cursor-pointer"
+                    onClick={() => window.location.href = "/initial"}
                 />
 
                 <h1 className="text-white text-xl font-semibold mb-1">Crie sua conta!</h1>
@@ -212,16 +213,12 @@ export default function RegisterPage() {
 
                     <button
                         type="submit"
-                        className="bg-[#96ABE9] text-white py-2 rounded-full font-semibold hover:bg-[#7485ec] transition cursor-pointer mb-2 w-3/4 mx-auto"
+                        className="bg-[#96ABE9] text-white py-2 rounded-full font-semibold hover:bg-[#7485ec] transition cursor-pointer w-3/4 mx-auto"
                     >
                         Cadastrar
                     </button>
 
-                    <div className="border-t border-white w-3/4 mx-auto mb-2"></div>
-
-                    <GoogleButton />
-
-                    <p className="text-white text-sm text-center mt-4">
+                    <p className="text-white text-sm text-center">
                         Já tem uma conta? <a href="/login" className="underline font-semibold cursor-pointer">Entrar</a>
                     </p>
                 </form>

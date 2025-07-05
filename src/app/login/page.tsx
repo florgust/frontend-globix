@@ -100,11 +100,12 @@ export default function LoginPage() {
             {/* Card de login */}
             <AuthCard>
                 <Image
-                    src="/images-login/globix-logo.png"
+                    src="/register/logo-globix.png"
                     alt="Logo Globix"
-                    width={220}
-                    height={60}
-                    className="mb-6"
+                    width={310}
+                    height={90}
+                    className="mb-2 cursor-pointer"
+                    onClick={() => window.location.href = "/initial"}
                 />
 
                 <h1 className="text-white text-xl font-semibold mb-1">Bem-vindo!</h1>
@@ -149,11 +150,7 @@ export default function LoginPage() {
                         Entrar
                     </button>
 
-                    <div className="border-t border-white w-3/4 mx-auto mb-2"></div>
-
-                    <GoogleButton />
-
-                    <p className="text-white text-sm text-center mt-4">
+                    <p className="text-white text-sm text-center">
                         Não tem uma conta? <a href="/register" className="underline font-semibold cursor-pointer">Cadastrar</a>
                     </p>
                 </form>
