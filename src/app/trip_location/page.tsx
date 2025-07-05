@@ -96,7 +96,6 @@ export default function TravelLocation() {
             <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
                 <SidebarMenu />
 
-
                 {/* ALERTA MODAL */}
                 {alertMessage && (
                     <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
