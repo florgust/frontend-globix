@@ -112,7 +112,7 @@ export default function TripTransportEdit() {
                 <SidebarMenu />
                 <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                     <HeaderPages />
-                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Editar transporte da viagem</h1>
+                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Editar Transporte da Viagem</h1>
                     <div className="flex flex-col items-center w-9/10 border border-2 border-[#092064] mt-3 mb-20" />
 
                     <div className="flex flex-col items-center w-3/5 h-2/5 mt-8 p-4 border-2 border-[#00FF4D] rounded-4xl shadow-lg">
@@ -159,7 +159,7 @@ export default function TripTransportEdit() {
                                                 }`}
                                         >
                                             <img
-                                                src={`/images-travel_transport/${item}.svg`}
+                                                src={`/images-trip_transport/${item}.svg`}
                                                 alt={item.charAt(0).toUpperCase() + item.slice(1)}
                                                 className="w-[4.375rem] h-[4.375rem]"
                                             />

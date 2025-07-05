@@ -414,12 +414,10 @@ export default function TripItinerary() {
         <SidebarMenu />
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
-          <div className="bg-[#0F2976] w-[80rem] rounded-t-2xl px-10 py-6 mt-8">
-            <h2 className="text-3xl font-bold text-white">
-              Editar itinerário da viagem
-            </h2>
-          </div>
-          <div className="w-[80rem] h-[41rem] bg-white rounded-b-2xl shadow-lg px-10 py-8 flex gap-8 flex-col">
+          <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Editar Itinerário da Viagem</h1>
+          <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
+          
+          <div className="w-[80rem] h-[36rem] bg-white rounded-2xl shadow-lg px-10 py-8 flex gap-8 flex-col">
             <div className="flex flex-row gap-8 flex-1">
               {/* Formulário */}
               <div className="flex flex-col w-1/2 gap-4">
@@ -528,26 +526,27 @@ export default function TripItinerary() {
                 onSelectActivity={handleSelectActivity}
               />
             </div>
-            <div className="flex justify-center pb-44">
-              <button
-                className="cursor-pointer transition hover:scale-105 bg-[#A7FF84] text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow min-w-[20rem] disabled:opacity-50 disabled:cursor-not-allowed"
-                type="button"
-                disabled={
-                  itineraries.length === 0 ||
-                  !itineraries.some(
-                    (it) => it.activities && it.activities.length > 0
-                  )
-                }
-                onClick={handleSaveItinerary}
-              >
-                Salvar
-              </button>
-              <SuccessModal
-                isOpen={showSuccess}
-                message="Itinerário salvo com sucesso!"
-                onClose={handleCloseModal}
-              />
-            </div>
+          </div>
+          <div className="w-full flex flex-col items-center justify-center mt-20 mb-20">
+            <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
+            <button
+              className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer disabled:cursor-not-allowed"
+              type="button"
+              disabled={
+                itineraries.length === 0 ||
+                !itineraries.some(
+                  (it) => it.activities && it.activities.length > 0
+                )
+              }
+              onClick={handleSaveItinerary}
+            >
+              Atualizar
+            </button>
+            <SuccessModal
+              isOpen={showSuccess}
+              message="Itinerário salvo com sucesso!"
+              onClose={handleCloseModal}
+            />
           </div>
         </div>
       </div>

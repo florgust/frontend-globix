@@ -74,7 +74,7 @@ export default function CreateTripPage() {
         }
     };
 
-    
+
     const handleCloseModal = () => {
         setShowSuccess(false);
         router.push("/trip_location");
@@ -85,17 +85,17 @@ export default function CreateTripPage() {
             <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
                 <SidebarMenu />
 
-            {alertMessage && (
-                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
-                    <Alert message={alertMessage} type="error" />
-                </div>
-            )}
-            <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-                <HeaderPages />
-                <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem</h1>
-                <div className='flex flex-col items-center w-9/10 border border-white mt-3' />
+                {alertMessage && (
+                    <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+                        <Alert message={alertMessage} type="error" />
+                    </div>
+                )}
+                <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+                    <HeaderPages />
+                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Detalhes</h1>
+                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
 
-                    <div className="flex flex-col items-center w-3/4 h-230 mt-8 p-4 border border-[#00FF4D] rounded-4xl shadow-lg">
+                    <div className="flex flex-col items-center w-3/4 h-230 p-4 border border-[#00FF4D] rounded-4xl shadow-lg">
 
                         <div className="relative w-[98%]">
                             <label
@@ -198,41 +198,40 @@ export default function CreateTripPage() {
                                 <DatePickerHtml onChange={(date) => setEndDate(date)} />
                             </div>
 
-                        <div className="w-full flex flex-col relative items-center justify-center mt-15  cursor-pointer">
-                            <div className='absolute bg-white w-3/5 h-40 rounded-md'></div>
+                            <div className="w-full flex flex-col relative items-center justify-center mt-15  cursor-pointer">
+                                <div className='absolute bg-white w-3/5 h-40 rounded-md'></div>
 
                                 <ImagePlus className='absolute w-25 h-25 mb-12' />
 
-                            <label
-                                htmlFor="file-upload"
-                                className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer"
-                            >
-                                Insira foto da Viagem
-                            </label>
-                            <input
-                                type="file"
-                                id="file-upload"
-                                className="block text-sm file:h-40 file:w-full file:mr-4 file:py-6 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-white"
-                            />
+                                <label
+                                    htmlFor="file-upload"
+                                    className="absolute mt-25 text-[#0F2976] text-3xl cursor-pointer"
+                                >
+                                    Insira foto da Viagem
+                                </label>
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    className="block text-sm file:h-40 file:w-full file:mr-4 file:py-6 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-white"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                    <div className='w-full flex flex-col items-center justify-center mt-15'>
+                    <div className="w-full flex flex-col items-center justify-center mt-20 mb-30">
+                        <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
                         <button
                             onClick={handleCreateTrip}
-                            className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-3/5 h-20 text-3xl cursor-pointer"
+                            className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer"
                         >
                             Próximo
                         </button>
                         <SuccessModal
                             isOpen={showSuccess}
-                            message="Viagem criada com sucesso!"
+                            message="Detalhes da Viagem criado com sucesso!"
                             onClose={handleCloseModal}
                         />
                     </div>
-
-                    <div className='flex flex-col items-center mt-20' />
                 </div>
             </div>
         </RequireAuth>

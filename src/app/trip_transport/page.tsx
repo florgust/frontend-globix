@@ -113,10 +113,10 @@ export default function TravelTransport() {
                 <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                     <HeaderPages />
 
-                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem - Transporte</h1>
-                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-20" />
+                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Transporte</h1>
+                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
 
-                    <div className="flex flex-col items-center w-3/5 h-2/5 mt-8 p-4 border-2 border-[#00FF4D] rounded-4xl shadow-lg">
+                    <div className="flex flex-col items-center w-3/5 h-2/5 mt-12 p-4 border-2 border-[#00FF4D] rounded-4xl shadow-lg">
                         <h1 className="text-white font-quicksand font-bold text-[2.5rem] leading-[1] tracking-[0] text-center mt-5">
                             Qual será o Transporte utilizado <br /> na Viagem?
                         </h1>
@@ -167,7 +167,7 @@ export default function TravelTransport() {
                                                 }`}
                                         >
                                             <Image
-                                                src={`/images-travel_transport/${item}.svg`}
+                                                src={`/images-trip_transport/${item}.svg`}
                                                 alt={item.charAt(0).toUpperCase() + item.slice(1)}
                                                 width={70}
                                                 height={70}
@@ -183,7 +183,7 @@ export default function TravelTransport() {
                         </div>
                     </div>
 
-                    <div className="w-full flex flex-col items-center justify-center mt-auto mb-30">
+                    <div className="w-full flex flex-col items-center justify-center mt-30">
                         <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
                         <button
                             onClick={handleFinalSave}
@@ -193,7 +193,7 @@ export default function TravelTransport() {
                                 : "cursor-pointer"
                                 }`}
                         >
-                            Salvar
+                            Próximo
                         </button>
                     </div>
                 </div>

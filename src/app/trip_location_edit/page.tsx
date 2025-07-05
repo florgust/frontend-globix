@@ -142,8 +142,8 @@ export default function TravelLocation() {
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
 
-          <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">
-            Editar localização da viagem
+          <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">
+            Editar Localização da Viagem
           </h1>
           <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-15" />
 
@@ -154,13 +154,7 @@ export default function TravelLocation() {
                 <h2 className="text-[#FFFFFF] font-bold text-4xl mb-2 flex items-center ml-3">
                   IDA
                 </h2>
-                <Image
-                  src="/images-travel_location/linha.svg"
-                  alt="Linha decorativa"
-                  width={200}
-                  height={8}
-                  className="mb-4 ml-3"
-                />
+                <hr className="mb-4 ml-3 border-t-2 border-[#0F2976] w-[97%]" />
                 <div className="flex flex-col space-y-4 ">
                   <div className="flex items-center space-x-4 gap-4">
                     <div className="flex-1">
