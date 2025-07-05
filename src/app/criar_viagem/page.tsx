@@ -3,18 +3,18 @@ import WhiteBackground from "@/components/create_trip/whiteBackground";
 import { HeaderPages } from "@/components/common/Header";
 import SidebarMenu from "@/components/common/SidebarMenu";
 import React, { useState, useEffect } from "react";
-import { Check, ImagePlus, Minus, Plus, X } from "lucide-react";
-import { useRouter } from "next/navigation"; // Importa o useRouter
-import api from "@/utils/axios"; // Importa o axios configurado
+import { ImagePlus, Minus, Plus, X } from "lucide-react";
+import { useRouter } from "next/navigation"; 
+import api from "@/utils/axios"; 
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Cookies from "js-cookie"; // Adicione este import
+import Cookies from "js-cookie"; 
 import { Alert } from "@/components/common/Alert";
 import RequireAuth from "@/components/auth/RequireAuth";
 import { Globe, Lock } from "lucide-react";
 import { MapPin, ArrowRight } from "lucide-react";
 
 export default function ExamplePage() {
-  const [selectedOption, setSelectedOption] = useState("public");
+const [selectedOption, setSelectedOption] = useState("public");
   const [count, setCount] = useState(0);
   const [tripName, setTripName] = useState("");
   const [tripDescription, setTripDescription] = useState("");
@@ -23,10 +23,11 @@ export default function ExamplePage() {
   const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [cidadeOrigem, setCidadeOrigem] = useState("");
   const [cidadeDestino, setCidadeDestino] = useState("");
+
 
   // Função para calcular a duração em dias
   function calculateDuration(start: string, end: string): number {
@@ -71,11 +72,11 @@ export default function ExamplePage() {
       descricao: tripDescription,
       dataInicio: startDate,
       dataFim: endDate,
-      criadorId, // Agora usando o ID do usuário autenticado
+      criadorId, 
       tipo: selectedOption === "public" ? "publica" : "privada",
       quantidadeParticipante: count,
     };
-
+    console.log("Payload da viagem:", payload);
     try {
       const response = await api.post("/viagem", payload);
       localStorage.setItem("viagemEmCriacao", JSON.stringify(response.data));
@@ -308,7 +309,7 @@ export default function ExamplePage() {
                           onClick={() =>
                             setCount((prev) => Math.max(0, prev - 1))
                           }
-                          className="flex items-center justify-center w-14 h-14 bg-[#0F2976] text-white rounded-full hover:bg-[#1C4CDC] transition-colors duration-200 shadow-lg"
+                          className="flex items-center justify-center w-14 h-14 bg-[#0F2976] text-white rounded-full hover:bg-[#1C4CDC] transition-colors duration-200 shadow-lg cursor-pointer"
                           disabled={count <= 0}
                         >
                           <Minus size={24} />
@@ -334,7 +335,7 @@ export default function ExamplePage() {
                         <button
                           type="button"
                           onClick={() => setCount((prev) => prev + 1)}
-                          className="flex items-center justify-center w-14 h-14 bg-[#00FF4D] text-[#0F2976] rounded-full hover:bg-green-400 transition-colors duration-200 shadow-lg"
+                          className="flex items-center justify-center w-14 h-14 bg-[#00FF4D] text-[#0F2976] rounded-full hover:bg-green-400 transition-colors duration-200 shadow-lg cursor-pointer"
                         >
                           <Plus size={24} />
                         </button>
@@ -464,7 +465,7 @@ export default function ExamplePage() {
                         <button
                           type="button"
                           onClick={removeImage}
-                          className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-3 hover:bg-red-600 transition-colors duration-200 shadow-lg"
+                          className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-3 hover:bg-red-600 transition-colors duration-200 shadow-lg cursor-pointer"
                         >
                           <X size={20} />
                         </button>
@@ -486,10 +487,14 @@ export default function ExamplePage() {
                   className="flex items-center bg-[#B1FF91] text-[#0F2976] gap-4 px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg cursor-pointer hover:bg-[#9AE670] hover:shadow-xl transform hover:scale-105 mx-auto"
                   onClick={handleCreateTrip}
                 >
-                  <Check size={28} />
                   Definir Embarque e Desembarque
                   <ArrowRight size={28} />
                 </button>
+                <SuccessModal
+                  isOpen={showSuccess}
+                  message="Detalhes da Viagem criado com sucesso!"
+                  onClose={handleCloseModal}
+                />
               </div>
             </div>
           </WhiteBackground>
