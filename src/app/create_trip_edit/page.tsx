@@ -125,12 +125,12 @@ export default function EditTripPage() {
 
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
-          <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">
-            Editar Viagem
+          <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">
+            Editar Detalhes da Viagem
           </h1>
-          <div className="flex flex-col items-center w-9/10 border border-white mt-3" />
+          <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
 
-          <div className="flex flex-col items-center w-3/4 h-230 mt-8 p-4 border border-[#00FF4D] rounded-4xl shadow-lg">
+          <div className="flex flex-col items-center w-3/4 h-230 p-4 border border-[#00FF4D] rounded-4xl shadow-lg">
             <div className="relative w-[98%]">
               <label
                 htmlFor="nome-viagem"
@@ -276,11 +276,12 @@ export default function EditTripPage() {
           </div>
 
           <div className="w-full flex flex-col items-center justify-center mt-15">
+            <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
             <button
               onClick={handleEditTrip}
-              className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-3/5 h-20 text-3xl cursor-pointer"
+              className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer"
             >
-              Salvar Alterações
+              Atualizar
             </button>
             <SuccessModal
               isOpen={showSuccess}

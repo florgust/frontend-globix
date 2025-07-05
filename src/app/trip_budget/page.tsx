@@ -111,13 +111,10 @@ export default function TripBudget() {
                 <SidebarMenu />
                 <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                     <HeaderPages />
-                    <div className="bg-[#0F2976] w-[80rem] rounded-t-2xl px-10 py-6 mt-8">
-                        <h2 className="text-3xl font-bold text-white">
-                            Criar Viagem - Orçamento
-                        </h2>
-                    </div>
+                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Orçamento</h1>
+                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
 
-                    <div className="w-[80rem] bg-white rounded-b-2xl shadow-lg px-10 py-4">
+                    <div className="w-[80rem] bg-white rounded-2xl shadow-lg px-10 py-4">
 
                         <div className="mb-6">
                             <div className="font-bold text-[2rem] mb-2 text-[#0F2976]">{tripData.name}</div>
@@ -262,16 +259,18 @@ export default function TripBudget() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-center mt-6">
-                            <button
-                                className="cursor-pointer bg-[#00FF4D] transition hover:scale-110 text-[#0F2976] font-bold px-[10rem] py-[1rem] rounded-xl text-2xl shadow hover:bg-[#4be05a] min-w-[40rem]"
-                                onClick={handleSubmit}
-                            >
-                                Próximo
-                            </button>
-                        </div>
+                    </div>
+                    <div className="w-full flex flex-col items-center justify-center mt-20 mb-20">
+                        <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
+                        <button
+                            className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer"
+                            onClick={handleSubmit}
+                        >
+                            Próximo
+                        </button>
                     </div>
                 </div>
+
                 <SuccessModal
                     isOpen={showSuccess}
                     message="Orçamentos salvos com sucesso!"

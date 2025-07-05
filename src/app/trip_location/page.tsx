@@ -107,8 +107,8 @@ export default function TravelLocation() {
                 <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                     <HeaderPages />
 
-                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-2">Criar Viagem - Localização</h1>
-                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-15" />
+                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Localização</h1>
+                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
 
                     <div className="flex flex-col items-center w-[52.5rem] h-[30rem] p-4 border-2 border-[#00FF4D] rounded-[2rem] shadow-lg ">
                         <div className="w-full mt-2 ">
@@ -117,13 +117,7 @@ export default function TravelLocation() {
                                 <h2 className="text-[#FFFFFF] font-bold text-4xl mb-2 flex items-center ml-3">
                                     IDA
                                 </h2>
-                                <Image
-                                    src="/images-travel_location/linha.svg"
-                                    alt="Linha decorativa"
-                                    width={200}
-                                    height={8}
-                                    className="mb-4 ml-3"
-                                />
+                                <hr className="mb-4 ml-3 border-t-2 border-[#0F2976] w-[97%]" />
                                 <div className="flex flex-col space-y-4 ">
                                     <div className="flex items-center space-x-4 gap-4">
                                         <div className="flex-1">
@@ -275,7 +269,7 @@ export default function TravelLocation() {
                             onClick={handleSave}
                             className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer"
                         >
-                            Proximo
+                            Próximo
                         </button>
                     </div>
                 </div>
