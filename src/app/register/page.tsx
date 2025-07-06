@@ -28,7 +28,7 @@ export default function RegisterPage() {
     });
 
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState(''); // Estado para o SuccessAlert
+    const [successMessage, setSuccessMessage] = useState(''); 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -39,7 +39,7 @@ export default function RegisterPage() {
 
         setInputErrors({
             ...inputErrors,
-            [name]: '', // Limpa o erro do campo correspondente
+            [name]: '', 
         });
     };
 
@@ -88,8 +88,8 @@ export default function RegisterPage() {
             });
 
             if (response.status === 201) {
-                setSuccessMessage('Conta criada com sucesso!'); // Exibe o SuccessAlert
-                setFormData({ // Limpa o formulário
+                setSuccessMessage('Conta criada com sucesso!'); 
+                setFormData({
                     username: '',
                     email: '',
                     password: '',

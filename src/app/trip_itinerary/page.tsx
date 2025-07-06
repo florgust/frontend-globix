@@ -7,6 +7,8 @@ import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import RequireAuth from "@/components/auth/RequireAuth";
+import WhiteBackground from "@/components/create_trip/whiteBackground";
+import { Check } from "lucide-react";
 
 interface Activity {
   time: string;
@@ -22,17 +24,16 @@ interface ItineraryDay {
 }
 
 const eventTypes = [
-  "Alimentação",
-  "Passeio",
-  "Transporte",
-  "Hospedagem",
-  "Outro",
+  "🍽️ Alimentação",
+  "🏞️ Passeio",
+  "🚗 Transporte",
+  "🏨 Hospedagem",
+  "📋 Outro",
 ];
 
 export default function TripItinerary() {
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-
   const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
@@ -64,7 +65,6 @@ export default function TripItinerary() {
     return timeStr.padStart(5, "0");
   };
 
-  // Adicionar atividade ao dia correto, criando o dia se necessário, mantendo ordem cronológica
   const handleAddItinerary = () => {
     if (
       !title.trim() ||
@@ -145,9 +145,9 @@ export default function TripItinerary() {
       prev.map((it, idx) =>
         idx === currentPage
           ? {
-            ...it,
-            activities: it.activities.filter((_, i) => i !== activityIdx),
-          }
+              ...it,
+              activities: it.activities.filter((_, i) => i !== activityIdx),
+            }
           : it
       )
     );
@@ -219,124 +219,128 @@ export default function TripItinerary() {
         <SidebarMenu />
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
-          <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Itinerário</h1>
-          <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
 
-          <div className="w-[80rem] h-[36rem] bg-white rounded-2xl shadow-lg px-10 py-8 flex gap-8 flex-col">
-            <div className="flex flex-row gap-8 flex-1">
-              {/* Formulário */}
-              <div className="flex flex-col w-1/2 gap-4">
-                <label className="font-bold text-[#292D32] text-lg">
-                  Data e Hora
-                </label>
-                <div className="flex gap-2 items-center">
-                  <div className="flex items-center border border-[#00FF4D] rounded-lg px-2 py-1 bg-white">
-                    <input
-                      type="date"
-                      className="outline-none border-none bg-transparent text-[#0F2976] font-bold"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                    />
-                    <input
-                      type="time"
-                      className="outline-none border-none bg-transparent text-[#0F2976] font-bold ml-2"
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                    />
+          <WhiteBackground titulo="Definir Itinerário da Viagem">
+            <div className="max-w-6xl mx-auto px-6 py-8">
+              <div className="flex flex-row gap-8 flex-1">
+                {/* Formulário */}
+                <div className="flex flex-col w-1/2 gap-4">
+                  <label className="font-bold text-[#292D32] text-lg">
+                    Data e Hora
+                  </label>
+                  <div className="flex gap-2 items-center">
+                    <div className="flex items-center border border-[#00FF4D] rounded-lg px-2 py-1 bg-white">
+                      <input
+                        type="date"
+                        className="outline-none border-none bg-transparent text-[#0F2976] font-bold"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                      />
+                      <input
+                        type="time"
+                        className="outline-none border-none bg-transparent text-[#0F2976] font-bold ml-2"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <label className="font-bold text-[#292D32] text-lg mt-2">
+                    Título
+                  </label>
+                  <input
+                    className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] focus:outline-none"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Título do evento"
+                  />
+                  <label className="font-bold text-[#292D32] text-lg mt-2">
+                    Descrição
+                  </label>
+                  <textarea
+                    className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Descrição do evento"
+                  />
+                  <label className="font-bold text-[#292D32] text-lg mt-2">
+                    Tipo de Evento
+                  </label>
+                  <select
+                    className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                  >
+                    {eventTypes.map((ev) => (
+                      <option key={ev} value={ev}>
+                        {ev}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex justify-center">
+                    <button
+                      className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
+                      onClick={handleAddItinerary}
+                      type="button"
+                      disabled={
+                        !title.trim() ||
+                        !description.trim() ||
+                        !date.trim() ||
+                        !time.trim() ||
+                        !type.trim()
+                      }
+                    >
+                      <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white mr-2">
+                        <img
+                          src="/images-trip_itinerary/mais.svg"
+                          alt="Adicionar"
+                          className="w-5 h-5"
+                        />
+                      </span>
+                      Adicionar Itinerário
+                    </button>
                   </div>
                 </div>
-                <label className="font-bold text-[#292D32] text-lg mt-2">
-                  Título
-                </label>
-                <input
-                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] focus:outline-none"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Título do evento"
+                {/* Linha vertical divisória */}
+                <div className="w-px bg-[#092064] h-[32rem] mx-2" />
+                <Itinerary
+                  itineraries={itineraries}
+                  currentPage={currentPage}
+                  handleRemoveDay={handleRemoveDay}
+                  handleRemoveActivity={handleRemoveActivity}
+                  handlePrev={handlePrev}
+                  handleNext={handleNext}
+                  setCurrentPage={setCurrentPage}
                 />
-                <label className="font-bold text-[#292D32] text-lg mt-2">
-                  Descrição
-                </label>
-                <textarea
-                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Descrição do evento"
-                />
-                <label className="font-bold text-[#292D32] text-lg mt-2">
-                  Tipo de Evento
-                </label>
-                <select
-                  className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none cursor-pointer"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  {eventTypes.map((ev) => (
-                    <option key={ev} value={ev}>
-                      {ev}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex justify-center">
-                  <button
-                    className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
-                    onClick={handleAddItinerary}
-                    type="button"
-                    disabled={
-                      !title.trim() ||
-                      !description.trim() ||
-                      !date.trim() ||
-                      !time.trim() ||
-                      !type.trim()
-                    }
-                  >
-                    <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white mr-2">
-                      <img
-                        src="/images-trip_itinerary/mais.svg"
-                        alt="Adicionar"
-                        className="w-5 h-5"
-                      />
-                    </span>
-                    Adicionar Itinerário
-                  </button>
-                </div>
               </div>
-              {/* Linha vertical divisória */}
-              <div className="w-px bg-[#092064] h-[32rem] mx-2" />
-              <Itinerary
-                itineraries={itineraries}
-                currentPage={currentPage}
-                handleRemoveDay={handleRemoveDay}
-                handleRemoveActivity={handleRemoveActivity}
-                handlePrev={handlePrev}
-                handleNext={handleNext}
-                setCurrentPage={setCurrentPage}
-              />
             </div>
-          </div>
-          <div className="w-full flex flex-col items-center justify-center mt-20 mb-20">
-            <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
-            <button
-              className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer disabled:cursor-not-allowed"
-              type="button"
-              disabled={
-                itineraries.length === 0 ||
-                !itineraries.some(
-                  (it) => it.activities && it.activities.length > 0
-                )
-              }
-              onClick={handleSaveItinerary}
-            >
-              Próximo
-            </button>
-            <SuccessModal
-              isOpen={showSuccess}
-              message="Itinerário salvo com sucesso!"
-              onClose={handleCloseModal}
-            />
-          </div>
-        </div>
 
+            <div className="w-full flex flex-col items-center justify-center mt-10 mb-10">
+              <div className="text-center">
+                <button
+                  className="bg-[#B1FF91] text-[#0F2976] font-bold rounded-xl px-12 py-4 text-2xl cursor-pointer hover:bg-[#9AE670] transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center mx-auto gap-3"
+                  type="button"
+                  disabled={
+                    itineraries.length === 0 ||
+                    !itineraries.some(
+                      (it) => it.activities && it.activities.length > 0
+                    )
+                  }
+                  onClick={handleSaveItinerary}
+                >
+                  Salvar Viagem
+                  <Check size={30} />
+                </button>
+              </div>
+            </div>
+          </WhiteBackground>
+          <div className="mt-20" />
+
+          <SuccessModal
+            isOpen={showSuccess}
+            message="Itinerário salvo com sucesso!"
+            onClose={handleCloseModal}
+          />
+        </div>
       </div>
     </RequireAuth>
   );

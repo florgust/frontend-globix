@@ -12,6 +12,7 @@ import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Alert } from "@/components/common/Alert";
 import api from "@/utils/axios";
 import { useSocket } from "@/hooks/useSocket";
 import NotificationModal from "@/components/ui/modals/ModalNotification";
@@ -104,7 +105,7 @@ export default function DetailsPage() {
   const [loading, setLoading] = useState(true);
   const [activeButton, setActiveButton] = useState("convidados");
   const [imagens] = useState(["/images-home_page/carousel/carrossel.png"]);
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
   const [isEndTripModalOpen, setIsEndTripModalOpen] = useState(false);
 
@@ -261,13 +262,13 @@ export default function DetailsPage() {
   const handleEndTrip = async () => {
     if (!trip?.id) return;
     try {
-      // Primeiro encerra todas as solicitações da viagem
       await api.put(`/solicitacao/encerrar/${trip.id}`);
-
       setIsEndTripModalOpen(false);
       router.push("/profile");
     } catch (error) {
-      alert("Erro ao encerrar viagem." + error);
+      setErrorMessage("Erro ao encerrar viagem.");
+      setTimeout(() => setErrorMessage(null), 4000);
+      console.log(error);
     }
   };
 
@@ -364,8 +365,14 @@ export default function DetailsPage() {
   };
 
   const handleDeny = async (id: number) => {
-    await api.delete(`/solicitacao/${trip?.id}/${id}`);
-    await fetchSolicitacoesData();
+    try {
+      await api.delete(`/solicitacao/${trip?.id}/${id}`);
+      await fetchSolicitacoesData();
+    } catch (error) {
+      setErrorMessage("Erro ao negar solicitação");
+      setTimeout(() => setErrorMessage(null), 4000);
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -497,6 +504,12 @@ export default function DetailsPage() {
           <SidebarMenu />
 
           <div className="flex flex-col items-center w-full bg-[#0F2976]">
+            {errorMessage && (
+              <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+                <Alert message={errorMessage} type="error" />
+              </div>
+            )}
+
             <img
               src="/images-home_page/logo-globix.png"
               className="ml-auto mr-5 mt-5"

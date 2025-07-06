@@ -4,205 +4,287 @@ import SidebarMenu from "../../components/common/SidebarMenu";
 import { HeaderPages } from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/common/Modal";
-import { X } from "lucide-react";
+import { X, Bus, Plane, Car, Train, Ship, CheckCircle, ArrowRight } from "lucide-react";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Image from "next/image";
 import RequireAuth from "@/components/auth/RequireAuth";
+import WhiteBackground from "@/components/create_trip/whiteBackground";
 
 export default function TravelTransport() {
-    const router = useRouter();
-    const [openModal, setOpenModal] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string | null>(null); // Transporte atualmente selecionado
-    const [description, setDescription] = useState(""); // Descrição do transporte selecionado
-    const [confirmedOption, setConfirmedOption] = useState<string | null>(null); // Transporte confirmado
-    const [descriptions, setDescriptions] = useState<{ [key: string]: string }>({}); // Armazena as descrições de cada transporte
-    const [showSuccess, setShowSuccess] = useState(false);
+  const router = useRouter();
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [description, setDescription] = useState("");
+  const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
+  const [descriptions, setDescriptions] = useState<{ [key: string]: string }>(
+    {}
+  );
+  const [showSuccess, setShowSuccess] = useState(false);
 
-    const [placeholders] = useState({
-        avião: "Informe dados importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
-        ônibus: "Informe dados importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
-        carro: "Informe dados importantes sobre o carro, como: Modelo, marca, cor, capacidade de passageiros e condições gerais do veículo.",
-        trem: "Informe dados importantes sobre o transporte ferroviário, como: Nome da companhia ferroviária, tipo de trem e serviços disponíveis.",
-        navio: "Informe dados importantes sobre o transporte marítimo, como: Nome da companhia marítima, tipo de embarcação e comodidades disponíveis.",
-    });
+  const [placeholders] = useState({
+    avião:
+      "Informe dados importantes sobre o transporte aéreo, como: Nome da companhia aérea, modelo da aeronave e serviços disponíveis a bordo.",
+    ônibus:
+      "Informe dados importantes sobre o transporte de ônibus, como: Nome da empresa de transporte, tipo de veículo e comodidades disponíveis.",
+    carro:
+      "Informe dados importantes sobre o carro, como: Modelo, marca, cor, capacidade de passageiros e condições gerais do veículo.",
+    trem: "Informe dados importantes sobre o transporte ferroviário, como: Nome da companhia ferroviária, tipo de trem e serviços disponíveis.",
+    navio:
+      "Informe dados importantes sobre o transporte marítimo, como: Nome da companhia marítima, tipo de embarcação e comodidades disponíveis.",
+  });
 
-    // Função para buscar transporte do back-end
-    const fetchTransporte = async () => {
-        try {
-            const response = await api.get('/transportes');
-            const transporte = response.data;
+  // Mapeamento de ícones para cada transporte
+  const transportIcons = {
+    avião: Plane,
+    ônibus: Bus,
+    carro: Car,
+    trem: Train,
+    navio: Ship,
+  };
 
-            if (transporte) {
-                setConfirmedOption(transporte.tipoTransporte);
-                setDescriptions({ [transporte.tipoTransporte]: transporte.descricao });
-            }
-        } catch (error) {
-            console.error("Erro ao buscar transporte:", error);
-        }
-    };
+  // Função para buscar transporte do back-end
+  const fetchTransporte = async () => {
+    try {
+      const response = await api.get("/transportes");
+      const transporte = response.data;
 
-    // Função para salvar transporte no back-end
-    const handleFinalSave = async () => {
-        if (!confirmedOption || !descriptions[confirmedOption]) {
-            alert("Selecione um transporte e preencha a descrição antes de salvar.");
-            return;
-        }
+      if (transporte) {
+        setConfirmedOption(transporte.tipoTransporte);
+        setDescriptions({ [transporte.tipoTransporte]: transporte.descricao });
+      }
+    } catch (error) {
+      console.error("Erro ao buscar transporte:", error);
+    }
+  };
 
-        // Buscar id da viagem do localStorage
-        const viagemStr = localStorage.getItem("viagemEmCriacao");
-        if (!viagemStr) {
-            alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
-            return;
-        }
-        const viagem = JSON.parse(viagemStr);
-        const viagemId = viagem.id ?? viagem.id_viagem; // ajuste conforme o campo retornado pelo backend
+  // Função para salvar transporte no back-end
+  const handleFinalSave = async () => {
+    if (!confirmedOption || !descriptions[confirmedOption]) {
+      alert("Selecione um transporte e preencha a descrição antes de salvar.");
+      return;
+    }
 
-        try {
-            const payload = {
-                viagemId,
-                tipoTransporte: confirmedOption,
-                descricao: descriptions[confirmedOption],
-            };
+    const viagemStr = localStorage.getItem("viagemEmCriacao");
+    if (!viagemStr) {
+      alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
+      return;
+    }
+    const viagem = JSON.parse(viagemStr);
+    const viagemId = viagem.id ?? viagem.id_viagem;
 
-            await api.post('/transporte', payload);
+    try {
+      const payload = {
+        viagemId,
+        tipoTransporte: confirmedOption,
+        descricao: descriptions[confirmedOption],
+      };
 
-            setShowSuccess(true);
-        } catch (error) {
-            console.error("Erro ao salvar o transporte:", error);
-            alert("Ocorreu um erro ao salvar o transporte. Tente novamente.");
-        }
-    };
+      await api.post("/transporte", payload);
+      setShowSuccess(true);
+    } catch (error) {
+      console.error("Erro ao salvar o transporte:", error);
+      alert("Ocorreu um erro ao salvar o transporte. Tente novamente.");
+    }
+  };
 
-    const handleCloseModalSuccess = () => {
-        setShowSuccess(false);
-        router.push("/trip_budget");
-    };
+  const handleCloseModalSuccess = () => {
+    setShowSuccess(false);
+    router.push("/trip_budget");
+  };
 
-    useEffect(() => {
-        fetchTransporte(); // Busca o transporte ao carregar a página
-    }, []);
+  useEffect(() => {
+    fetchTransporte();
+  }, []);
 
-    const handleTransportClick = (item: string) => {
-        setSelectedOption(item); // Define o transporte selecionado
-        setDescription(descriptions[item] || ""); // Carrega a descrição salva, se existir
-        setOpenModal(true); // Abre o modal
-    };
+  const handleTransportClick = (item: string) => {
+    setSelectedOption(item);
+    setDescription(descriptions[item] || "");
+    setOpenModal(true);
+  };
 
-    const handleSaveAndExit = () => {
-        if (selectedOption) {
-            // Atualiza o estado para manter apenas a descrição do transporte selecionado
-            setDescriptions({
-                [selectedOption]: description, // Salva apenas a descrição do transporte selecionado
-            });
-            setConfirmedOption(selectedOption); // Confirma o transporte selecionado
-            setOpenModal(false); // Fecha o modal
-        }
-    };
+  const handleSaveAndExit = () => {
+    if (selectedOption) {
+      setDescriptions({
+        [selectedOption]: description,
+      });
+      setConfirmedOption(selectedOption);
+      setOpenModal(false);
+    }
+  };
 
-    const handleCloseModal = () => {
-        setOpenModal(false); // Fecha o modal sem confirmar
-        setDescription(""); // Limpa a descrição temporária
-    };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setDescription("");
+  };
 
-    return (
-        <RequireAuth>
-            <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
-                <SidebarMenu />
+  return (
+    <RequireAuth>
+      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+        <SidebarMenu />
 
-                <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-                    <HeaderPages />
+        <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+          <HeaderPages />
 
-                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Transporte</h1>
-                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
+          <WhiteBackground titulo="Escolher Transporte">
+            <div className="max-w-5xl mx-auto px-6 py-8">
+              {/* Título principal */}
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-[#3B4449] mb-4">
+                  Qual será o Transporte utilizado na Viagem?
+                </h2>
+                <div className="w-24 h-1 bg-[#0F2976] mx-auto rounded-full"></div>
+              </div>
 
-                    <div className="flex flex-col items-center w-3/5 h-2/5 mt-12 p-4 border-2 border-[#00FF4D] rounded-4xl shadow-lg">
-                        <h1 className="text-white font-quicksand font-bold text-[2.5rem] leading-[1] tracking-[0] text-center mt-5">
-                            Qual será o Transporte utilizado <br /> na Viagem?
-                        </h1>
-
-                        <div className="flex items-center justify-center space-x-6 mt-auto mb-10">
-                            <Modal isOpen={openModal}>
-                                <div className="flex flex-col items-center justify-center h-full">
-                                    <h1 className="text-[#0F2976] text-4xl text-center mb-10">Insira a descrição do Transporte:</h1>
-                                    <textarea
-                                        placeholder={selectedOption ? placeholders[selectedOption as keyof typeof placeholders] : ""}
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        className="w-[38rem] h-[12rem] pl-10 pr-10 pt-5 bg-[#0F2976] text-white placeholder-gray-300 rounded-[4.375rem] placeholder:text-2xl placeholder:leading-8 resize-none"
-                                        style={{ fontSize: "1.5rem" }}
-                                    />
-                                    <button
-                                        onClick={handleSaveAndExit}
-                                        disabled={description.trim().length === 0}
-                                        className={`mt-5 font-bold text-xl px-6 py-3 rounded-lg ${description.trim().length > 0
-                                            ? "bg-[#00FF4D] text-[#0F2976] cursor-pointer"
-                                            : "bg-gray-400 text-gray-700 cursor-not-allowed"
-                                            }`}
-                                    >
-                                        Salvar e Sair
-                                    </button>
-                                    <button onClick={handleCloseModal}>
-                                        <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F] cursor-pointer" />
-                                    </button>
-                                </div>
-                            </Modal>
-
-                            <div className="flex space-x-6 gap-5">
-                                {["avião", "ônibus", "carro", "trem", "navio"].map((item) => (
-                                    <button
-                                        key={item}
-                                        type="button"
-                                        className="flex flex-col items-center cursor-pointer bg-transparent border-none p-0 focus:outline-none"
-                                        onClick={() => handleTransportClick(item)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === "Enter" || e.key === " ") {
-                                                e.preventDefault();
-                                                handleTransportClick(item);
-                                            }
-                                        }}
-                                    >
-                                        <div
-                                            className={`hover:scale-110 transition-transform w-[6.125rem] h-[6.125rem] flex items-center justify-center rounded-full ${confirmedOption === item ? "bg-[#00FF4D]" : "bg-white"
-                                                }`}
-                                        >
-                                            <Image
-                                                src={`/images-trip_transport/${item}.svg`}
-                                                alt={item.charAt(0).toUpperCase() + item.slice(1)}
-                                                width={70}
-                                                height={70}
-                                                className="w-[4.375rem] h-[4.375rem]"
-                                            />
-                                        </div>
-                                        <span className="text-white mt-2">
-                                            {item.charAt(0).toUpperCase() + item.slice(1)}
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full flex flex-col items-center justify-center mt-30">
-                        <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
-                        <button
-                            onClick={handleFinalSave}
-                            disabled={!confirmedOption || !descriptions[confirmedOption]}
-                            className={`absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl ${!confirmedOption || !descriptions[confirmedOption]
-                                ? "cursor-not-allowed"
-                                : "cursor-pointer"
-                                }`}
-                        >
-                            Próximo
-                        </button>
-                    </div>
+              <Modal isOpen={openModal}>
+                <div className="flex flex-col items-center justify-center h-full">
+                  <h1 className="text-[#0F2976] text-4xl text-center mb-10">
+                    Insira a descrição do Transporte:
+                  </h1>
+                  <textarea
+                    placeholder={
+                      selectedOption
+                        ? placeholders[
+                            selectedOption as keyof typeof placeholders
+                          ]
+                        : ""
+                    }
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-[38rem] h-[12rem] pl-10 pr-10 pt-5 bg-[#0F2976] text-white placeholder-gray-300 rounded-[4.375rem] placeholder:text-2xl placeholder:leading-8 resize-none"
+                    style={{ fontSize: "1.5rem" }}
+                  />
+                  <button
+                    onClick={handleSaveAndExit}
+                    disabled={description.trim().length === 0}
+                    className={`mt-5 font-bold text-xl px-6 py-3 rounded-lg ${
+                      description.trim().length > 0
+                        ? "bg-[#00FF4D] text-[#0F2976] cursor-pointer"
+                        : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                    }`}
+                  >
+                    Salvar e Sair
+                  </button>
+                  <button onClick={handleCloseModal}>
+                    <X className="absolute top-10 right-10 w-12 h-12 text-[#6C727F] cursor-pointer" />
+                  </button>
                 </div>
-                <SuccessModal
-                    isOpen={showSuccess}
-                    message="Transporte salvo com sucesso!"
-                    onClose={handleCloseModalSuccess}
-                />
+              </Modal>
+
+              {/* Opções de Transporte */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12">
+                {["avião", "ônibus", "carro", "trem", "navio"].map((item) => {
+                  const IconComponent =
+                    transportIcons[item as keyof typeof transportIcons];
+                  const isSelected = confirmedOption === item;
+
+                  return (
+                    <button
+                      key={item}
+                      type="button"
+                      className={`group relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-200 cursor-pointer ${
+                        isSelected
+                          ? "bg-[#0F2976] border-[#0F2976] text-white shadow-lg"
+                          : "bg-white border-gray-200 text-[#3B4449] hover:border-[#0F2976] hover:shadow-md"
+                      }`}
+                      onClick={() => handleTransportClick(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleTransportClick(item);
+                        }
+                      }}
+                    >
+                      {/* Ícone de confirmação */}
+                      {isSelected && (
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#00FF4D] rounded-full flex items-center justify-center">
+                          <CheckCircle className="text-[#0F2976]" size={16} />
+                        </div>
+                      )}
+
+                      {/* Ícone do transporte */}
+                      <div
+                        className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-300 ${
+                          isSelected
+                            ? "bg-[#00FF4D]"
+                            : "bg-gray-100 group-hover:bg-gray-200"
+                        }`}
+                      >
+                        <IconComponent
+                          size={32}
+                          className={
+                            isSelected ? "text-[#0F2976]" : "text-[#3B4449]"
+                          }
+                        />
+                      </div>
+
+                      {/* Nome do transporte */}
+                      <span
+                        className={`text-lg font-semibold capitalize ${
+                          isSelected ? "text-white" : "text-[#3B4449]"
+                        }`}
+                      >
+                        {item}
+                      </span>
+
+                      {/* Indicador de descrição */}
+                      {descriptions[item] && (
+                        <div className="mt-2 text-xs opacity-75">
+                          ✓ Descrição adicionada
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Transporte selecionado */}
+              {confirmedOption && (
+                <div className="mb-8 p-6 bg-green-50 rounded-xl border border-green-200">
+                  <div className="flex items-center mb-3">
+                    <CheckCircle className="text-green-600 mr-3" size={24} />
+                    <h3 className="text-green-800 font-bold text-lg">
+                      Transporte Selecionado:{" "}
+                      {confirmedOption.charAt(0).toUpperCase() +
+                        confirmedOption.slice(1)}
+                    </h3>
+                  </div>
+                  <p className="text-green-700 text-sm">
+                    {descriptions[confirmedOption]}
+                  </p>
+                </div>
+              )}
+
+              {/* Linha divisória */}
+              <div className="flex items-center justify-center mb-8">
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+
+              {/* Botão */}
+              <div className="text-center">
+                <button
+                  onClick={handleFinalSave}
+                  disabled={!confirmedOption || !descriptions[confirmedOption]}
+                  className={`flex items-center gap-3 px-12 py-4 rounded-xl font-bold text-xl transition-all duration-300 shadow-lg mx-auto cursor-pointer ${
+                    !confirmedOption || !descriptions[confirmedOption]
+                      ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                      : "bg-[#B1FF91] text-[#0F2976] cursor-pointer hover:bg-[#9AE670] hover:shadow-xl transform hover:scale-105"
+                  }`}
+                >
+                  <CheckCircle size={24} />
+                  Confirmar Transporte
+                  <ArrowRight size={24} />
+                </button>
+              </div>
             </div>
-        </RequireAuth>
-    );
+          </WhiteBackground>
+        </div>
+
+        <SuccessModal
+          isOpen={showSuccess}
+          message="Transporte salvo com sucesso!"
+          onClose={handleCloseModalSuccess}
+        />
+      </div>
+    </RequireAuth>
+  );
 }
