@@ -9,10 +9,13 @@ import ModalTransport from "@/components/ui/modals/ModalTransport";
 import { Trip } from "@/types/trip";
 import api from "@/utils/axios";
 import { List } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ModalBudget from "@/components/ui/modals/ModalBudget";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RequireTripSelected from "@/components/auth/RequireTripSelected";
+import { useSocket } from "@/hooks/useSocket";
+import NotificationModal from "@/components/ui/modals/ModalNotification";
+import Cookies from "js-cookie";
 import {
   mapApiToItineraries,
   ItineraryDay,
@@ -32,6 +35,7 @@ interface UsuarioViagem {
   idUsuario: number;
   papel: string;
   status: number;
+  inseridoNaViagem: number;
 }
 
 interface Usuario {
@@ -54,6 +58,21 @@ interface Orcamento {
   dataAtualizacao: string;
 }
 
+interface Notificacao {
+  id: number;
+  mensagem: string;
+  tipo: string;
+  viagemId?: number;
+  dataCriacao: string;
+}
+
+interface SolicitacaoViagem {
+  idUsuario: number;
+  papel: string;
+  status: number;
+  inseridoNaViagem: number;
+}
+
 export default function DetailsPage() {
   const [isMoreDetailsOpen, setIsMoreDetailsModalOpen] = useState(false);
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
@@ -69,6 +88,150 @@ export default function DetailsPage() {
   const [organizadores, setOrganizadores] = useState<Usuario[]>([]);
   const [convidados, setConvidados] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isNotifsOpen, setIsNotifsOpen] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const usuarioCookie = Cookies.get("usuario");
+  const userId = usuarioCookie ? JSON.parse(usuarioCookie).id : 1;
+
+  // busca iniciais
+  async function fetchTripData() {
+    const stored = localStorage.getItem("selectedTrip");
+    if (!stored) return;
+    const tripObj = JSON.parse(stored);
+    setTrip({
+      ...tripObj,
+      codigoConvite: tripObj.codigoConvite ?? tripObj.codigo_convite,
+    });
+  }
+
+  async function fetchSolicitacoesData() {
+    if (!trip?.id) return;
+    const { data } = await api.get<SolicitacaoViagem[]>(
+      `/solicitacoes/viagem/${trip.id}`
+    );
+    const usuarios = await Promise.all(
+      data.map(async (sol) => {
+        const { data: u } = await api.get<Usuario>(
+          `/usuario/${sol.idUsuario}`
+        );
+        return {
+          ...u,
+          papel: sol.papel,
+          status: sol.status,
+          inseridoNaViagem: sol.inseridoNaViagem,
+        };
+      })
+    );
+
+    // quem é organizador ou promovido continua aqui
+    setOrganizadores(
+      usuarios.filter(u =>
+        ["organizador", "organizadorpromovido"].includes(u.papel.toLowerCase())
+      )
+    );
+
+    // só quem está inserido _e_ não tem papel de organizador/promovido
+    setConvidados(
+      usuarios
+        .filter(u =>
+          u.inseridoNaViagem === 1 &&
+          !["organizador", "organizadorpromovido"].includes(u.papel.toLowerCase())
+        )
+        .map(u => ({ ...u, foto: u.foto ?? "/user2.png" }))
+    );
+
+  }
+
+  async function fetchMoreDetailsData() {
+    if (!trip?.id) return;
+    const { data } = await api.get(`/viagem/${trip.id}`);
+    setMoreDetailsTrip(
+      mapToModalMoreDetailsTrip(data, organizadores, convidados)
+    );
+  }
+
+  async function fetchTransportData() {
+    if (!trip?.id) return;
+    const [{ data: tr }, { data: loc }] = await Promise.all([
+      api.get(`/transporte/viagem/${trip.id}`),
+      api.get(`/localizacao/viagem/${trip.id}`),
+    ]);
+    setTransportData(mapToTransportLocation(tr, loc));
+  }
+
+  async function fetchItinerariesData() {
+    if (!trip?.id) return;
+    const { data } = await api.get(`/itinerarios/viagem/${trip.id}`);
+    setItineraries(mapApiToItineraries(data));
+  }
+
+  async function fetchOrcamentosData() {
+    if (!trip?.id) return;
+    const { data } = await api.get(`/orcamentos/viagem/${trip.id}`);
+    setOrcamentos(data);
+  }
+
+  async function fetchNotifications() {
+    const { data } = await api.get<Notificacao[]>(
+      `/notificacoes/unread/${userId}`
+    );
+    setNotificacoes(data);
+    setUnreadCount(data.length);
+  }
+
+  // 2️⃣ monta tudo num “loader” genérico
+  async function loadAll() {
+    await fetchTripData();
+    await fetchSolicitacoesData();
+    await fetchMoreDetailsData();
+    await fetchTransportData();
+    await fetchItinerariesData();
+    await fetchOrcamentosData();
+    await fetchNotifications();
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadAll();
+  }, [userId]);
+
+  useEffect(() => {
+    api.get<Notificacao[]>(`/notificacoes/unread/${userId}`).then(({ data }) => {
+      setNotificacoes(data);
+      setUnreadCount(data.length);
+    });
+  }, [userId]);
+
+  useSocket(userId, (nova: Notificacao) => {
+    setNotificacoes((prev) => [nova, ...prev]);
+    setUnreadCount((c) => c + 1);
+    audioRef.current
+      ?.play()
+      .catch(err => console.error("erro ao tocar notify:", err));
+    loadAll();
+  });
+
+  const handleOpenNotifs = () => {
+    // play + pause imediato para destravar o contexto de áudio
+    audioRef.current
+      ?.play()
+      .then(() => audioRef.current!.pause())
+      .catch(() => { });
+    setIsNotifsOpen(true);
+  };
+
+  const handleCloseNotifs = async () => {
+    // marca todas lidas
+    await api.put("/notificacoes/mark-read", {
+      ids: notificacoes.map(n => n.id)
+    });
+    await fetchNotifications();
+    setIsNotifsOpen(false);
+  };
 
   useEffect(() => {
     const storedTrip = localStorage.getItem("selectedTrip");
@@ -109,10 +272,11 @@ export default function DetailsPage() {
                 ...usuario,
                 papel: sol.papel,
                 status: sol.status,
+                inseridoNaViagem: sol.inseridoNaViagem,  // ← garantido que vem o flag
               };
             }
           );
-          const usuariosCompletos: Usuario[] = await Promise.all(
+          const usuariosCompletos = await Promise.all(
             usuariosPromises
           );
           console.log("Usuários completos:", usuariosCompletos);
@@ -121,7 +285,7 @@ export default function DetailsPage() {
           setOrganizadores(
             usuariosCompletos.filter((u) =>
               ["organizador", "organizadorpromovido"].includes(
-                (u.tipo || "").toLowerCase()
+                (u.papel || "").toLowerCase()
               )
             )
           );
@@ -129,9 +293,9 @@ export default function DetailsPage() {
             usuariosCompletos
               .filter(
                 (u) =>
-                  u.status == 1 &&
+                  u.inseridoNaViagem == 1 &&
                   !["organizador", "organizadorpromovido"].includes(
-                    (u.tipo || "").toLowerCase()
+                    (u.papel || "").toLowerCase()
                   )
               )
               .map((u) => ({
@@ -433,17 +597,32 @@ export default function DetailsPage() {
                         />
                         <p className="text-sm text-gray-500 mt-4">Mensagem</p>
                       </div>
-                      <div className="flex flex-col items-center">
-                        <IconButton
-                          icon={
-                            <img
-                              src="/images-travel/Icons/IconAlert.png"
-                              className="w-20 h-20"
+                      <div>
+                        <div className="flex flex-col items-center">
+                          <div className="relative">
+                            <IconButton
+                              icon={<img src="/images-travel/Icons/IconAlert.png" className="w-20 h-20" />}
+                              onClick={handleOpenNotifs}
                             />
-                          }
-                          onClick={() => alert("Botão clicado!")}
+                            {unreadCount > 0 && (
+                              <span className="absolute top-0 right-0 block w-3 h-3 bg-red-600 rounded-full" />
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-500 mt-4">Avisos</p>
+                        </div>
+
+                        <audio
+                          ref={audioRef}
+                          src="/sounds/notify.mp3"
+                          preload="auto"
+                          style={{ display: "none" }}
                         />
-                        <p className="text-sm text-gray-500 mt-4">Avisos</p>
+
+                        <NotificationModal
+                          isOpen={isNotifsOpen}
+                          onClose={handleCloseNotifs}
+                          notifications={notificacoes}
+                        />
                       </div>
                     </div>
 
@@ -488,6 +667,6 @@ export default function DetailsPage() {
           <div className="mt-20"></div>
         </div>
       </RequireTripSelected>
-    </RequireAuth>
+    </RequireAuth >
   );
 }
