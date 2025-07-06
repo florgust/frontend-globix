@@ -75,6 +75,8 @@ const [selectedOption, setSelectedOption] = useState("public");
       criadorId, 
       tipo: selectedOption === "public" ? "publica" : "privada",
       quantidadeParticipante: count,
+      cidadeOrigem: cidadeOrigem,
+      cidadeDestino: cidadeDestino,
     };
     console.log("Payload da viagem:", payload);
     try {
