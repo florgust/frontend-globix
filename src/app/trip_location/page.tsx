@@ -5,9 +5,10 @@ import { HeaderPages } from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Image from "next/image";
 import { Alert } from '@/components/common/Alert';
 import RequireAuth from "@/components/auth/RequireAuth";
+import WhiteBackground from "@/components/create_trip/whiteBackground";
+import { MapPin, Clock, ArrowRight, Info, Bus } from "lucide-react";
 
 export default function TravelLocation() {
     const router = useRouter();
@@ -20,6 +21,7 @@ export default function TravelLocation() {
             return () => clearTimeout(timer);
         }
     }, [alertMessage]);
+
     // Estados para armazenar os dados do formulário
     const [ida, setIda] = useState({
         enderecoPartida: "",
@@ -45,13 +47,13 @@ export default function TravelLocation() {
     };
 
     const handleSave = async () => {
-        // Recupera a viagem criada do localStorage
+        // Validações...
         if (ida.dataPartida && ida.dataChegada && new Date(ida.dataPartida) > new Date(ida.dataChegada)) {
-            setAlertMessage("Na IDA, a data de partida não pode ser depois da data de chegada.");
+            setAlertMessage("Na IDA, o horário de saída não pode ser depois do horário de chegada.");
             return;
         }
         if (volta.dataPartida && volta.dataChegada && new Date(volta.dataPartida) > new Date(volta.dataChegada)) {
-            setAlertMessage("Na VOLTA, a data de partida não pode ser depois da data de chegada.");
+            setAlertMessage("Na VOLTA, o horário de saída não pode ser depois do horário de chegada.");
             return;
         }
 
@@ -61,11 +63,11 @@ export default function TravelLocation() {
             return;
         }
         const viagem = JSON.parse(viagemStr);
-        const idViagem = viagem.id ?? viagem.id_viagem; // ajuste conforme o campo retornado pelo backend
+        const idViagem = viagem.id ?? viagem.id_viagem;
 
         const payload = {
             idViagem,
-            nome: "Localização Exemplo",
+            nome: "Pontos de Encontro",
             idaEnderecoPartida: ida.enderecoPartida,
             idaEnderecoChegada: ida.enderecoChegada,
             idaDataPartida: ida.dataPartida,
@@ -77,12 +79,11 @@ export default function TravelLocation() {
         };
 
         try {
-
             await api.post("/localizacao", payload);
             setShowSuccess(true);
         } catch (error) {
-            console.error("Erro ao salvar a localização:", error);
-            alert("Ocorreu um erro ao salvar a localização. Tente novamente.");
+            console.error("Erro ao salvar os pontos de encontro:", error);
+            setAlertMessage("Ocorreu um erro ao salvar os pontos de encontro. Tente novamente.");
         }
     };
 
@@ -93,9 +94,8 @@ export default function TravelLocation() {
 
     return (
         <RequireAuth>
-            <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976] ">
+            <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                 <SidebarMenu />
-
 
                 {/* ALERTA MODAL */}
                 {alertMessage && (
@@ -107,152 +107,168 @@ export default function TravelLocation() {
                 <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
                     <HeaderPages />
 
-                    <h1 className="font-bold text-4xl text-left text-white w-full pl-22 mt-4">Criar Viagem - Localização</h1>
-                    <div className="flex flex-col items-center w-9/10 border-2 border-[#092064] mt-3 mb-10" />
+                    <WhiteBackground titulo="Definir Pontos de Encontro">
+                        <div className="max-w-4xl mx-auto px-6 py-8">
+                            
+                            {/* Seção de Informações */}
+                            <div className="mb-8 p-6 bg-blue-50 rounded-xl border-l-4 border-[#0F2976]">
+                                <div className="flex items-center mb-3">
+                                    <Info className="text-[#0F2976] mr-3" size={24} />
+                                    <h3 className="text-[#0F2976] font-bold text-lg">Instruções</h3>
+                                </div>
+                                <p className="text-[#3B4449] text-sm leading-relaxed">
+                                    Defina os pontos de encontro para a ida e volta da viagem. 
+                                    Escolha locais de fácil acesso e que todos possam localizar facilmente.
+                                </p>
+                            </div>
 
-                    <div className="flex flex-col items-center w-[52.5rem] h-[30rem] p-4 border-2 border-[#00FF4D] rounded-[2rem] shadow-lg ">
-                        <div className="w-full mt-2 ">
                             {/* IDA */}
-                            <div className="mb-4 ">
-                                <h2 className="text-[#FFFFFF] font-bold text-4xl mb-2 flex items-center ml-3">
-                                    IDA
-                                </h2>
-                                <hr className="mb-4 ml-3 border-t-2 border-[#0F2976] w-[97%]" />
-                                <div className="flex flex-col space-y-4 ">
-                                    <div className="flex items-center space-x-4 gap-4">
-                                        <div className="flex-1">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block ml-3"
-                                                htmlFor="ida-endereco-partida"
-                                            >
-                                                Local de Partida <span className="text-red-500">*</span>
+                            <div className="mb-12">
+                                <div className="flex items-center mb-6">
+                                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mr-4">
+                                        <ArrowRight className="text-green-600" size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-[#3B4449] font-bold text-3xl">IDA</h2>
+                                        <p className="text-gray-600 text-sm">Trajeto de ida da viagem</p>
+                                    </div>
+                                </div>
+                                <hr className="mb-6 border-t-2 border-green-200 w-full" />
+                                
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="md:col-span-2">
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <MapPin className="text-green-600 mr-2" size={18} />
+                                                Ponto de Encontro para Embarque <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="ida-endereco-partida"
                                                 type="text"
-                                                placeholder="Digite o ponto inicial. Ex.: Rodoviária, Aeroporto..."
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF]"
+                                                placeholder="Ex: Rodoviária Central, Praça da Sé, Shopping Center..."
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={ida.enderecoPartida}
                                                 onChange={(e) => handleChange(e, "ida", "enderecoPartida")}
                                             />
                                         </div>
-                                        <div className="w-1/3">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block"
-                                                htmlFor="ida-data-partida"
-                                            >
-                                                Data de Partida <span className="text-red-500">*</span>
+                                        <div>
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <Clock className="text-green-600 mr-2" size={18} />
+                                                Horário de Saída <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="ida-data-partida"
                                                 type="datetime-local"
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] bg-[#FFFFFF]"
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={ida.dataPartida}
                                                 onChange={(e) => handleChange(e, "ida", "dataPartida")}
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex items-center space-x-4 gap-4">
-                                        <div className="flex-1">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block ml-3"
-                                                htmlFor="ida-endereco-chegada"
-                                            >
-                                                Local de Chegada <span className="text-red-500">*</span>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+                                        <div className="md:col-span-2">
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <MapPin className="text-green-600 mr-2" size={18} />
+                                                Ponto de Encontro para Desembarque <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="ida-endereco-chegada"
                                                 type="text"
-                                                placeholder="Digite o ponto final. Ex.: Hotel, Posto..."
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF]"
+                                                placeholder="Ex: Hotel, Pousada, Centro da cidade de destino..."
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={ida.enderecoChegada}
                                                 onChange={(e) => handleChange(e, "ida", "enderecoChegada")}
                                             />
                                         </div>
-                                        <div className="w-1/3">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block"
-                                                htmlFor="ida-data-chegada"
-                                            >
-                                                Data de Chegada <span className="text-red-500">*</span>
+                                        <div>
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <Clock className="text-green-600 mr-2" size={18} />
+                                                Horário de Chegada <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="ida-data-chegada"
                                                 type="datetime-local"
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] bg-[#FFFFFF]"
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={ida.dataChegada}
                                                 onChange={(e) => handleChange(e, "ida", "dataChegada")}
                                             />
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* VOLTA */}
-                                <div className="flex flex-col space-y-4">
-                                    <h2 className="text-[#FFFFFF] font-bold text-4xl mb-2 flex items-center mt-5 ml-3">
-                                        VOLTA
-                                    </h2>
-                                    <div className="flex items-center space-x-4 gap-4">
-                                        <div className="flex-1">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block ml-3"
-                                                htmlFor="volta-endereco-partida"
-                                            >
-                                                Local de Partida <span className="text-red-500">*</span>
+                            {/* Linha divisória com seta */}
+                            <div className="flex items-center justify-center mb-12">
+                                <div className="flex-1 h-px bg-gray-200"></div>
+                                <div className="px-4">
+                                    <div className="flex items-center justify-center w-12 h-12 bg-[#0F2976] rounded-full">
+                                        <Bus className="text-white" size={24} />
+                                    </div>
+                                </div>
+                                <div className="flex-1 h-px bg-gray-200"></div>
+                            </div>
+
+                            {/* VOLTA */}
+                            <div className="mb-12">
+                                <div className="flex items-center mb-6">
+                                    <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mr-4">
+                                        <ArrowRight className="text-red-600 rotate-180" size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-[#3B4449] font-bold text-3xl">VOLTA</h2>
+                                        <p className="text-gray-600 text-sm">Trajeto de volta da viagem</p>
+                                    </div>
+                                </div>
+                                <hr className="mb-6 border-t-2 border-red-200 w-full" />
+                                
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="md:col-span-2">
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <MapPin className="text-red-600 mr-2" size={18} />
+                                                Ponto de Encontro para Embarque <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="volta-endereco-partida"
                                                 type="text"
-                                                placeholder="Digite o ponto inicial. Ex.: Rodoviária, Aeroporto..."
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF]"
+                                                placeholder="Ex: Mesmo local do hotel, centro da cidade..."
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={volta.enderecoPartida}
                                                 onChange={(e) => handleChange(e, "volta", "enderecoPartida")}
                                             />
                                         </div>
-                                        <div className="w-1/3">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block"
-                                                htmlFor="volta-data-partida"
-                                            >
-                                                Data de Partida <span className="text-red-500">*</span>
+                                        <div>
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <Clock className="text-red-600 mr-2" size={18} />
+                                                Horário de Saída <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="volta-data-partida"
                                                 type="datetime-local"
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] bg-[#FFFFFF]"
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={volta.dataPartida}
                                                 onChange={(e) => handleChange(e, "volta", "dataPartida")}
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex items-center space-x-4 gap-4">
-                                        <div className="flex-1">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block ml-3"
-                                                htmlFor="volta-endereco-chegada"
-                                            >
-                                                Local de Chegada <span className="text-red-500">*</span>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+                                        <div className="md:col-span-2">
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <MapPin className="text-red-600 mr-2" size={18} />
+                                                Ponto de Encontro para Desembarque <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="volta-endereco-chegada"
                                                 type="text"
-                                                placeholder="Digite o ponto final. Ex.: Hotel, Posto..."
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF]"
+                                                placeholder="Ex: Mesmo local de saída, rodoviária de origem..."
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] placeholder-[#6B7280] text-sm bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={volta.enderecoChegada}
                                                 onChange={(e) => handleChange(e, "volta", "enderecoChegada")}
                                             />
                                         </div>
-                                        <div className="w-1/3">
-                                            <label
-                                                className="text-[#FFFFFF] font-bold text-base mb-1 block"
-                                                htmlFor="volta-data-chegada"
-                                            >
-                                                Data de Chegada <span className="text-red-500">*</span>
+                                        <div>
+                                            <label className="text-[#3B4449] font-bold text-base mb-2 block flex items-center">
+                                                <Clock className="text-red-600 mr-2" size={18} />
+                                                Horário de Chegada <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                id="volta-data-chegada"
                                                 type="datetime-local"
-                                                className="w-full p-2 border-[0.5px] border-[#0F2976] rounded-[100px] text-[#0F2976] bg-[#FFFFFF]"
+                                                className="w-full p-3 border-2 border-[#0F2976] rounded-xl text-[#0F2976] bg-[#FFFFFF] focus:border-[#1C4CDC] focus:ring-2 focus:ring-blue-200 outline-none"
                                                 value={volta.dataChegada}
                                                 onChange={(e) => handleChange(e, "volta", "dataChegada")}
                                             />
@@ -260,22 +276,39 @@ export default function TravelLocation() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div className="w-full flex flex-col items-center justify-center mt-auto mb-30">
-                        <button className="absolute mt-5 ml-5 block bg-white rounded-lg w-2/4 h-20" />
-                        <button
-                            onClick={handleSave}
-                            className="absolute bg-[#00FF4D] text-[#0F2976] font-bold rounded-lg w-2/4 h-20 text-3xl cursor-pointer"
-                        >
-                            Próximo
-                        </button>
-                    </div>
+                            {/* Dica adicional */}
+                            <div className="mb-8 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                                <p className="text-yellow-800 text-sm">
+                                    <strong>💡 Dica:</strong> Escolha pontos de encontro conhecidos e de fácil acesso para todos os participantes. 
+                                    Considere estacionamento e transporte público no local.
+                                </p>
+                            </div>
+
+                            {/* Linha divisória final */}
+                            <div className="flex items-center justify-center mb-8">
+                                <div className="flex-1 h-px bg-gray-200"></div>
+                            </div>
+
+                            {/* Botão */}
+                            <div className="text-center">
+                                <button
+                                    onClick={handleSave}
+                                    className="bg-[#B1FF91] text-[#0F2976] font-bold rounded-xl px-12 py-4 text-xl cursor-pointer hover:bg-[#9AE670] transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center mx-auto gap-3"
+                                >
+                                    <MapPin size={24} />
+                                    Definir Pontos de Encontro
+                                    <ArrowRight size={24} />
+                                </button>
+                            </div>
+                        </div>
+                    </WhiteBackground>
+                    <div className="mb-20"/>
                 </div>
+
                 <SuccessModal
                     isOpen={showSuccess}
-                    message="Localização salva com sucesso!"
+                    message="Pontos de encontro definidos com sucesso!"
                     onClose={handleCloseModal}
                 />
             </div>
