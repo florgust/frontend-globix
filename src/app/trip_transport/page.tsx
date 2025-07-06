@@ -4,16 +4,7 @@ import SidebarMenu from "../../components/common/SidebarMenu";
 import { HeaderPages } from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/common/Modal";
-import {
-  X,
-  Bus,
-  Plane,
-  Car,
-  Train,
-  Ship,
-  CheckCircle,
-  ArrowRight,
-} from "lucide-react";
+import { X, Bus, Plane, Car, Train, Ship, CheckCircle, ArrowRight } from "lucide-react";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import RequireAuth from "@/components/auth/RequireAuth";
@@ -281,7 +272,7 @@ export default function TravelTransport() {
                 >
                   <CheckCircle size={24} />
                   Confirmar Transporte
-                  <ArrowRight size={24} />0
+                  <ArrowRight size={24} />
                 </button>
               </div>
             </div>
