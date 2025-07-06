@@ -2,7 +2,6 @@
 
 import { Input } from '@/components/common/Input';
 import { Checkbox } from '@/components/common/Checkbox';
-import { GoogleButton } from '@/components/common/GoogleButton';
 import { AuthCard } from '@/components/ui/AuthCard';
 import { ImageCarousel } from '@/components/ui/ImageCarousel';
 import { Alert } from '@/components/common/Alert';

@@ -5,7 +5,6 @@ import { HeaderPages } from "@/components/common/Header";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Image from "next/image";
 import { Alert } from '@/components/common/Alert';
 import RequireAuth from "@/components/auth/RequireAuth";
 

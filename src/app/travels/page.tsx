@@ -28,6 +28,8 @@ import {
 } from "@/utils/transportUtils";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RequireTripSelected from "@/components/auth/RequireTripSelected";
+import { useSocket } from "@/hooks/useSocket";
+import Cookies from "js-cookie";
 
 interface Usuario {
   id: number;
@@ -98,8 +100,13 @@ export default function DetailsPage() {
   const router = useRouter();
   const [isEndTripModalOpen, setIsEndTripModalOpen] = useState(false);
 
+  // ❯ Obtém o usuário via cookie (js-cookie)
+  const usuarioCookie = Cookies.get("usuario");
+  const userId = usuarioCookie ? JSON.parse(usuarioCookie).id : 1;
 
-  // ...existing code...
+  // ❯ Inicializa o socket com o userId vindo do cookie
+  useSocket(userId);
+
   const handleEndTrip = async () => {
     if (!trip?.id) return;
     try {
@@ -112,7 +119,6 @@ export default function DetailsPage() {
       alert("Erro ao encerrar viagem." + error);
     }
   };
-  // ...existing code...
 
   useEffect(() => {
     async function fetchData() {
