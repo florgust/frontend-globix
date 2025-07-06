@@ -303,6 +303,7 @@ export default function TravelLocation() {
                             </div>
                         </div>
                     </WhiteBackground>
+                    <div className="mb-20"/>
                 </div>
 
                 <SuccessModal
