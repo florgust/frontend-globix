@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import Sidebar, { SidebarItem } from "./sidebar";
+import Sidebar, { SidebarItem } from "./Sidebar";
 import { House, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import ModalLogout from "./modals/ModalLogout";
+import ModalLogout from "../ui/modals/ModalLogout";
 
 const user = "/images-home_page/sidebar-menu/user.svg";
 const message = "/images-home_page/sidebar-menu/message.svg";

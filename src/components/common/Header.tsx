@@ -74,7 +74,8 @@ export function Header() {
             width={160}
             height={0}
             priority
-            className="w-32 md:w-40 lg:w-48 h-auto"
+            className="w-32 md:w-40 lg:w-48 h-auto cursor-pointer"
+            onClick={() => window.location.href = "/initial"}
           />
         </div>
 

@@ -1,8 +1,8 @@
 "use client";
 
-import SidebarMenu from "@/components/ui/SidebarMenu";
+import SidebarMenu from "@/components/common/SidebarMenu";
 import { UserList, RequestList } from "@/components/ui/UserList";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import ModalEditTrip from "@/components/ui/modals/ModalEditTrip";
 import { ModalItinerary } from "@/components/ui/modals/ModalItinerary";
 import ModalMoreDetails from "@/components/ui/modals/ModalMoreDetails";
@@ -12,6 +12,7 @@ import ModalBudget from "@/components/ui/modals/ModalBudget";
 import { List, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Alert } from "@/components/common/Alert";
 import api from "@/utils/axios";
 import {
   mapApiToItineraries,
@@ -97,19 +98,20 @@ export default function DetailsPage() {
 
   const router = useRouter();
   const [isEndTripModalOpen, setIsEndTripModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 
   // ...existing code...
   const handleEndTrip = async () => {
     if (!trip?.id) return;
     try {
-      // Primeiro encerra todas as solicitações da viagem
       await api.put(`/solicitacao/encerrar/${trip.id}`);
-
       setIsEndTripModalOpen(false);
       router.push("/profile");
     } catch (error) {
-      alert("Erro ao encerrar viagem." + error);
+      setErrorMessage("Erro ao encerrar viagem.");
+      setTimeout(() => setErrorMessage(null), 4000);
+      console.log(error);
     }
   };
   // ...existing code...
@@ -228,8 +230,9 @@ export default function DetailsPage() {
         solicitacoes.filter((solicitacao) => solicitacao.id !== id)
       );
     } catch (error) {
-      console.error("Erro ao negar solicitação:", error);
-      alert("Erro ao negar solicitação");
+      setErrorMessage("Erro ao negar solicitação");
+      setTimeout(() => setErrorMessage(null), 4000);
+      console.log(error);
     }
   };
 
@@ -362,6 +365,12 @@ export default function DetailsPage() {
           <SidebarMenu />
 
           <div className="flex flex-col items-center w-full bg-[#0F2976]">
+            {errorMessage && (
+              <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+                <Alert message={errorMessage} type="error" />
+              </div>
+            )}
+
             <img
               src="/images-home_page/logo-globix.png"
               className="ml-auto mr-5 mt-5"
@@ -379,7 +388,7 @@ export default function DetailsPage() {
             <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
               {/* capa */}
               <img
-                src={trip?.imagem || "/images-travel/capa.png"}
+                src={"/images-travel/capa.png"}
                 alt={trip?.nome || "Capa da viagem"}
                 className="w-full h-80"
               />
@@ -398,7 +407,7 @@ export default function DetailsPage() {
                           className="flex flex-col items-center"
                         >
                           <img
-                            src={usuario.foto || "/user.png"}
+                            src={usuario.foto || "/user2.png"}
                             alt={usuario.nome}
                             className="w-23 h-23 object-cover rounded-full"
                           />

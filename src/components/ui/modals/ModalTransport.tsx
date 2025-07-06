@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import { TransportLocation } from "@/utils/transportUtils";
 
 interface ModalTransportProps {

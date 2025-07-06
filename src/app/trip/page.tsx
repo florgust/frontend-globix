@@ -1,8 +1,8 @@
 "use client";
 
-import SidebarMenu from "@/components/ui/SidebarMenu";
+import SidebarMenu from "@/components/common/SidebarMenu";
 import { UserList } from "@/components/ui/UserList";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import { ModalItinerary } from "@/components/ui/modals/ModalItinerary";
 import ModalMoreDetails from "@/components/ui/modals/ModalMoreDetails";
 import ModalTransport from "@/components/ui/modals/ModalTransport";
@@ -41,6 +41,7 @@ interface Usuario {
   status: number;
   tipo: string;
   foto?: string;
+  papel: string;
 }
 
 interface Orcamento {
@@ -259,7 +260,7 @@ export default function DetailsPage() {
             <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
               {/* capa */}
               <img
-                src={trip?.imagem || "/images-travel/capa.png"}
+                src={"/images-travel/capa.png"}
                 alt={trip?.nome || "Capa da viagem"}
                 className="w-full h-80"
               />
