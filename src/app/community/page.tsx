@@ -7,6 +7,7 @@ import BarraDePesquisa from "@/components/ui/community/SearchBar";
 import RequireAuth from "@/components/auth/RequireAuth";
 import api from "@/utils/axios";
 import { useRouter } from "next/navigation";
+import { getDefaultImage } from '@/utils/imageUtils';
 
 interface Organizador {
   id: number;
@@ -121,8 +122,8 @@ export default function CommunityPage() {
                                     viagens.map((viagem) => (
                                         <Card
                                             key={viagem.id}
-                                            topImage={viagem.foto || "https://images.unsplash.com/photo-1506744038136-46273834b3fb"}
-                                            userImage={viagem.organizador?.foto || "https://randomuser.me/api/portraits/men/32.jpg"}
+                                            topImage={viagem.foto || getDefaultImage('trip')}
+                                            userImage={viagem.organizador?.foto || getDefaultImage('user')}
                                             tripName={viagem.nome}
                                             location={viagem.destino}
                                             createdAt={calcularTempoDecorrido(viagem.dataInicio)}
