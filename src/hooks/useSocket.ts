@@ -1,29 +1,33 @@
-// src/hooks/useSocket.ts
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
-export function useSocket(userId: number) {
+interface NovaNotificacao {
+  id: number;
+  mensagem: string;
+  viagemId?: number;
+  tipo: string;
+  dataCriacao: string;
+}
+
+export function useSocket(
+  userId: number,
+  onNotification: (data: NovaNotificacao) => void
+) {
   useEffect(() => {
-    const socket = io("https://globix-afaea8fe15ce.herokuapp.com"); // ajuste sua URL
+    const socket = io('https://globix-afaea8fe15ce.herokuapp.com/');
 
     socket.on("connect", () => {
       console.log("🔌 Socket conectado:", socket.id);
-
-      // 🔑 Entra na sala do userId
       socket.emit("join", String(userId));
     });
 
     socket.on("nova-notificacao", (data) => {
       console.log("📣 Nova notificação recebida:", data);
-      // Aqui você pode chamar um toast, atualizar estado global etc.
-    });
-
-    socket.on("disconnect", () => {
-      console.log("❌ Socket desconectado");
+      onNotification(data);
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [userId]);
+  }, [userId, onNotification]);
 }
