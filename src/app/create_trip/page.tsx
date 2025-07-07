@@ -4,23 +4,22 @@ import { HeaderPages } from "@/components/common/Header";
 import SidebarMenu from "@/components/common/SidebarMenu";
 import React, { useState, useEffect } from "react";
 import { ImagePlus, Minus, Plus, X } from "lucide-react";
-import { useRouter } from "next/navigation"; 
-import api from "@/utils/axios"; 
+import { useRouter } from "next/navigation";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 import { Alert } from "@/components/common/Alert";
 import RequireAuth from "@/components/auth/RequireAuth";
 import { Globe, Lock } from "lucide-react";
 import { MapPin, ArrowRight } from "lucide-react";
+import { useTripCreation } from "@/utils/contextAPI";
 
 export default function ExamplePage() {
-const [selectedOption, setSelectedOption] = useState("public");
+  const [selectedOption, setSelectedOption] = useState("public");
   const [count, setCount] = useState(0);
   const [tripName, setTripName] = useState("");
   const [tripDescription, setTripDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [, setSelectedImage] = useState<File | null>(null);
@@ -28,6 +27,9 @@ const [selectedOption, setSelectedOption] = useState("public");
   const [cidadeOrigem, setCidadeOrigem] = useState("");
   const [cidadeDestino, setCidadeDestino] = useState("");
 
+  const { state, updateBasicInfo, setCurrentStep } = useTripCreation();
+
+  const router = useRouter();
 
   // Função para calcular a duração em dias
   function calculateDuration(start: string, end: string): number {
@@ -45,50 +47,108 @@ const [selectedOption, setSelectedOption] = useState("public");
     }
   }, [alertMessage]);
 
+  useEffect(() => {
+    if (state.tripData.basicInfo) {
+      setTripName(state.tripData.basicInfo.nome);
+      setTripDescription(state.tripData.basicInfo.descricao);
+      setStartDate(state.tripData.basicInfo.dataInicio);
+      setEndDate(state.tripData.basicInfo.dataFim);
+      setSelectedOption(state.tripData.basicInfo.tipo);
+      setCount(state.tripData.basicInfo.quantidadeParticipante);
+      setCidadeOrigem(state.tripData.basicInfo.cidadeOrigem);
+      setCidadeDestino(state.tripData.basicInfo.cidadeDestino);
+    }
+  }, [state.tripData.basicInfo]);
+
+  useEffect(() => {
+    // Só salva se pelo menos o nome da viagem foi preenchido
+    if (tripName.trim()) {
+      const usuarioCookie = Cookies.get("usuario");
+      if (usuarioCookie) {
+        const usuario = JSON.parse(usuarioCookie);
+
+        updateBasicInfo({
+          nome: tripName,
+          descricao: tripDescription,
+          cidadeOrigem: cidadeOrigem,
+          cidadeDestino: cidadeDestino,
+          tipo: selectedOption,
+          quantidadeParticipante: count,
+          dataInicio: startDate,
+          dataFim: endDate,
+          criadorId: usuario.id,
+        });
+      }
+    }
+  }, [
+    tripName,
+    tripDescription,
+    cidadeOrigem,
+    cidadeDestino,
+    selectedOption,
+    count,
+    startDate,
+    endDate,
+  ]);
+
   const handleCreateTrip = async () => {
-    if (!tripName || !tripDescription || !startDate || !endDate || count <= 0) {
-      setAlertMessage(
-        "Preencha todos os campos obrigatórios antes de prosseguir."
-      );
+    // Validações
+    if (
+      !tripName ||
+      !startDate ||
+      !endDate ||
+      !cidadeOrigem ||
+      !cidadeDestino
+    ) {
+      setAlertMessage("Por favor, preencha todos os campos obrigatórios");
       return;
     }
 
-    if (new Date(startDate) > new Date(endDate)) {
-      setAlertMessage("A data de início não pode ser depois da data final.");
+    if (new Date(startDate) >= new Date(endDate)) {
+      setAlertMessage("A data de início deve ser anterior à data de fim");
       return;
     }
 
-    // Pegue o usuário do cookie
+    if (count <= 0) {
+      setAlertMessage("A quantidade de participantes deve ser maior que zero");
+      return;
+    }
+
+    // Pegar ID do usuário do cookie
     const usuarioCookie = Cookies.get("usuario");
     if (!usuarioCookie) {
-      alert("Usuário não autenticado.");
+      setAlertMessage("Usuário não encontrado. Faça login novamente.");
       return;
     }
-    const usuarioObj = JSON.parse(usuarioCookie);
-    const criadorId = usuarioObj.id;
 
-    const payload = {
-      nome: tripName,
-      descricao: tripDescription,
-      dataInicio: startDate,
-      dataFim: endDate,
-      criadorId, 
-      tipo: selectedOption === "public" ? "publica" : "privada",
-      quantidadeParticipante: count,
-      cidadeOrigem: cidadeOrigem,
-      cidadeDestino: cidadeDestino,
-    };
-    console.log("Payload da viagem:", payload);
+    const usuario = JSON.parse(usuarioCookie);
+
     try {
-      const response = await api.post("/viagem", payload);
-      localStorage.setItem("viagemEmCriacao", JSON.stringify(response.data));
+      // Salvar dados no Context (não na API ainda!)
+      updateBasicInfo({
+        nome: tripName,
+        descricao: tripDescription,
+        cidadeOrigem: cidadeOrigem,
+        cidadeDestino: cidadeDestino,
+        tipo: selectedOption,
+        quantidadeParticipante: count,
+        dataInicio: startDate,
+        dataFim: endDate,
+        criadorId: usuario.id,
+      });
 
-      const idViagem = response.data.id; // Ajuste conforme o nome do campo retornado
-      await api.post(`/solicitacao/criador/${criadorId}/${idViagem}`);
+      // Definir que estamos na etapa 1
+      setCurrentStep(1);
+
+      // Mostrar sucesso e ir para próxima tela
       setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        router.push("/trip_location");
+      }, 2000);
     } catch (error) {
-      console.error("Erro ao criar viagem:", error);
-      alert("Ocorreu um erro ao criar a viagem. Tente novamente.");
+      console.error("Erro ao salvar dados:", error);
+      setAlertMessage("Erro ao salvar dados. Tente novamente.");
     }
   };
 

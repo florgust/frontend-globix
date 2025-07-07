@@ -60,7 +60,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   const IconComponent = config.icon;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
       <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform animate-scaleIn">
         {/* Header com ícone */}
         <div className="flex items-center justify-center mb-6">

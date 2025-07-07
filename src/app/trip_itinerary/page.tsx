@@ -1,347 +1,570 @@
 "use client";
-import React, { useState } from "react";
-import SidebarMenu from "../../components/common/SidebarMenu";
-import { HeaderPages } from "@/components/common/Header";
-import { Itinerary } from "@/components/ui/Itinerary";
-import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import { useRouter } from "next/navigation";
-import api from "@/utils/axios";
-import RequireAuth from "@/components/auth/RequireAuth";
+import React, { useState, useEffect } from "react";
 import WhiteBackground from "@/components/create_trip/whiteBackground";
-import { Check } from "lucide-react";
+import { HeaderPages } from "@/components/common/Header";
+import SidebarMenu from "@/components/common/SidebarMenu";
+import { useRouter } from "next/navigation";
+import SuccessModal from "@/components/ui/modals/ModalSuccess";
+import { Alert } from "@/components/common/Alert";
+import RequireAuth from "@/components/auth/RequireAuth";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Camera,
+  Coffee,
+  Car,
+  Plus,
+  ArrowRight,
+  Info,
+  Star,
+  Users,
+  X,
+} from "lucide-react";
+import { useTripCreation } from "@/utils/contextAPI";
 
-interface Activity {
-  time: string;
-  title: string;
-  description: string;
-  type: string;
+interface ItineraryItem {
+  id: number;
+  tipoEvento: string;
+  titulo: string;
+  dataHora: string;
+  descricao: string;
+  icon: React.ElementType;
+  color: string;
 }
-
-interface ItineraryDay {
-  day: number;
-  date: string;
-  activities: Activity[];
-}
-
-const eventTypes = [
-  "🍽️ Alimentação",
-  "🏞️ Passeio",
-  "🚗 Transporte",
-  "🏨 Hospedagem",
-  "📋 Outro",
-];
 
 export default function TripItinerary() {
-  const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
+  const { state, updateItineraryInfo, setCurrentStep, createTrip } = useTripCreation();
 
-  // Form state
-  const [date, setDate] = useState("2025-04-20");
-  const [time, setTime] = useState("08:00");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [type, setType] = useState(eventTypes[0]);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [itineraryItems, setItineraryItems] = useState<ItineraryItem[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<ItineraryItem | null>(null);
+  const [nextId, setNextId] = useState(1);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-  // Utilitário para formatar data para "dd/mm/yyyy"
-  const formatDateDisplay = (dateStr: string) => {
-    if (dateStr.includes("/")) return dateStr;
-    const [year, month, day] = dateStr.split("-");
-    return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
-  };
+  const eventTypes = [
+    { value: "Turismo", icon: Camera, color: "bg-blue-500" },
+    { value: "Alimentação", icon: Coffee, color: "bg-orange-500" },
+    { value: "Transporte", icon: Car, color: "bg-green-500" },
+    { value: "Hospedagem", icon: MapPin, color: "bg-purple-500" },
+    { value: "Entretenimento", icon: Star, color: "bg-pink-500" },
+    { value: "Reunião", icon: Users, color: "bg-indigo-500" },
+  ];
 
-  // Utilitário para comparar datas (yyyy-mm-dd)
-  const getComparableDate = (dateStr: string) => {
-    if (dateStr.includes("/")) {
-      const [day, month, year] = dateStr.split("/");
-      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    }
-    return dateStr;
-  };
-
-  // Utilitário para comparar horas (hh:mm)
-  const getComparableTime = (timeStr: string) => {
-    return timeStr.padStart(5, "0");
-  };
-
-  const handleAddItinerary = () => {
-    if (
-      !title.trim() ||
-      !description.trim() ||
-      !date.trim() ||
-      !time.trim() ||
-      !type.trim()
-    )
-      return;
-
-    const displayDate = formatDateDisplay(date);
-    const comparableDate = getComparableDate(date);
-
-    setItineraries((prev) => {
-      // Procura se já existe o dia
-      let found = false;
-      let newItineraries = prev.map((it) => {
-        if (getComparableDate(it.date) === comparableDate) {
-          found = true;
-          // Verifica se já existe atividade no mesmo horário
-          const exists = it.activities.some(
-            (a) => getComparableTime(a.time) === getComparableTime(time)
+  // Carregar dados salvos quando a tela abrir
+  useEffect(() => {
+    if (state.tripData.itineraryInfo && !dataLoaded) {
+      const savedItineraries = state.tripData.itineraryInfo.itinerarios.map(
+        (item, index) => {
+          const eventType = eventTypes.find(
+            (type) => type.value === item.tipoEvento
           );
-          if (exists) {
-            alert("Já existe um evento neste horário para este dia.");
-            return it;
-          }
-          // Adiciona atividade e ordena por hora
-          const newActivities = [
-            ...it.activities,
-            { time, title, description, type },
-          ].sort((a, b) =>
-            getComparableTime(a.time).localeCompare(getComparableTime(b.time))
-          );
-          return { ...it, activities: newActivities };
+          return {
+            id: index + 1,
+            tipoEvento: item.tipoEvento,
+            titulo: item.titulo,
+            dataHora: item.dataHora,
+            descricao: item.descricao,
+            icon: eventType?.icon || Camera,
+            color: eventType?.color || "bg-blue-500",
+          };
         }
-        return it;
-      });
-
-      // Se não encontrou, cria novo dia
-      if (!found) {
-        newItineraries = [
-          ...newItineraries,
-          {
-            day: 0, // será ajustado depois
-            date: displayDate,
-            activities: [{ time, title, description, type }],
-          },
-        ];
-      }
-
-      // Ordena os dias por data
-      newItineraries = newItineraries
-        .sort((a, b) =>
-          getComparableDate(a.date).localeCompare(getComparableDate(b.date))
-        )
-        .map((it, idx) => ({ ...it, day: idx + 1 }));
-
-      // Atualiza página atual para o dia do evento recém adicionado
-      const newPage = newItineraries.findIndex(
-        (it) => getComparableDate(it.date) === comparableDate
       );
 
-      setCurrentPage(newPage);
+      setItineraryItems(savedItineraries);
+      setNextId(savedItineraries.length + 1);
+      setDataLoaded(true);
+    } else {
+      setDataLoaded(true);
+    }
+  }, [state.tripData.itineraryInfo, dataLoaded]);
 
-      return newItineraries;
-    });
+  // Salvar automaticamente quando os dados mudam
+  useEffect(() => {
+    if (dataLoaded && itineraryItems.length > 0) {
+      const timer = setTimeout(() => {
+        const itineraryData = {
+          itinerarios: itineraryItems.map((item) => ({
+            tipoEvento: item.tipoEvento,
+            titulo: item.titulo,
+            dataHora: item.dataHora,
+            descricao: item.descricao,
+          })),
+        };
 
-    setTitle("");
-    setDescription("");
-    setType(eventTypes[0]);
-    setTime("08:00");
-  };
+        updateItineraryInfo(itineraryData);
+        console.log("Dados salvos:", itineraryData);
+      }, 500);
 
-  // Remove activity
-  const handleRemoveActivity = (activityIdx: number) => {
-    setItineraries((prev) =>
-      prev.map((it, idx) =>
-        idx === currentPage
-          ? {
-              ...it,
-              activities: it.activities.filter((_, i) => i !== activityIdx),
-            }
-          : it
-      )
-    );
-  };
+      return () => clearTimeout(timer);
+    }
+  }, [itineraryItems, dataLoaded, updateItineraryInfo]);
 
-  // Remove entire day
-  const handleRemoveDay = (dayIdx: number) => {
-    setItineraries((prev) => prev.filter((_, idx) => idx !== dayIdx));
-    // Ajusta a página atual para não ficar fora do índice
-    setCurrentPage((prevPage) => {
-      if (dayIdx === 0) return 0;
-      if (prevPage >= itineraries.length - 1)
-        return itineraries.length - 2 >= 0 ? itineraries.length - 2 : 0;
-      return prevPage;
-    });
-  };
+  // ...existing code...
 
-  // Pagination
-  const handlePrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-  const handleNext = () => {
-    if (currentPage < itineraries.length - 1) setCurrentPage(currentPage + 1);
-  };
+  const [newItem, setNewItem] = useState({
+    tipoEvento: "",
+    titulo: "",
+    dataHora: "",
+    descricao: "",
+  });
 
-  const handleSaveItinerary = async () => {
-    const viagemStr = localStorage.getItem("viagemEmCriacao");
-    if (!viagemStr) {
-      alert("Viagem não encontrada.");
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
+  const handleAddItem = () => {
+    if (
+      !newItem.tipoEvento ||
+      !newItem.titulo ||
+      !newItem.dataHora ||
+      !newItem.descricao
+    ) {
+      setAlertMessage("Por favor, preencha todos os campos");
       return;
     }
-    const viagem = JSON.parse(viagemStr);
-    const viagemId = viagem.id;
 
-    try {
-      for (const day of itineraries) {
-        for (const activity of day.activities) {
-          const [dayStr, monthStr, yearStr] = day.date.split("/");
-          // Monta dataHora no formato ISO
-          const dataHora = `${yearStr}-${monthStr.padStart(
-            2,
-            "0"
-          )}-${dayStr.padStart(2, "0")}T${activity.time}:00Z`;
+    const eventType = eventTypes.find(
+      (type) => type.value === newItem.tipoEvento
+    );
 
-          await api.post("/itinerario", {
-            viagemId,
-            tipoEvento: activity.type,
-            titulo: activity.title,
-            dataHora,
-            descricao: activity.description,
-          });
-        }
-      }
-      setShowSuccess(true);
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao salvar o itinerário.");
+    const item: ItineraryItem = {
+      id: nextId,
+      tipoEvento: newItem.tipoEvento,
+      titulo: newItem.titulo,
+      dataHora: newItem.dataHora,
+      descricao: newItem.descricao,
+      icon: eventType?.icon || Camera,
+      color: eventType?.color || "bg-blue-500",
+    };
+
+    setItineraryItems([...itineraryItems, item]);
+    setNextId(nextId + 1);
+    setNewItem({ tipoEvento: "", titulo: "", dataHora: "", descricao: "" });
+    setShowModal(false);
+  };
+
+  const handleEditItem = (item: ItineraryItem) => {
+    setEditingItem(item);
+    setNewItem({
+      tipoEvento: item.tipoEvento,
+      titulo: item.titulo,
+      dataHora: item.dataHora,
+      descricao: item.descricao,
+    });
+    setShowModal(true);
+  };
+
+  const handleUpdateItem = () => {
+    if (!editingItem) return;
+
+    if (
+      !newItem.tipoEvento ||
+      !newItem.titulo ||
+      !newItem.dataHora ||
+      !newItem.descricao
+    ) {
+      setAlertMessage("Por favor, preencha todos os campos");
+      return;
     }
+
+    const eventType = eventTypes.find(
+      (type) => type.value === newItem.tipoEvento
+    );
+
+    setItineraryItems(
+      itineraryItems.map((item) =>
+        item.id === editingItem.id
+          ? {
+              ...item,
+              tipoEvento: newItem.tipoEvento,
+              titulo: newItem.titulo,
+              dataHora: newItem.dataHora,
+              descricao: newItem.descricao,
+              icon: eventType?.icon || Camera,
+              color: eventType?.color || "bg-blue-500",
+            }
+          : item
+      )
+    );
+
+    setEditingItem(null);
+    setNewItem({ tipoEvento: "", titulo: "", dataHora: "", descricao: "" });
+    setShowModal(false);
+  };
+
+  const handleDeleteItem = (id: number) => {
+    setItineraryItems(itineraryItems.filter((item) => item.id !== id));
   };
 
   const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingItem(null);
+    setNewItem({ tipoEvento: "", titulo: "", dataHora: "", descricao: "" });
+  };
+
+  const handleSubmit = async () => {
+    if (itineraryItems.length === 0) {
+      setAlertMessage("Por favor, adicione pelo menos um item ao itinerário");
+      return;
+    }
+
+    try {
+      // Salvar uma última vez para garantir
+      const itineraryData = {
+        itinerarios: itineraryItems.map((item) => ({
+          tipoEvento: item.tipoEvento,
+          titulo: item.titulo,
+          dataHora: item.dataHora,
+          descricao: item.descricao,
+        })),
+      };
+
+      updateItineraryInfo(itineraryData);
+
+      // Definir que estamos na etapa 5
+      setCurrentStep(5);
+
+      // Mostrar sucesso e ir para próxima tela
+      const succes = await createTrip();
+      if (!succes) {
+        setAlertMessage("Erro ao criar a viagem. Tente novamente.");
+        return;
+      }
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        router.push("/create_trip_successful");
+      }, 2000);
+    } catch (error) {
+      console.error("Erro ao salvar dados:", error);
+      setAlertMessage("Erro ao salvar dados. Tente novamente.");
+    }
+  };
+
+  const handleSuccessModalClose = () => {
     setShowSuccess(false);
     router.push("/create_trip_successful");
   };
+
+  const sortedItems = [...itineraryItems].sort(
+    (a, b) => new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime()
+  );
 
   return (
     <RequireAuth>
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
         <SidebarMenu />
+
+        {alertMessage && (
+          <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+            <Alert message={alertMessage} type="error" />
+          </div>
+        )}
+
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
-
-          <WhiteBackground titulo="Definir Itinerário da Viagem">
-            <div className="max-w-6xl mx-auto px-6 py-8">
-              <div className="flex flex-row gap-8 flex-1">
-                {/* Formulário */}
-                <div className="flex flex-col w-1/2 gap-4">
-                  <label className="font-bold text-[#292D32] text-lg">
-                    Data e Hora
-                  </label>
-                  <div className="flex gap-2 items-center">
-                    <div className="flex items-center border border-[#00FF4D] rounded-lg px-2 py-1 bg-white">
-                      <input
-                        type="date"
-                        className="outline-none border-none bg-transparent text-[#0F2976] font-bold"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                      />
-                      <input
-                        type="time"
-                        className="outline-none border-none bg-transparent text-[#0F2976] font-bold ml-2"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <label className="font-bold text-[#292D32] text-lg mt-2">
-                    Título
-                  </label>
-                  <input
-                    className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] focus:outline-none"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Título do evento"
-                  />
-                  <label className="font-bold text-[#292D32] text-lg mt-2">
-                    Descrição
-                  </label>
-                  <textarea
-                    className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-normal focus:outline-none resize-none"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Descrição do evento"
-                  />
-                  <label className="font-bold text-[#292D32] text-lg mt-2">
-                    Tipo de Evento
-                  </label>
-                  <select
-                    className="border-2 border-[#00FF4D] rounded-lg px-4 py-2 text-[#0F2976] font-bold focus:outline-none"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                  >
-                    {eventTypes.map((ev) => (
-                      <option key={ev} value={ev}>
-                        {ev}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="flex justify-center">
-                    <button
-                      className="flex items-center justify-center gap-2 mt-4 bg-[#A7FF84] text-[#0F2976] font-bold py-2 rounded-lg text-lg shadow hover:bg-[#4be05a] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-65 border-[#C4C4C4]"
-                      onClick={handleAddItinerary}
-                      type="button"
-                      disabled={
-                        !title.trim() ||
-                        !description.trim() ||
-                        !date.trim() ||
-                        !time.trim() ||
-                        !type.trim()
-                      }
-                    >
-                      <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white mr-2">
-                        <img
-                          src="/images-trip_itinerary/mais.svg"
-                          alt="Adicionar"
-                          className="w-5 h-5"
-                        />
-                      </span>
-                      Adicionar Itinerário
-                    </button>
-                  </div>
+          <WhiteBackground titulo="Criar Itinerário">
+            <div className="max-w-5xl mx-auto px-6 py-8">
+              {/* Seção de Informações */}
+              <div className="mb-8 p-6 bg-blue-50 rounded-xl border-l-4 border-[#0F2976]">
+                <div className="flex items-center mb-3">
+                  <Info className="text-[#0F2976] mr-3" size={24} />
+                  <h3 className="text-[#0F2976] font-bold text-lg">
+                    Planejamento do Itinerário
+                  </h3>
                 </div>
-                {/* Linha vertical divisória */}
-                <div className="w-px bg-[#092064] h-[32rem] mx-2" />
-                <Itinerary
-                  itineraries={itineraries}
-                  currentPage={currentPage}
-                  handleRemoveDay={handleRemoveDay}
-                  handleRemoveActivity={handleRemoveActivity}
-                  handlePrev={handlePrev}
-                  handleNext={handleNext}
-                  setCurrentPage={setCurrentPage}
+                <p className="text-[#3B4449] text-sm leading-relaxed">
+                  Crie um itinerário detalhado com todas as atividades, pontos
+                  turísticos e compromissos da viagem. Organize por data e
+                  horário para melhor planejamento.
+                </p>
+              </div>
+
+              {/* Botão para adicionar item */}
+              <div className="text-center mb-8">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="bg-[#0F2976] text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-[#1C4CDC] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center mx-auto gap-3"
+                >
+                  <Plus size={24} />
+                  Adicionar Item ao Itinerário
+                </button>
+              </div>
+
+              {/* Lista de itens */}
+              <div className="mb-8">
+                {sortedItems.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="text-center mb-6">
+                      <h2 className="text-2xl font-bold text-[#3B4449] mb-2">
+                        Itinerário da Viagem
+                      </h2>
+                      <div className="w-24 h-1 bg-[#0F2976] mx-auto rounded-full"></div>
+                    </div>
+
+                    {sortedItems.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div
+                          key={item.id}
+                          className="bg-white rounded-xl shadow-md p-6 border-l-4 border-[#0F2976] hover:shadow-lg transition-shadow"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-4 flex-1">
+                              <div
+                                className={`w-12 h-12 rounded-full flex items-center justify-center ${item.color} flex-shrink-0`}
+                              >
+                                <IconComponent
+                                  size={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="bg-[#0F2976] text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    {item.tipoEvento}
+                                  </span>
+                                  <span className="text-gray-500 text-sm">
+                                    #{index + 1}
+                                  </span>
+                                </div>
+                                <h3 className="text-xl font-bold text-[#3B4449] mb-2">
+                                  {item.titulo}
+                                </h3>
+                                <div className="flex items-center gap-4 mb-3 text-gray-600">
+                                  <div className="flex items-center gap-1">
+                                    <Calendar size={16} />
+                                    <span className="text-sm">
+                                      {new Date(
+                                        item.dataHora
+                                      ).toLocaleDateString("pt-BR")}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Clock size={16} />
+                                    <span className="text-sm">
+                                      {new Date(
+                                        item.dataHora
+                                      ).toLocaleTimeString("pt-BR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </span>
+                                  </div>
+                                </div>
+                                <p className="text-gray-700 leading-relaxed">
+                                  {item.descricao}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 ml-4">
+                              <button
+                                onClick={() => handleEditItem(item)}
+                                className="text-blue-600 hover:text-blue-800 p-2 rounded-full hover:bg-blue-50 transition-colors"
+                                title="Editar"
+                              >
+                                <Plus size={18} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteItem(item.id)}
+                                className="text-red-600 hover:text-red-800 p-2 rounded-full hover:bg-red-50 transition-colors"
+                                title="Excluir"
+                              >
+                                <X size={18} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Calendar
+                      size={64}
+                      className="text-gray-400 mx-auto mb-4"
+                    />
+                    <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                      Nenhum item no itinerário
+                    </h3>
+                    <p className="text-gray-500">
+                      Adicione atividades, pontos turísticos e compromissos para
+                      organizar sua viagem.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Dicas */}
+              <div className="mb-8 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                <h4 className="font-bold text-yellow-800 mb-2">
+                  💡 Dicas para o Itinerário:
+                </h4>
+                <ul className="text-yellow-700 text-sm space-y-1">
+                  <li>• Organize as atividades por data e horário</li>
+                  <li>• Considere tempo de deslocamento entre locais</li>
+                  <li>• Inclua intervalos para descanso e alimentação</li>
+                  <li>• Mantenha flexibilidade para mudanças</li>
+                </ul>
+              </div>
+
+              {/* Botão de Continuar */}
+              <div className="text-center">
+                <button
+                  onClick={handleSubmit}
+                  disabled={itineraryItems.length === 0}
+                  className={`flex items-center gap-4 px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-lg mx-auto transform hover:scale-105 ${
+                    itineraryItems.length > 0
+                      ? "bg-[#B1FF91] text-[#0F2976] hover:bg-[#9AE670] hover:shadow-xl cursor-pointer"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  <Calendar size={28} />
+                  Finalizar Itinerário
+                  <ArrowRight size={28} />
+                </button>
+              </div>
+
+              <SuccessModal
+                isOpen={showSuccess}
+                message="Itinerário criado com sucesso!"
+                onClose={handleSuccessModalClose}
+              />
+            </div>
+          </WhiteBackground>
+        </div>
+      </div>
+
+      {/* Modal para adicionar/editar item */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-[#3B4449]">
+                {editingItem ? "Editar Item" : "Adicionar Item"}
+              </h3>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-500 hover:text-gray-700 p-2"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Tipo de Evento */}
+              <div>
+                <label className="block text-[#3B4449] font-semibold mb-3">
+                  Tipo de Evento <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {eventTypes.map((type) => {
+                    const IconComponent = type.icon;
+                    return (
+                      <button
+                        key={type.value}
+                        onClick={() =>
+                          setNewItem({ ...newItem, tipoEvento: type.value })
+                        }
+                        className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                          newItem.tipoEvento === type.value
+                            ? `${type.color} border-transparent text-white`
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                      >
+                        <div className="text-center">
+                          <IconComponent
+                            size={24}
+                            className={`mx-auto mb-2 ${
+                              newItem.tipoEvento === type.value
+                                ? "text-white"
+                                : "text-gray-600"
+                            }`}
+                          />
+                          <span className="text-sm font-medium">
+                            {type.value}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Título */}
+              <div>
+                <label className="block text-[#3B4449] font-semibold mb-2">
+                  Título <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newItem.titulo}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, titulo: e.target.value })
+                  }
+                  placeholder="Ex: Visita ao Cristo Redentor"
+                  className="w-full p-3 border-2 border-gray-300 rounded-xl focus:border-[#0F2976] focus:ring-2 focus:ring-blue-200 outline-none"
+                />
+              </div>
+
+              {/* Data e Hora */}
+              <div>
+                <label className="block text-[#3B4449] font-semibold mb-2">
+                  Data e Hora <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="datetime-local"
+                  value={newItem.dataHora}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, dataHora: e.target.value })
+                  }
+                  className="w-full p-3 border-2 border-gray-300 rounded-xl focus:border-[#0F2976] focus:ring-2 focus:ring-blue-200 outline-none"
+                />
+              </div>
+
+              {/* Descrição */}
+              <div>
+                <label className="block text-[#3B4449] font-semibold mb-2">
+                  Descrição <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={newItem.descricao}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, descricao: e.target.value })
+                  }
+                  placeholder="Descreva a atividade, localização, informações importantes..."
+                  className="w-full p-3 border-2 border-gray-300 rounded-xl focus:border-[#0F2976] focus:ring-2 focus:ring-blue-200 outline-none resize-none"
+                  rows={4}
                 />
               </div>
             </div>
 
-            <div className="w-full flex flex-col items-center justify-center mt-10 mb-10">
-              <div className="text-center">
-                <button
-                  className="bg-[#B1FF91] text-[#0F2976] font-bold rounded-xl px-12 py-4 text-2xl cursor-pointer hover:bg-[#9AE670] transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center mx-auto gap-3"
-                  type="button"
-                  disabled={
-                    itineraries.length === 0 ||
-                    !itineraries.some(
-                      (it) => it.activities && it.activities.length > 0
-                    )
-                  }
-                  onClick={handleSaveItinerary}
-                >
-                  Salvar Viagem
-                  <Check size={30} />
-                </button>
-              </div>
+            <div className="flex gap-4 mt-8">
+              <button
+                onClick={handleCloseModal}
+                className="flex-1 px-6 py-3 bg-gray-200 text-[#3B4449] rounded-xl hover:bg-gray-300 transition-colors duration-200 font-semibold"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={editingItem ? handleUpdateItem : handleAddItem}
+                className="flex-1 px-6 py-3 bg-[#0F2976] text-white rounded-xl hover:bg-[#1C4CDC] transition-colors duration-200 font-semibold"
+              >
+                {editingItem ? "Atualizar" : "Adicionar"}
+              </button>
             </div>
-          </WhiteBackground>
-          <div className="mt-20" />
-
-          <SuccessModal
-            isOpen={showSuccess}
-            message="Itinerário salvo com sucesso!"
-            onClose={handleCloseModal}
-          />
+          </div>
         </div>
-      </div>
+      )}
     </RequireAuth>
   );
 }

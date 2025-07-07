@@ -1,8 +1,9 @@
 "use client";
 import { ArrowLeft, X } from "lucide-react";
-import { useRouter } from "next/navigation"; // ← Corrigido o import
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import ConfirmationModal from '@/components/ui/modals/ModalCancelTrip';
+import ConfirmationModal from "@/components/ui/modals/ModalCancelTrip";
+import { useTripCreation } from "@/utils/contextAPI";
 
 interface FormContainerProps {
   titulo: string;
@@ -13,10 +14,11 @@ interface FormContainerProps {
 export default function WhiteBackground({
   titulo,
   children,
-  className = ""
+  className = "",
 }: FormContainerProps) {
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
+  const { clearTripData } = useTripCreation(); // Usar o Context API
 
   const handleVoltar = () => {
     router.back();
@@ -27,13 +29,18 @@ export default function WhiteBackground({
   };
 
   const confirmCancelar = () => {
+    // Usar o Context API para limpar os dados
+    clearTripData();
+
+    // Manter a limpeza dos outros localStorage se necessário
     localStorage.removeItem("tripFormData");
-    localStorage.removeItem('viagemEmCriacao');
+    localStorage.removeItem("viagemEmCriacao");
+
     setShowCancelModal(false);
     router.push("/home_page");
   };
 
-  const cancelCancelar = () => { 
+  const cancelCancelar = () => {
     setShowCancelModal(false);
   };
 
@@ -44,16 +51,18 @@ export default function WhiteBackground({
       >
         <div className="w-full bg-[#0F2976] rounded-t-4xl py-6 px-6 relative">
           <button
-            onClick={handleVoltar} // ← Corrigido (remover arrow function)
+            onClick={handleVoltar}
             className="absolute left-6 top-1/2 transform -translate-y-1/2 w-20 h-10 text-white rounded-full hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center cursor-pointer"
           >
             <ArrowLeft size={35} />
           </button>
 
-          <h1 className="font-bold text-4xl text-center text-white">{titulo}</h1>
+          <h1 className="font-bold text-4xl text-center text-white">
+            {titulo}
+          </h1>
 
           <button
-            onClick={handleCancelar} // ← Corrigido o nome da função
+            onClick={handleCancelar}
             className="absolute right-8 top-1/2 transform -translate-y-1/2 w-50 h-10 bg-red-500 bg-opacity-80 text-white rounded-full hover:bg-opacity-100 transition-all duration-200 flex items-center justify-center cursor-pointer"
           >
             <X size={20} className="mr-4" />
@@ -64,7 +73,6 @@ export default function WhiteBackground({
         <div className="bg-white w-full rounded-b-4xl p-8">{children}</div>
       </div>
 
-      {/* Modal movido para fora da div do header */}
       <ConfirmationModal
         isOpen={showCancelModal}
         title="Cancelar Criação da Viagem?"

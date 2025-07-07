@@ -1,5 +1,6 @@
 import '../styles/global.css';
 import { ReactNode } from 'react';
+import { TripCreationProvider } from '@/utils/contextAPI';
 
 export const metadata = {
   title: "Globix",
@@ -16,7 +17,9 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="h-full text-gray-900 overflow-x-hidden">
-        <main className="h-full">{children}</main>
+        <TripCreationProvider>
+          <main className="h-full">{children}</main>
+        </TripCreationProvider>
       </body>
     </html>
   );
