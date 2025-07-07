@@ -10,6 +10,7 @@ import SuccessModal from "@/components/ui/modals/ModalSuccess";
 import RequireAuth from "@/components/auth/RequireAuth";
 import WhiteBackground from "@/components/create_trip/whiteBackground";
 import { ArrowRight, CalendarDays, Earth, Users } from "lucide-react";
+import { Alert } from "@/components/common/Alert";
 
 const initialCategories = [
   { id: 1, name: "Transporte", value: "" },
@@ -24,13 +25,14 @@ export default function TripBudget() {
   const [notes, setNotes] = useState("");
   const [participants] = useState(10);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const router = useRouter();
 
   const handleSubmit = async () => {
     // Buscar id da viagem do localStorage
     const viagemStr = localStorage.getItem("viagemEmCriacao");
     if (!viagemStr) {
-      alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
+      setAlertMessage("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
       return;
     }
     const viagem = JSON.parse(viagemStr);
@@ -49,9 +51,16 @@ export default function TripBudget() {
       setShowSuccess(true);
     } catch (error) {
       console.error("Erro ao salvar orçamentos:", error);
-      alert("Erro ao salvar orçamentos.");
+      setAlertMessage("Erro ao salvar orçamentos.");
     }
   };
+
+  React.useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   const handleCloseModal = () => {
     setShowSuccess(false);
@@ -111,6 +120,13 @@ export default function TripBudget() {
     <RequireAuth>
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
         <SidebarMenu />
+
+        {alertMessage && (
+          <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+            <Alert message={alertMessage} type="error" />
+          </div>
+        )}
+        
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
           <WhiteBackground titulo="Criar Orçamento">
@@ -258,7 +274,7 @@ export default function TripBudget() {
               </button>
             </div>
           </WhiteBackground>
-                <div className="mt-20"></div>
+          <div className="mt-20"></div>
 
         </div>
 
