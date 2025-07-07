@@ -73,7 +73,7 @@ const menuItems = [
         className={`${active ? "" : "grayscale opacity-40"}`}
         priority
       />
-    ), text: "Sobre", path: "/sobre"
+    ), text: "Sobre", path: "/about"
   },
   { icon: (active: boolean) => <LogOut size={20} color={active ? "#0F2976" : "#D1D5DB"} />, text: "Sair", path: "/logout", isLogout: true },
 ];
