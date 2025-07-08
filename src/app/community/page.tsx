@@ -60,7 +60,6 @@ export default function CommunityPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [pendentes, setPendentes] = useState<number[]>([]);
   const [alertMessage, setAlertMessage] = useState<string>("");
-  const router = useRouter();
 
   // Pega o id do usuário logado do cookie
   const usuarioCookie = typeof window !== "undefined" ? Cookies.get("usuario") : null;
@@ -145,7 +144,8 @@ export default function CommunityPage() {
         }
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 2000);
-      } catch (error: any) {
+      } catch (error: unknown) {
+        console.error("Erro ao solicitar participação:", error);
         setAlertMessage("Erro ao solicitar participação. Tente novamente.");
         setTimeout(() => setAlertMessage(""), 3000);
       }
