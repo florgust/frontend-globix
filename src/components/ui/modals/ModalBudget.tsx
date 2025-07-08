@@ -14,7 +14,7 @@ interface Orcamento {
 export interface ModalBudgetProps {
   isOpen: boolean;
   onClose: () => void;
-  onNavigate: (target: "details" | "itinerary" | "transport") => void;
+  onNavigate: (target: "details" | "itinerary" | "transport" | "notifs") => void;
   orcamentos: Orcamento[];
 }
 
@@ -267,33 +267,13 @@ export const ModalBudget: React.FC<ModalBudgetProps> = ({
               />
               <p className="text-sm text-[#0F2976] mt-2">Itinerário</p>
             </div>
-            {/* Ícone de Mensagens */}
-            <div className="flex flex-col items-center">
-              <IconButton
-                icon={
-                  <img
-                    src="/images-travel/Icons/IconMessage.png"
-                    className="w-16 h-16 cursor-pointer"
-                  />
-                }
-                size="lg"
-                shape="circle"
-                onClick={() => alert("Mensagens clicado!")}
-              />
-              <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
-            </div>
             {/* Ícone de Aviso */}
             <div className="flex flex-col items-center">
               <IconButton
-                icon={
-                  <img
-                    src="/images-travel/Icons/IconAlert.png"
-                    className="w-16 h-16 cursor-pointer"
-                  />
-                }
+                icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
                 size="lg"
                 shape="circle"
-                onClick={() => alert("Avisos clicado!")}
+                onClick={() => onNavigate('notifs')}
               />
               <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
             </div>

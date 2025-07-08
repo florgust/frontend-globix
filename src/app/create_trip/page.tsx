@@ -156,8 +156,8 @@ export default function ExamplePage() {
         router.push("/trip_location");
       }, 2000);
     } catch (error) {
-      console.error("Erro ao salvar dados:", error);
-      setAlertMessage("Erro ao salvar dados. Tente novamente.");
+      console.error("Erro ao criar viagem:", error);
+      alert("Ocorreu um erro ao criar a viagem. Tente novamente.");
     }
   };
 

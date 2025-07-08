@@ -1,7 +1,8 @@
 export interface ModalMoreDetailsTrip {
     nome: string;
     descricao: string;
-    destino: string;
+    cidadeOrigem: string;
+    cidadeDestino: string;
     dataInicio: string;
     dataFim: string;
     tipo: string;
@@ -15,6 +16,10 @@ export interface ModalMoreDetailsTrip {
 export interface RawTrip {
     nome: string;
     descricao?: string;
+    cidadeOrigem?: string;
+    cidade_origem?: string;
+    cidadeDestino?: string;
+    cidade_destino?: string;
     data_inicio?: string;
     dataInicio?: string;
     data_fim?: string;
@@ -77,7 +82,8 @@ export function mapToModalMoreDetailsTrip(
     return {
         nome: tripObj.nome,
         descricao: tripObj.descricao || "",
-        destino: extractDestino(tripObj.nome),
+        cidadeOrigem: tripObj.cidadeOrigem || tripObj.cidade_origem || "",
+        cidadeDestino: tripObj.cidadeDestino || tripObj.cidade_destino || "",
         dataInicio: formatDate(tripObj.data_inicio || tripObj.dataInicio),
         dataFim: formatDate(tripObj.data_fim || tripObj.dataFim),
         tipo,

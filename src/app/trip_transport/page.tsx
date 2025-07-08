@@ -142,6 +142,13 @@ export default function TravelTransport() {
     }
   }, [alertMessage]);
 
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
   const handleTransportClick = (item: string) => {
     setSelectedOption(item);
     setDescription(descriptions[item] || "");
@@ -174,6 +181,12 @@ export default function TravelTransport() {
           </div>
         )}
 
+        {alertMessage && (
+          <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+            <Alert message={alertMessage} type="error" />
+          </div>
+        )}
+
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
 
@@ -196,8 +209,8 @@ export default function TravelTransport() {
                     placeholder={
                       selectedOption
                         ? placeholders[
-                            selectedOption as keyof typeof placeholders
-                          ]
+                        selectedOption as keyof typeof placeholders
+                        ]
                         : ""
                     }
                     value={description}
@@ -208,11 +221,10 @@ export default function TravelTransport() {
                   <button
                     onClick={handleSaveAndExit}
                     disabled={description.trim().length === 0}
-                    className={`mt-5 font-bold text-xl px-6 py-3 rounded-lg ${
-                      description.trim().length > 0
+                    className={`mt-5 font-bold text-xl px-6 py-3 rounded-lg ${description.trim().length > 0
                         ? "bg-[#00FF4D] text-[#0F2976] cursor-pointer"
                         : "bg-gray-400 text-gray-700 cursor-not-allowed"
-                    }`}
+                      }`}
                   >
                     Salvar e Sair
                   </button>
@@ -233,11 +245,10 @@ export default function TravelTransport() {
                     <button
                       key={item}
                       type="button"
-                      className={`group relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-200 cursor-pointer ${
-                        isSelected
+                      className={`group relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-200 cursor-pointer ${isSelected
                           ? "bg-[#0F2976] border-[#0F2976] text-white shadow-lg"
                           : "bg-white border-gray-200 text-[#3B4449] hover:border-[#0F2976] hover:shadow-md"
-                      }`}
+                        }`}
                       onClick={() => handleTransportClick(item)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
@@ -255,11 +266,10 @@ export default function TravelTransport() {
 
                       {/* Ícone do transporte */}
                       <div
-                        className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-300 ${
-                          isSelected
+                        className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-300 ${isSelected
                             ? "bg-[#00FF4D]"
                             : "bg-gray-100 group-hover:bg-gray-200"
-                        }`}
+                          }`}
                       >
                         <IconComponent
                           size={32}
@@ -271,9 +281,8 @@ export default function TravelTransport() {
 
                       {/* Nome do transporte */}
                       <span
-                        className={`text-lg font-semibold capitalize ${
-                          isSelected ? "text-white" : "text-[#3B4449]"
-                        }`}
+                        className={`text-lg font-semibold capitalize ${isSelected ? "text-white" : "text-[#3B4449]"
+                          }`}
                       >
                         {item}
                       </span>
@@ -316,11 +325,10 @@ export default function TravelTransport() {
                 <button
                   onClick={handleSave}
                   disabled={!confirmedOption || !descriptions[confirmedOption]}
-                  className={`flex items-center gap-3 px-12 py-4 rounded-xl font-bold text-xl transition-all duration-300 shadow-lg mx-auto cursor-pointer ${
-                    !confirmedOption || !descriptions[confirmedOption]
+                  className={`flex items-center gap-3 px-12 py-4 rounded-xl font-bold text-xl transition-all duration-300 shadow-lg mx-auto cursor-pointer ${!confirmedOption || !descriptions[confirmedOption]
                       ? "bg-gray-400 text-gray-700 cursor-not-allowed"
                       : "bg-[#B1FF91] text-[#0F2976] cursor-pointer hover:bg-[#9AE670] hover:shadow-xl transform hover:scale-105"
-                  }`}
+                    }`}
                 >
                   <CheckCircle size={24} />
                   Confirmar Transporte

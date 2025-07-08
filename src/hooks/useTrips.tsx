@@ -5,6 +5,15 @@ interface UseTripsProps {
   initialTrips: Trip[];
 }
 
+// Função para normalizar papel para filtro
+function papelParaFiltro(papel: string) {
+  if (!papel) return "";
+  const papelLower = papel.toLowerCase();
+  if (papelLower === "organizador" || papelLower === "organizadorpromovido") return "organizador";
+  if (papelLower === "participante") return "participante";
+  return papelLower;
+}
+
 export const useTrips = ({ initialTrips }: UseTripsProps) => {
   const [trips] = useState<Trip[]>(initialTrips);
   const [filtered, setFiltered] = useState<Trip[]>(initialTrips);
@@ -15,7 +24,7 @@ export const useTrips = ({ initialTrips }: UseTripsProps) => {
     let result = [...trips];
 
     if (roleFilter) {
-      result = result.filter((trip) => trip.papel === roleFilter);
+      result = result.filter((trip) => papelParaFiltro(trip.papel) === roleFilter);
     }
 
     if (sortOrder === "a-z") {
@@ -23,6 +32,7 @@ export const useTrips = ({ initialTrips }: UseTripsProps) => {
     } else if (sortOrder === "z-a") {
       result.sort((a, b) => b.nome.localeCompare(a.nome));
     } else if (sortOrder === "recentes") {
+      // Ordena por data de início mais próxima do momento atual
       const now = new Date().getTime();
       result.sort((a, b) => {
         const dateA = new Date(a.dataInicio).getTime();

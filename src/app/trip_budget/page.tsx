@@ -176,12 +176,10 @@ export default function TripBudget() {
   };
 
   const handleSubmit = async () => {
-    const total = calculateTotal();
-
-    if (total <= 0) {
-      setAlertMessage(
-        "Por favor, defina um orçamento para pelo menos uma categoria"
-      );
+    // Buscar id da viagem do localStorage
+    const viagemStr = localStorage.getItem("viagemEmCriacao");
+    if (!viagemStr) {
+      alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
       return;
     }
 
@@ -207,10 +205,17 @@ export default function TripBudget() {
         router.push("/trip_itinerary");
       }, 2000);
     } catch (error) {
-      console.error("Erro ao salvar dados:", error);
-      setAlertMessage("Erro ao salvar dados. Tente novamente.");
+      console.error("Erro ao salvar orçamentos:", error);
+      alert("Erro ao salvar orçamentos.");
     }
   };
+
+  React.useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   const handleCloseModal = () => {
     setShowSuccess(false);
@@ -229,13 +234,6 @@ export default function TripBudget() {
     <RequireAuth>
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
         <SidebarMenu />
-
-        {alertMessage && (
-          <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
-            <Alert message={alertMessage} type="error" />
-          </div>
-        )}
-
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
           <WhiteBackground titulo="Definir Orçamento">
@@ -492,6 +490,8 @@ export default function TripBudget() {
               />
             </div>
           </WhiteBackground>
+                <div className="mt-20"></div>
+
         </div>
       </div>
     </RequireAuth>

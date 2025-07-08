@@ -5,7 +5,7 @@ import { TransportLocation } from "@/utils/transportUtils";
 interface ModalTransportProps {
     isOpen: boolean;
     onClose: () => void;
-    onNavigate: (target: 'details' | 'itinerary' | 'budget') => void;
+    onNavigate: (target: 'details' | 'itinerary' | 'budget' | 'notifs') => void;
     transportData?: TransportLocation | null;
 }
 
@@ -137,19 +137,10 @@ const ModalTransport: React.FC<ModalTransportProps> = ({
                     </div>
                     <div className="flex flex-col items-center">
                         <IconButton
-                            icon={<img src="/images-travel/Icons/IconMessage.png" className="w-16 h-16 cursor-pointer" />}
-                            size="lg"
-                            shape="circle"
-                            onClick={() => alert("Mensagens clicado!")}
-                        />
-                        <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <IconButton
                             icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Avisos clicado!")}
+                            onClick={() => onNavigate('notifs')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
                     </div>

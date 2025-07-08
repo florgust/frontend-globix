@@ -251,6 +251,13 @@ export default function TripItinerary() {
     }
   };
 
+  React.useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
   const handleSuccessModalClose = () => {
     setShowSuccess(false);
     router.push("/create_trip_successful");
