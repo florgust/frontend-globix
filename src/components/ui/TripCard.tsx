@@ -48,10 +48,16 @@ const TripCard = ({ trip }: TripCardProps) => {
             <span className="truncate">{trip.nome}</span>
           </h3>
         </div>
-        <p><strong>Dia:</strong> {trip.dataInicio}</p>
+        <p>
+          <strong>Dia:</strong>{" "}
+            {new Date(new Date(trip.dataInicio).setDate(new Date(trip.dataInicio).getDate() + 1)).toLocaleDateString("pt-BR")}
+        </p>
         <p><strong>Organizador:</strong> {trip.organizador}</p>
         <p><strong>Transporte:</strong> {trip.transporte}</p>
-        <p><strong>Duração:</strong> {trip.dataInicio} até {trip.dataFim}</p>
+        <p>
+          <strong>Duração:</strong>{" "}
+            {new Date(new Date(trip.dataInicio).setDate(new Date(trip.dataInicio).getDate() + 1)).toLocaleDateString("pt-BR")} até {new Date(new Date(trip.dataFim).setDate(new Date(trip.dataFim).getDate() + 1)).toLocaleDateString("pt-BR")}
+        </p>
         <button
           className={`px-3 py-1 rounded-xl mt-2 text-sm cursor-pointer ${
             isEncerrada 

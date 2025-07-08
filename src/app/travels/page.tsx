@@ -344,6 +344,7 @@ export default function DetailsPage() {
     setIsMoreDetailsModalOpen(false);
     setIsItineraryModalOpen(false);
     setIsBudgetModalOpen(false);
+    setIsNotifsOpen(false);
   };
 
   async function PromoverOuRebaixarOrganizador(tripId: number, id_usuario: number) {
@@ -524,7 +525,7 @@ export default function DetailsPage() {
             </div>
 
             {/* div branca */}
-            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
+            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-190 mt-25 mb-30">
               {/* capa */}
               <img
                 src={trip?.imagem || ""}
@@ -690,7 +691,7 @@ export default function DetailsPage() {
                             icon={<List className="w-20 h-20" />}
                             onClick={() => setIsMoreDetailsModalOpen(true)}
                           />
-                          <p className="text-sm text-gray-500 mt-4">
+                          <p className="text-sm text-gray-500 mt-3">
                             Mais Detalhes
                           </p>
                         </div>
@@ -702,6 +703,7 @@ export default function DetailsPage() {
                             if (target === "itinerary") setIsItineraryModalOpen(true);
                             if (target === "transport") setIsTransportModalOpen(true);
                             if (target === "budget") setIsBudgetModalOpen(true);
+                            if (target === "notifs") setIsNotifsOpen(true); 
                           }}
                           trip={moreDetailsTrip}
                         />
@@ -719,7 +721,7 @@ export default function DetailsPage() {
                             setIsTransportModalOpen(true);
                           }}
                         />
-                        <p className="text-sm text-gray-500 mt-4">Transporte</p>
+                        <p className="text-sm text-gray-500 mt-3">Transporte</p>
                         <ModalTransport
                           isOpen={isTransportModalOpen}
                           onClose={() => setIsTransportModalOpen(false)}
@@ -728,6 +730,7 @@ export default function DetailsPage() {
                             if (target === "itinerary") setIsItineraryModalOpen(true);
                             if (target === "details") setIsMoreDetailsModalOpen(true);
                             if (target === "budget") setIsBudgetModalOpen(true);
+                            if (target === "notifs") setIsNotifsOpen(true); 
                           }}
                           transportData={transportData}
                         />
@@ -742,17 +745,16 @@ export default function DetailsPage() {
                           }
                           onClick={() => setIsItineraryModalOpen(true)}
                         />
-                        <p className="text-sm text-gray-500 mt-4">Itinerário</p>
+                        <p className="text-sm text-gray-500 mt-3">Itinerário</p>
                         <ModalItinerary
                           isOpen={isItineraryOpen}
                           onClose={() => setIsItineraryModalOpen(false)}
                           onNavigate={(target) => {
                             closeAllModals();
-                            if (target === "transport")
-                              setIsTransportModalOpen(true);
-                            if (target === "details")
-                              setIsMoreDetailsModalOpen(true);
+                            if (target === "transport") setIsTransportModalOpen(true);
+                            if (target === "details") setIsMoreDetailsModalOpen(true);
                             if (target === "budget") setIsBudgetModalOpen(true);
+                            if (target === "notifs") setIsNotifsOpen(true); 
                           }}
                           itinerario={eventos}
                         />
@@ -770,7 +772,7 @@ export default function DetailsPage() {
                             }
                             onClick={() => setIsBudgetModalOpen(true)}
                           />
-                          <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                          <p className="text-sm text-gray-500 mt-3">Orçamento</p>
                         </div>
 
                         <ModalBudget
@@ -784,21 +786,11 @@ export default function DetailsPage() {
                               setIsTransportModalOpen(true);
                             if (target === "details")
                               setIsMoreDetailsModalOpen(true);
+                            if (target === "notifs") 
+                              setIsNotifsOpen(true); 
                           }}
                           orcamentos={orcamentos}
                         />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <IconButton
-                          icon={
-                            <img
-                              src="/images-travel/Icons/IconMessage.png"
-                              className="w-20 h-20"
-                            />
-                          }
-                          onClick={() => alert("Botão clicado!")}
-                        />
-                        <p className="text-sm text-gray-500 mt-4">Mensagem</p>
                       </div>
                       <div className="flex flex-col items-center">
                         <div className="relative">
@@ -810,7 +802,7 @@ export default function DetailsPage() {
                             <span className="absolute top-0 right-0 block w-3 h-3 bg-red-600 rounded-full" />
                           )}
                         </div>
-                        <p className="text-sm text-gray-500 mt-4">Avisos</p>
+                        <p className="text-sm text-gray-500 mt-3">Avisos</p>
                       </div>
 
                       <audio
@@ -824,11 +816,18 @@ export default function DetailsPage() {
                         isOpen={isNotifsOpen}
                         onClose={handleCloseNotifs}
                         notifications={notificacoes}
+                        onNavigate={(target) => {                          
+                          closeAllModals();
+                          if (target === "details") setIsMoreDetailsModalOpen(true);
+                          if (target === "transport") setIsTransportModalOpen(true);
+                          if (target === "itinerary") setIsItineraryModalOpen(true);
+                          if (target === "budget") setIsBudgetModalOpen(true);
+                        }}
                       />
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex justify-between mt-5">
+                <div className="w-full flex justify-between mt-7">
                   <button
                     className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
                     onClick={() => setIsEditModalOpen(true)}
