@@ -60,7 +60,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/LocationIcon.png" alt="Ícone de localização" className="w-8 h-8" />
-                                    Destino: <span className="font-bold">{trip.destino}</span>
+                                    Destino: <span className="font-bold">{trip.cidadeOrigem} <span className="mx-1">→</span> {trip.cidadeDestino}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
