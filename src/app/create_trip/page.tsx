@@ -104,6 +104,15 @@ export default function ExamplePage() {
       return;
     }
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Zerar as horas para comparar apenas a data
+    const startDateObj = new Date(startDate);
+
+    if (startDateObj < today) {
+      setAlertMessage("A data de início não pode ser anterior à data atual");
+      return;
+    }
+
     if (new Date(startDate) >= new Date(endDate)) {
       setAlertMessage("A data de início deve ser anterior à data de fim");
       return;
@@ -462,20 +471,40 @@ export default function ExamplePage() {
                 {/* Indicadores de data */}
                 {startDate && endDate && (
                   <div className="mt-8 text-center">
-                    {new Date(startDate) <= new Date(endDate) ? (
-                      <div className="p-4 bg-gray-50 rounded-xl border">
-                        <p className="text-xl text-[#0F2976] font-bold">
-                          📅 Duração: {calculateDuration(startDate, endDate)}{" "}
-                          dias
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="p-4 bg-red-50 rounded-xl border border-red-200">
-                        <p className="text-red-700 font-medium">
-                          ⚠️ Data de início deve ser anterior à data final
-                        </p>
-                      </div>
-                    )}
+                    {(() => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      const startDateObj = new Date(startDate);
+                      const endDateObj = new Date(endDate);
+
+                      if (startDateObj < today) {
+                        return (
+                          <div className="p-4 bg-red-50 rounded-xl border border-red-200">
+                            <p className="text-red-700 font-medium">
+                              ⚠️ Data de início não pode ser anterior à data
+                              atual
+                            </p>
+                          </div>
+                        );
+                      } else if (startDateObj >= endDateObj) {
+                        return (
+                          <div className="p-4 bg-red-50 rounded-xl border border-red-200">
+                            <p className="text-red-700 font-medium">
+                              ⚠️ Data de início deve ser anterior à data final
+                            </p>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="p-4 bg-gray-50 rounded-xl border">
+                            <p className="text-xl text-[#0F2976] font-bold">
+                              📅 Duração:{" "}
+                              {calculateDuration(startDate, endDate)} dias
+                            </p>
+                          </div>
+                        );
+                      }
+                    })()}
                   </div>
                 )}
               </div>
