@@ -5,7 +5,6 @@ import { HeaderPages } from "@/components/common/Header";
 import SidebarMenu from "@/components/common/SidebarMenu";
 import { useRouter } from "next/navigation";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import { Alert } from "@/components/common/Alert";
 import RequireAuth from "@/components/auth/RequireAuth";
 import {
   DollarSign,
@@ -77,7 +76,7 @@ export default function TripBudget() {
       value: "0",
     },
   ];
-  
+
   const [categories, setCategories] = useState<Category[]>(initialCategories);
 
   // Carregar dados salvos quando a tela abrir
@@ -205,8 +204,8 @@ export default function TripBudget() {
         router.push("/trip_itinerary");
       }, 2000);
     } catch (error) {
-      console.error("Erro ao salvar orçamentos:", error);
-      alert("Erro ao salvar orçamentos.");
+      console.error("Erro ao salvar dados:", error);
+      setAlertMessage("Erro ao salvar dados. Tente novamente.");
     }
   };
 
@@ -490,8 +489,7 @@ export default function TripBudget() {
               />
             </div>
           </WhiteBackground>
-                <div className="mt-20"></div>
-
+          <div className="mt-20"></div>
         </div>
       </div>
     </RequireAuth>
