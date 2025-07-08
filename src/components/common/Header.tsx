@@ -28,7 +28,8 @@ export function HeaderPages() {
               width={120}
               height={40}
               priority
-              className="h-auto w-auto"
+              className="h-auto w-auto cursor-pointer"
+              onClick={() => window.location.href = "/initial"}
             />
           </div>
         </div>
@@ -82,14 +83,14 @@ export function Header() {
         {/* Navegação principal */}
         <nav className="flex flex-wrap items-center gap-4 md:gap-8 text-sm font-medium min-w-0" ref={menuRef}>
           {/* Viagens */}
-            <div className="relative">
+          <div className="relative">
             <button
               onClick={() => window.location.href = '/community'}
               className="focus:outline-none flex items-center gap-2 cursor-pointer hover:font-bold"
             >
               Comunidade
             </button>
-            </div>
+          </div>
 
           {/* Sobre Nós */}
           <div className="relative">
