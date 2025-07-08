@@ -315,6 +315,7 @@ export default function DetailsPage() {
     setIsMoreDetailsModalOpen(false);
     setIsItineraryModalOpen(false);
     setIsBudgetModalOpen(false);
+    setIsNotifsOpen(false);
   };
 
   useEffect(() => {
@@ -487,7 +488,7 @@ export default function DetailsPage() {
                             icon={<List className="w-20 h-20" />}
                             onClick={() => setIsMoreDetailsModalOpen(true)}
                           />
-                          <p className="text-sm text-gray-500 mt-4">
+                          <p className="text-sm text-gray-500 mt-3">
                             Mais Detalhes
                           </p>
                         </div>
@@ -499,6 +500,7 @@ export default function DetailsPage() {
                             if (target === "itinerary") setIsItineraryModalOpen(true);
                             if (target === "transport") setIsTransportModalOpen(true);
                             if (target === "budget") setIsBudgetModalOpen(true);
+                            if (target === "notifs") setIsNotifsOpen(true);
                           }}
                           trip={moreDetailsTrip}
                         />
@@ -516,7 +518,7 @@ export default function DetailsPage() {
                             setIsTransportModalOpen(true);
                           }}
                         />
-                        <p className="text-sm text-gray-500 mt-4">Transporte</p>
+                        <p className="text-sm text-gray-500 mt-3">Transporte</p>
                         <ModalTransport
                           isOpen={isTransportModalOpen}
                           onClose={() => setIsTransportModalOpen(false)}
@@ -525,6 +527,7 @@ export default function DetailsPage() {
                             if (target === "itinerary") setIsItineraryModalOpen(true);
                             if (target === "details") setIsMoreDetailsModalOpen(true);
                             if (target === "budget") setIsBudgetModalOpen(true);
+                            if (target === "notifs") setIsNotifsOpen(true);
                           }}
                           transportData={transportData}
                         />
@@ -539,7 +542,7 @@ export default function DetailsPage() {
                           }
                           onClick={() => setIsItineraryModalOpen(true)}
                         />
-                        <p className="text-sm text-gray-500 mt-4">Itinerário</p>
+                        <p className="text-sm text-gray-500 mt-3">Itinerário</p>
                         <ModalItinerary
                           isOpen={isItineraryOpen}
                           onClose={() => setIsItineraryModalOpen(false)}
@@ -549,7 +552,10 @@ export default function DetailsPage() {
                               setIsTransportModalOpen(true);
                             if (target === "details")
                               setIsMoreDetailsModalOpen(true);
-                            if (target === "budget") setIsBudgetModalOpen(true);
+                            if (target === "budget") 
+                              setIsBudgetModalOpen(true);
+                            if (target === "notifs") 
+                              setIsNotifsOpen(true);
                           }}
                           itinerario={eventos}
                         />
@@ -567,7 +573,7 @@ export default function DetailsPage() {
                             }
                             onClick={() => setIsBudgetModalOpen(true)}
                           />
-                          <p className="text-sm text-gray-500 mt-4">Orçamento</p>
+                          <p className="text-sm text-gray-500 mt-3">Orçamento</p>
                         </div>
 
                         <ModalBudget
@@ -581,10 +587,12 @@ export default function DetailsPage() {
                               setIsTransportModalOpen(true);
                             if (target === "details")
                               setIsMoreDetailsModalOpen(true);
+                            if (target === "notifs") 
+                              setIsNotifsOpen(true);
                           }}
                           orcamentos={orcamentos}
                         />
-                      </div>                      
+                      </div>
                       <div>
                         <div className="flex flex-col items-center">
                           <div className="relative">
@@ -596,7 +604,7 @@ export default function DetailsPage() {
                               <span className="absolute top-0 right-0 block w-3 h-3 bg-red-600 rounded-full" />
                             )}
                           </div>
-                          <p className="text-sm text-gray-500 mt-4">Avisos</p>
+                          <p className="text-sm text-gray-500 mt-3">Avisos</p>
                         </div>
 
                         <audio
@@ -610,6 +618,13 @@ export default function DetailsPage() {
                           isOpen={isNotifsOpen}
                           onClose={handleCloseNotifs}
                           notifications={notificacoes}
+                          onNavigate={(target) => {                            
+                            closeAllModals();
+                            if (target === "details") setIsMoreDetailsModalOpen(true);
+                            if (target === "transport") setIsTransportModalOpen(true);
+                            if (target === "itinerary") setIsItineraryModalOpen(true);
+                            if (target === "budget") setIsBudgetModalOpen(true);
+                          }}
                         />
                       </div>
                     </div>
