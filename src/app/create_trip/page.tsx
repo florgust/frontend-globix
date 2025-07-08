@@ -322,7 +322,7 @@ export default function ExamplePage() {
                     <div className="flex justify-center gap-6">
                       <button
                         type="button"
-                        onClick={() => setSelectedOption("public")}
+                        onClick={() => setSelectedOption("publica")}
                         className={`flex flex-col items-center justify-center w-40 h-36 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
                           selectedOption === "public"
                             ? "bg-[#0F2976] border-[#0F2976] text-white shadow-lg transform scale-105"
@@ -345,7 +345,7 @@ export default function ExamplePage() {
 
                       <button
                         type="button"
-                        onClick={() => setSelectedOption("private")}
+                        onClick={() => setSelectedOption("privada")}
                         className={`flex flex-col items-center justify-center w-40 h-36 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
                           selectedOption === "private"
                             ? "bg-[#0F2976] border-[#0F2976] text-white shadow-lg transform scale-105"
@@ -474,6 +474,7 @@ export default function ExamplePage() {
                     {(() => {
                       const today = new Date();
                       today.setHours(0, 0, 0, 0);
+                      today.setDate(today.getDate() - 1);
                       const startDateObj = new Date(startDate);
                       const endDateObj = new Date(endDate);
 

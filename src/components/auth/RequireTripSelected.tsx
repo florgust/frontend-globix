@@ -1,8 +1,13 @@
 "use client";
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-export default function RequireTripSelected({ children }: { children: React.ReactNode }) {
+export default function RequireTripSelected({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -13,19 +18,38 @@ export default function RequireTripSelected({ children }: { children: React.Reac
       router.replace("/not_trip_page");
       return;
     }
-    const selectedTrip = JSON.parse(selectedTripStr);
-    // Ajuste conforme o campo do backend: tipo, papel, etc
-    const papel = selectedTrip.papel || selectedTrip.tipo || selectedTrip.role || "";
+    try {
+      const selectedTrip = JSON.parse(selectedTripStr);
 
-    // Se está em /trip e é organizador, redireciona para /travels
-    if (pathname === "/trip" && ["organizador", "organizadorpromovido"].includes(papel.toLowerCase())) {
-      router.replace("/travels");
-      return;
-    }
-    // Se está em /travels e NÃO é organizador, redireciona para /trip
-    if (pathname === "/travels" && !["organizador", "organizadorpromovido"].includes(papel.toLowerCase())) {
-      router.replace("/trip");
-      return;
+      // Pegar o papel do usuário do cookie, não da viagem
+      const usuarioCookie = Cookies.get("usuario");
+      if (!usuarioCookie) {
+        router.replace("/not_authenticated");
+        return;
+      }
+
+      const usuario = JSON.parse(usuarioCookie);
+
+      // Verificar se o usuário é criador da viagem ou organizador
+      const isOrganizador =
+        selectedTrip.criadorId === usuario.id ||
+        usuario.papel === "organizador" ||
+        usuario.papel === "organizadorpromovido";
+
+      // Se está em /trip e é organizador, redireciona para /travels
+      if (pathname === "/trip" && isOrganizador) {
+        router.replace("/travels");
+        return;
+      }
+
+      // Se está em /travels e NÃO é organizador, redireciona para /trip
+      if (pathname === "/travels" && !isOrganizador) {
+        router.replace("/trip");
+        return;
+      }
+    } catch (error) {
+      console.error("Erro ao validar viagem selecionada:", error);
+      router.replace("/not_trip_page");
     }
   }, [router, pathname]);
 
