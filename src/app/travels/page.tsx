@@ -524,7 +524,7 @@ export default function DetailsPage() {
             </div>
 
             {/* div branca */}
-            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
+            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-190 mt-25 mb-30">
               {/* capa */}
               <img
                 src={"/images-travel/capa.png"}
@@ -787,19 +787,7 @@ export default function DetailsPage() {
                           }}
                           orcamentos={orcamentos}
                         />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <IconButton
-                          icon={
-                            <img
-                              src="/images-travel/Icons/IconMessage.png"
-                              className="w-20 h-20"
-                            />
-                          }
-                          onClick={() => alert("Botão clicado!")}
-                        />
-                        <p className="text-sm text-gray-500 mt-4">Mensagem</p>
-                      </div>
+                      </div>                     
                       <div className="flex flex-col items-center">
                         <div className="relative">
                           <IconButton
@@ -828,7 +816,7 @@ export default function DetailsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex justify-between mt-5">
+                <div className="w-full flex justify-between mt-7">
                   <button
                     className="text-2xl font-bold bg-[#D9D9D9] text-[#0F2976] rounded-full w-60 py-3 hover:bg-gray-300 cursor-pointer"
                     onClick={() => setIsEditModalOpen(true)}

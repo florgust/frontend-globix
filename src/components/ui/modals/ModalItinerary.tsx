@@ -150,19 +150,7 @@ function ModalItinerary({ isOpen, onClose, onNavigate, itinerario }: ModalItiner
                             onClick={() => onNavigate('budget')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Orçamento</p>
-                    </div>
-
-                    {/* Ícone de Mensagens */}
-                    <div className="flex flex-col items-center">
-                        <IconButton
-                            icon={<img src="/images-travel/Icons/IconMessage.png" className="w-16 h-16 cursor-pointer" />}
-                            size="lg"
-                            shape="circle"
-                            onClick={() => alert("Mensagens clicado!")}
-                        />
-                        <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
-                    </div>
-
+                    </div>                   
                     {/* Ícone de Aviso */}
                     <div className="flex flex-col items-center">
                         <IconButton
