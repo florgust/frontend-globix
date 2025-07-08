@@ -207,6 +207,7 @@ export default function CommunityPage() {
       } catch (error) {
         setAlertMessage("Erro ao solicitar participação. Tente novamente.");
         setTimeout(() => setAlertMessage(""), 3000);
+        console.error(error);
       }
     });
   };
@@ -293,7 +294,7 @@ export default function CommunityPage() {
                   <Card
                     key={viagem.id}
                     topImage={viagem.foto || getDefaultImage('trip')}
-                    userImage={getDefaultImage('user')}
+                    userImage={viagem.organizador.foto || getDefaultImage('user')}
                     tripName={viagem.nome}
                     location={viagem.destino || ""}
                     cidadeOrigem={viagem.cidadeOrigem}

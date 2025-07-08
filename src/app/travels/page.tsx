@@ -525,7 +525,7 @@ export default function DetailsPage() {
             </div>
 
             {/* div branca */}
-            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-190 mt-25 mb-30">
+            <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-[48rem] mt-25 mb-30">
               {/* capa */}
               <img
                 src={trip?.imagem || ""}
