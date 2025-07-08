@@ -1,23 +1,27 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SidebarMenu from "../../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
+import SidebarMenu from "../../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
 import Cookies from "js-cookie";
 import RequireAuth from "@/components/auth/RequireAuth";
+import { useRouter } from "next/navigation";
 
 interface Trip {
+    id?: string;
     nome: string;
     dataInicio: string;
     dataFim: string;
     tipo: string;
     quantidadeParticipante: number;
-    // Adicione outros campos se necessário
+    codigoConvite?: string;
 }
 
 export default function TripTransport() {
     const [trip, setTrip] = useState<Trip | null>(null);
     const [organizer, setOrganizer] = useState<string>("");
     const [isMounted, setIsMounted] = useState(false);
+    const [copyMessage, setCopyMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         setIsMounted(true); // Marca que o componente já foi montado (lado do cliente)
@@ -57,6 +61,53 @@ export default function TripTransport() {
         return `${day}/${month}/${year}`;
     };
 
+    // Função para obter dados atuais da viagem do localStorage
+    const getCurrentTripData = () => {
+        const tripStr = localStorage.getItem("viagemEmCriacao");
+        if (tripStr) {
+            const tripData = JSON.parse(tripStr);
+            return tripData;
+        }
+        return null;
+    };
+
+    // Função para navegar para a página da viagem
+    const handleGoToTripPage = () => {
+        // Sempre busca os dados mais atuais do localStorage
+        const currentTrip = getCurrentTripData();
+        if (currentTrip && currentTrip.id) {
+            // Armazena o ID da viagem no sessionStorage para acesso na próxima página
+            sessionStorage.setItem('currentTripId', currentTrip.id);
+            // Navega para a página sem o ID na URL
+            router.push('/travels');
+        } else {
+            console.error("ID da viagem não encontrado no localStorage");
+        }
+    };
+
+    // Função para copiar o código de convite
+    const handleCopyInviteCode = async () => {
+        // Sempre busca os dados mais atuais do localStorage
+        const currentTrip = getCurrentTripData();
+        
+        if (currentTrip?.codigoConvite) {
+            try {
+                await navigator.clipboard.writeText(currentTrip.codigoConvite);
+                setCopyMessage({ text: "Copiado com sucesso!", type: 'success' });
+                // Remove a mensagem após 3 segundos
+                setTimeout(() => setCopyMessage(null), 3000);
+            } catch (error) {
+                console.error("Erro ao copiar código:", error);
+                setCopyMessage({ text: "Erro ao copiar código de convite", type: 'error' });
+                // Remove a mensagem após 3 segundos
+                setTimeout(() => setCopyMessage(null), 3000);
+            }
+        } else {
+            setCopyMessage({ text: "Código de convite não encontrado", type: 'error' });
+            setTimeout(() => setCopyMessage(null), 3000);
+        }
+    };
+
     return (
         <RequireAuth>
             <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
@@ -92,72 +143,87 @@ export default function TripTransport() {
                         </div>
 
                         {/* INTEGRAÇÃO DOS DADOS */}
-                        <div className="w-full mt-6 text-[#0F2976] font-bold text-[1.1rem]">
-                            <div className="flex items-center mb-2">
-                                <img
-                                    src="/images-trip_successful/globo.svg"
-                                    alt="Globo"
-                                    className="mr-2 w-6 h-6"
-                                />
-                                <span> {trip.nome} </span>
+                        <div className="w-full mt-6 flex flex-col items-center">
+                            <div className="text-[#0F2976] font-bold text-[1.1rem] w-full max-w-md text-left">
+                                <div className="flex items-center mb-2">
+                                    <img
+                                        src="/images-trip_successful/globo.svg"
+                                        alt="Globo"
+                                        className="mr-2 w-6 h-6"
+                                    />
+                                    <span> {trip.nome} </span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                    <img
+                                        src="/images-trip_successful/calendario.svg"
+                                        alt="Calendario"
+                                        className="mr-2 w-6 h-6"
+                                    />
+                                    <span>
+                                        De <b>{formatDate(trip.dataInicio)}</b> até <b>{formatDate(trip.dataFim)}</b>
+                                    </span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                    <img
+                                        src="/images-trip_successful/organizador.svg"
+                                        alt="Organizador"
+                                        className="mr-2 w-6 h-6"
+                                    />
+                                    <span>Organizador: <b>{organizer}</b></span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                    <img
+                                        src="/images-trip_successful/globo2.svg"
+                                        alt="Globo 2"
+                                        className="mr-2 w-6 h-6"
+                                    />
+                                    <span>Tipo: <b>{trip.tipo === "publica" ? "Pública" : "Privada"}</b></span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                    <img
+                                        src="/images-trip_successful/pessoas.svg"
+                                        alt="Pessoas"
+                                        className="mr-2 w-6 h-6"
+                                    />
+                                    <span>Vagas: <b>{trip.quantidadeParticipante}</b></span>
+                                </div>
                             </div>
-                            <div className="flex items-center mb-2">
-                                <img
-                                    src="/images-trip_successful/calendario.svg"
-                                    alt="Calendario"
-                                    className="mr-2 w-6 h-6"
-                                />
-                                <span>
-                                    De <b>{formatDate(trip.dataInicio)}</b> até <b>{formatDate(trip.dataFim)}</b>
-                                </span>
-                            </div>
-                            <div className="flex items-center mb-2">
-                                <img
-                                    src="/images-trip_successful/organizador.svg"
-                                    alt="Organizador"
-                                    className="mr-2 w-6 h-6"
-                                />
-                                <span>Organizador: <b>{organizer}</b></span>
-                            </div>
-                            <div className="flex items-center mb-2">
-                                <img
-                                    src="/images-trip_successful/globo2.svg"
-                                    alt="Globo 2"
-                                    className="mr-2 w-6 h-6"
-                                />
-                                <span>Tipo: <b>{trip.tipo === "publica" ? "Pública" : "Privada"}</b></span>
-                            </div>
-                            <div className="flex items-center mb-2">
-                                <img
-                                    src="/images-trip_successful/pessoas.svg"
-                                    alt="Pessoas"
-                                    className="mr-2 w-6 h-6"
-                                />
-                                <span>Vagas: <b>{trip.quantidadeParticipante}</b></span>
-                            </div>
+                            <p className="mt-4 text-sm text-[#27A450] text-center">
+                                <strong>Localização, transporte, orçamento e itinerário foram salvos!</strong>
+                            </p>
+                            <p className="mt-2 text-2sm text-[#111315] text-center">
+                                Você pode editar qualquer detalhe a qualquer momento.
+                            </p>
                         </div>
-
-                    <p className="mt-4 text-sm text-[#27A450]">
-                        <strong>Localização, transporte, orçamento e itinerário foram salvos!</strong>
-                    </p>
-                    <p className="mt-2 text-2sm text-[#111315]">
-                        Você pode editar qualquer detalhe a qualquer momento.
-                    </p>
 
                         <div className="flex justify-center mt-6 space-x-4 gap-5">
-                            <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
+                            <button className="w-34 h-14 bg-[#B1FF91] rounded-lg cursor-pointer hover:scale-110">
                                 <a href="/home_page" className="font-bold text-sm text-[#092064]">Página inicial</a>
                             </button>
-                            <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
-                                <span className="font-bold text-sm text-[#092064]">Convidar participantes</span>
+                            <button 
+                                onClick={handleGoToTripPage}
+                                className="w-34 h-14 bg-[#B1FF91] rounded-lg cursor-pointer hover:scale-110"
+                            >
+                                <span className="font-bold text-sm text-[#092064]">Página da viagem</span>
                             </button>
-                            <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
-                                <a className="font-bold text-sm text-[#092064]">Mais detalhes</a>
-                            </button>
-                            <button className="w-34 h-14 bg-[#00FF4D] rounded-lg cursor-pointer hover:scale-110">
-                                <span className="font-bold text-sm text-[#092064]">Editar</span>
+                            <button 
+                                onClick={handleCopyInviteCode}
+                                className="w-34 h-14 bg-[#B1FF91] rounded-lg cursor-pointer hover:scale-110"
+                            >
+                                <span className="font-bold text-sm text-[#092064]">Copiar código de convite</span>
                             </button>
                         </div>
+                        
+                        {/* Mensagem de feedback inline */}
+                        {copyMessage && (
+                            <div className={`mt-4 px-4 py-2 text-sm font-medium ${
+                                copyMessage.type === 'success' 
+                                    ? 'absolut top-full text-green-600 font-semibold bg-white px-3 rounded shadow' 
+                                    : 'absolut top-full text-red-800 font-semibold bg-white px-3 rounded shadow'
+                            }`}>
+                                {copyMessage.text}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

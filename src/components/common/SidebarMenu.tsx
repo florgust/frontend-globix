@@ -1,18 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import Sidebar, { SidebarItem } from "./sidebar";
+import Sidebar, { SidebarItem } from "./Sidebar";
 import { House, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import ModalLogout from "./modals/ModalLogout";
+import ModalLogout from "../ui/modals/ModalLogout";
 
 const user = "/images-home_page/sidebar-menu/user.svg";
-const message = "/images-home_page/sidebar-menu/message.svg";
-const setting = "/images-home_page/sidebar-menu/setting.svg";
 const about = "/images-home_page/sidebar-menu/about.svg";
 const community = "/images-home_page/sidebar-menu/comunity.svg";
 
+// Adicione spacer: true ao item "Perfil"
 const menuItems = [
   { icon: (active: boolean) => <House size={20} color={active ? "#0F2976" : "#D1D5DB"} />, text: "Página Principal", path: "/home_page" },
   {
@@ -37,31 +36,7 @@ const menuItems = [
         className={`${active ? "" : "grayscale opacity-40"}`}
         priority
       />
-    ), text: "Perfil", path: "/profile"
-  },
-  {
-    icon: (active: boolean) => (
-      <Image
-        src={message}
-        alt="Mensagens"
-        width={24}
-        height={24}
-        className={`${active ? "" : "grayscale opacity-40"}`}
-        priority
-      />
-    ), text: "Mensagens", path: "/mensagens"
-  },
-  {
-    icon: (active: boolean) => (
-      <Image
-        src={setting}
-        alt="Configurações"
-        width={24}
-        height={24}
-        className={`${active ? "" : "grayscale opacity-40"}`}
-        priority
-      />
-    ), text: "Configurações", path: "/configuracoes", spacer: true
+    ), text: "Perfil", path: "/profile", spacer: true // <-- Aqui!
   },
   {
     icon: (active: boolean) => (
@@ -73,7 +48,7 @@ const menuItems = [
         className={`${active ? "" : "grayscale opacity-40"}`}
         priority
       />
-    ), text: "Sobre", path: "/sobre"
+    ), text: "Sobre", path: "/about"
   },
   { icon: (active: boolean) => <LogOut size={20} color={active ? "#0F2976" : "#D1D5DB"} />, text: "Sair", path: "/logout", isLogout: true },
 ];
@@ -140,7 +115,7 @@ export default function SidebarMenu() {
                 active={active}
                 href={item.path}
               />
-              {item.spacer && <div className="my-20" />}
+              {item.spacer ? <div className="my-20" /> : null}
             </React.Fragment>
           );
         })}

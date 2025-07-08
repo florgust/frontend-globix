@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import SidebarMenu from "../components/ui/SidebarMenu";
-import { HeaderPages } from "@/components/ui/header";
-import Footer from "@/components/ui/Footer";
+import SidebarMenu from "../components/common/SidebarMenu";
+import { HeaderPages } from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
 import { useRouter } from "next/navigation";
 
 
@@ -17,7 +17,9 @@ export default function NotFound() {
                 <HeaderPages />
 
                 <div className="mt-45 text-[#A7FF84] text-center">
-                    <p className="font-bold text-[1.3rem]">A página que você procura não pode ser encontrada</p>
+                    <p className="font-bold text-[1.8rem]">
+                        Opa! Você saiu da trilha e acabou em um destino desconhecido.<br />                       
+                    </p>
                     <p className="pt-3">ERRO 404</p>
                 </div>
 

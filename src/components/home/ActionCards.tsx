@@ -13,6 +13,7 @@ export default function ActionCards() {
   const [openModal, setOpenModal] = useState(false);
   const [tripCode, setTripCode] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleJoinTrip = async () => {
     if (!tripCode.trim()) {
@@ -40,7 +41,9 @@ export default function ActionCards() {
       setOpenModal(false);
 
       // Exibe o modal de sucesso por 3 segundos
+      setShowSuccess(true);
       setTimeout(() => {
+        setShowSuccess(false);
       }, 3000);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -56,6 +59,17 @@ export default function ActionCards() {
       return;
     }
   };
+
+  function SuccessModal() {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+        <div className="bg-white rounded-2xl shadow-lg px-12 py-10 flex flex-col items-center min-w-[24rem]">
+          <span className="text-3xl text-[#00FF4D] font-bold mb-2">Sucesso!</span>
+          <span className="text-[#0F2976] text-xl text-center">Solicitação enviada.</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -104,7 +118,7 @@ export default function ActionCards() {
           style={{
             background: "linear-gradient(90deg, #ACEBA2 18.27%, #3AB660 100%)"
           }}
-          // futuramente: onClick={() => router.push("/explorar_viagens")}
+        // futuramente: onClick={() => router.push("/explorar_viagens")}
         >
           <span className="flex items-center justify-center bg-white rounded-full w-16 h-14 ml-4">
             <Image
@@ -114,7 +128,13 @@ export default function ActionCards() {
               height={32}
             />
           </span>
-          <span className="text-white font-semibold text-lg">Explorar Viagens</span>
+            <span
+            className="text-white font-semibold text-lg"
+            onClick={() => router.push("/community")}
+            style={{ cursor: "pointer" }}
+            >
+            Explorar Viagens
+            </span>
         </button>
       </div>
 
@@ -131,6 +151,7 @@ export default function ActionCards() {
           setTripCode("");
         }}
       />
+      {showSuccess && <SuccessModal />}
     </>
   );
 }

@@ -11,4 +11,6 @@ export interface Trip {
   codigoConvite: number;
   papel: UserRole;
   status: number;
+  dataCriacao?: string;   
+  dataAtualizacao?: string;
 }

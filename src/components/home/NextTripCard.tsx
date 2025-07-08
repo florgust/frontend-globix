@@ -1,4 +1,24 @@
 import { useState, useEffect } from "react";
+import api from "@/utils/axios";
+import Cookies from "js-cookie";
+
+interface User {
+  id: number;
+  name?: string;
+  email?: string;
+}
+
+interface Trip {
+  id: number;
+  data_inicio?: string;
+  dataInicio?: string;
+  destino?: string;
+  status?: string;
+}
+
+interface TripWithParsedDate extends Trip {
+  start: Date | null;
+}
 
 const checklist = [
   "Verificar documentos (passaporte, RG/CNH e visto)",
@@ -10,8 +30,21 @@ const checklist = [
 
 const STORAGE_KEY = "nextTripChecklist";
 
+function parseDate(dateStr?: string): Date | null {
+  if (!dateStr) return null;
+  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+    const [year, month, day] = dateStr.split("T")[0].split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? null : date;
+}
+
 export default function NextTripCard() {
-  const [checked, setChecked] = useState(Array(checklist.length).fill(false));
+  const [checked, setChecked] = useState<boolean[]>(
+    Array(checklist.length).fill(false)
+  );
+  const [daysLeft, setDaysLeft] = useState<number | null>(null);
 
   // Carregar do localStorage ao montar
   useEffect(() => {
@@ -26,7 +59,56 @@ export default function NextTripCard() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
   }, [checked]);
 
-  const handleCheck = (idx: number) => {
+  // Buscar próxima viagem
+  useEffect(() => {
+    const fetchNextTrip = async () => {
+      try {
+        const usuarioCookie = Cookies.get("usuario");
+        const user: User | null = usuarioCookie
+          ? JSON.parse(usuarioCookie)
+          : null;
+        const idUsuario = user?.id;
+        if (!idUsuario) return;
+
+        const { data } = await api.get<Trip[]>(
+          `/solicitacoes/viagem/card/${idUsuario}`
+        );
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Filtra apenas viagens futuras
+        const futureTrips: TripWithParsedDate[] = (data || [])
+          .map(
+            (trip: Trip): TripWithParsedDate => ({
+              ...trip,
+              start: parseDate(trip.data_inicio || trip.dataInicio),
+            })
+          )
+          .filter(
+            (trip: TripWithParsedDate): trip is TripWithParsedDate =>
+              trip.start !== null && trip.start >= today
+          )
+          .sort(
+            (a: TripWithParsedDate, b: TripWithParsedDate) =>
+              (a.start as Date).getTime() - (b.start as Date).getTime()
+          );
+
+        if (futureTrips.length > 0) {
+          const nextTrip = futureTrips[0];
+          const diffTime = (nextTrip.start as Date).getTime() - today.getTime();
+          setDaysLeft(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+        } else {
+          setDaysLeft(null);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar próxima viagem:", error);
+        setDaysLeft(null);
+      }
+    };
+    fetchNextTrip();
+  }, []);
+
+  const handleCheck = (idx: number): void => {
     setChecked((prev) => {
       const copy = [...prev];
       copy[idx] = !copy[idx];
@@ -38,13 +120,24 @@ export default function NextTripCard() {
     <div
       className="rounded-2xl shadow-lg px-6 py-5 w-[420px] h-[42.5vh] flex flex-col"
       style={{
-        background: "linear-gradient(180deg, #FFFFFF 0%, #CAFFB5 99.99%, #A7FF84 100%)"
+        background:
+          "linear-gradient(180deg, #FFFFFF 0%, #CAFFB5 99.99%, #A7FF84 100%)",
       }}
     >
-      <h2 className="text-[#0F2976] text-lg font-extrabold mb-1">Próxima Viagem</h2>
-      <div className="text-[#292D32] text-2xl font-bold mb-2">Faltam 10 dias para a viagem!</div>
+      <h2 className="text-[#0F2976] text-lg font-extrabold mb-1">
+        Próxima Viagem
+      </h2>
+      <div className="text-[#292D32] text-2xl font-bold mb-2">
+        {daysLeft === null
+          ? "Nenhuma viagem futura encontrada!"
+          : daysLeft === 0
+          ? "A viagem começa hoje!"
+          : `Faltam ${daysLeft} dia${daysLeft > 1 ? "s" : ""} para a viagem!`}
+      </div>
       <div className="w-full border-b border-black mb-3" />
-      <div className="text-[#0F2976] text-xs mb-2">Antes de partir, não esqueça de:</div>
+      <div className="text-[#0F2976] text-xs mb-2">
+        Antes de partir, não esqueça de:
+      </div>
       <ul className="text-[#292D32] text-2sm space-y-3 pl-1">
         {checklist.map((item, idx) => (
           <li key={idx} className="flex items-center gap-3 py-1">

@@ -1,11 +1,11 @@
 import React from "react";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 import { ModalMoreDetailsTrip } from "@/utils/moreDetailsUtils";
 
 interface ModalMoreDetailsProps {
     isOpen: boolean;
     onClose: () => void;
-    onNavigate: (target: 'transport' | 'itinerary' | 'budget') => void;
+    onNavigate: (target: 'transport' | 'itinerary' | 'budget' | 'notifs') => void;
     trip?: ModalMoreDetailsTrip | null;
 }
 
@@ -60,7 +60,7 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                             <div className="flex items-center justify-between">
                                 <p className="flex items-center gap-2 text-[#0F2976]">
                                     <img src="/images-modals/Icons/LocationIcon.png" alt="Ícone de localização" className="w-8 h-8" />
-                                    Destino: <span className="font-bold">{trip.destino}</span>
+                                    Destino: <span className="font-bold">{trip.cidadeOrigem} <span className="mx-1">→</span> {trip.cidadeDestino}</span>
                                 </p>
                             </div>
                             <div className="flex items-center justify-between">
@@ -132,19 +132,10 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                     </div>
                     <div className="flex flex-col items-center">
                         <IconButton
-                            icon={<img src="/images-travel/Icons/IconMessage.png" className="w-16 h-16 cursor-pointer" />}
-                            size="lg"
-                            shape="circle"
-                            onClick={() => alert("Mensagens clicado!")}
-                        />
-                        <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <IconButton
                             icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Avisos clicado!")}
+                            onClick={() => onNavigate('notifs')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
                     </div>

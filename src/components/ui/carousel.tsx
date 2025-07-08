@@ -7,7 +7,7 @@ import useEmblaCarousel, {
 import { ChevronRight, ChevronLeft } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/common/Button"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -197,7 +197,7 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeft className="text-white"/>
+      <ChevronLeft className="text-white" />
       <span className="sr-only">Anterior</span>
     </Button>
   )
@@ -227,12 +227,13 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRight className=""/>
+      <ChevronRight className="" />
       <span className="sr-only">Próximo</span>
     </Button>
-  )}
+  )
+}
 
-function PreviousCarousel ({
+function PreviousCarousel({
   className,
   ...props
 }: React.ComponentProps<typeof Button>) {
@@ -247,16 +248,16 @@ function PreviousCarousel ({
       {...props}
     >
       <img
-      src={rightArrow}
-      alt="Previous"
-      className="w-[3.5rem]"
+        src={rightArrow}
+        alt="Previous"
+        className="w-[3.5rem]"
       />
       <span className="sr-only">Previous</span>
     </Button>
   );
 }
 
-function NextCarousel ({
+function NextCarousel({
   className,
   ...props
 }: React.ComponentProps<typeof Button>) {
@@ -270,12 +271,12 @@ function NextCarousel ({
       onClick={scrollNext}
       {...props}
     >
-      
-    <img
-    src={leftArrow}
-    alt="Next"
-    className="w-[3.5rem]"
-/>
+
+      <img
+        src={leftArrow}
+        alt="Next"
+        className="w-[3.5rem]"
+      />
       <span className="sr-only">Next</span>
     </Button>
   );
@@ -288,6 +289,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  NextCarousel, 
+  NextCarousel,
   PreviousCarousel
 }

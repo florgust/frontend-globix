@@ -17,7 +17,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, message, onClose })
                 <span className="text-green-600 text-4xl mb-4">✔️</span>
                 <p className="text-2xl text-[#0F2976] font-bold mb-6">{message}</p>
                 <button
-                    className="bg-[#00FF4D] text-[#0F2976] font-bold px-8 py-2 rounded-lg text-xl"
+                    className="bg-[#00FF4D] text-[#0F2976] font-bold px-8 py-2 rounded-lg text-xl cursor-pointer hover:transform hover:scale-105 transition duration-200"
                     onClick={onClose}
                 >
                     OK

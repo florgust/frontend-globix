@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton } from "@/components/ui/button";
+import { IconButton } from "@/components/common/Button";
 
 interface ItineraryItem {
     id: number;
@@ -13,7 +13,7 @@ interface ItineraryItem {
 interface ModalItineraryProps {
     isOpen: boolean;
     onClose: () => void;
-    onNavigate: (target: 'transport' | 'details' | 'budget') => void;
+    onNavigate: (target: 'transport' | 'details' | 'budget' | 'notifs') => void;
     itinerario: ItineraryItem[];
 }
 
@@ -151,25 +151,13 @@ function ModalItinerary({ isOpen, onClose, onNavigate, itinerario }: ModalItiner
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Orçamento</p>
                     </div>
-
-                    {/* Ícone de Mensagens */}
-                    <div className="flex flex-col items-center">
-                        <IconButton
-                            icon={<img src="/images-travel/Icons/IconMessage.png" className="w-16 h-16 cursor-pointer" />}
-                            size="lg"
-                            shape="circle"
-                            onClick={() => alert("Mensagens clicado!")}
-                        />
-                        <p className="text-sm text-[#0F2976] mt-2">Mensagens</p>
-                    </div>
-
                     {/* Ícone de Aviso */}
                     <div className="flex flex-col items-center">
                         <IconButton
                             icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Avisos clicado!")}
+                            onClick={() => onNavigate('notifs')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
                     </div>
