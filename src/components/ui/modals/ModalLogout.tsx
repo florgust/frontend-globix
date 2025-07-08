@@ -19,13 +19,13 @@ export default function ModalLogout({ open, onClose, onLogout }: Readonly<ModalL
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 rounded bg-gray-200 text-[#0F2976] hover:bg-gray-300 font-semibold"
+                        className="px-4 py-2 rounded bg-gray-200 text-[#0F2976] hover:bg-gray-300 font-semibold cursor-pointer hover:transform hover:scale-105 transition duration-200"
                     >
                         Cancelar
                     </button>
                     <button
                         onClick={onLogout}
-                        className="px-4 py-2 rounded bg-[#0F2976] text-white hover:bg-[#1439b6] font-semibold"
+                        className="px-4 py-2 rounded bg-[#0F2976] text-white hover:bg-[#1439b6] font-semibold cursor-pointer hover:transform hover:scale-105 transition duration-200"
                     >
                         Sair
                     </button>

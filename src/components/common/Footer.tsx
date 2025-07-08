@@ -30,12 +30,19 @@ const Footer = () => {
         <footer className="bg-[#102976] text-white px-4 sm:px-8 md:px-16 lg:px-24 py-8 relative w-full">
             <div className="flex flex-wrap justify-between w-full gap-y-12 gap-x-8 max-w-7xl mx-auto">
                 {/* Logo + Back to Top */}
-                <div className="flex flex-col items-center md:items-start gap-4 min-w-[200px] flex-1 cursor-pointer">
-                    <Image src={"/images-login/globix-logo.png"} alt="Globix Logo" width={160} height={40} />
+                <div className="flex flex-col items-center md:items-start gap-4 min-w-[200px] flex-1">
+                    <Image
+                        src={"/images-login/globix-logo.png"}
+                        alt="Globix Logo"
+                        width={160}
+                        height={40}
+                        className="cursor-pointer"
+                        onClick={() => window.location.href = "/initial"}
+                    />
                     <div className="flex justify-center items-center w-full">
                         <button
                             onClick={scrollToTop}
-                            className="bg-white text-[#0A2C82] p-2 rounded-full hover:scale-110 transition"
+                            className="bg-white text-[#0A2C82] p-2 rounded-full hover:scale-110 transition cursor-pointer"
                             aria-label="Voltar ao topo"
                         >
                             <ArrowUp size={20} />

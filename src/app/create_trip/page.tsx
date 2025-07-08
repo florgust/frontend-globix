@@ -61,7 +61,7 @@ const [selectedOption, setSelectedOption] = useState("public");
     // Pegue o usuário do cookie
     const usuarioCookie = Cookies.get("usuario");
     if (!usuarioCookie) {
-      alert("Usuário não autenticado.");
+      setAlertMessage("Usuário não autenticado.");
       return;
     }
     const usuarioObj = JSON.parse(usuarioCookie);
@@ -88,7 +88,7 @@ const [selectedOption, setSelectedOption] = useState("public");
       setShowSuccess(true);
     } catch (error) {
       console.error("Erro ao criar viagem:", error);
-      alert("Ocorreu um erro ao criar a viagem. Tente novamente.");
+      setAlertMessage("Ocorreu um erro ao criar a viagem. Tente novamente.");
     }
   };
 

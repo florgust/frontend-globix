@@ -128,7 +128,13 @@ export default function ActionCards() {
               height={32}
             />
           </span>
-          <span className="text-white font-semibold text-lg">Explorar Viagens</span>
+            <span
+            className="text-white font-semibold text-lg"
+            onClick={() => router.push("/community")}
+            style={{ cursor: "pointer" }}
+            >
+            Explorar Viagens
+            </span>
         </button>
       </div>
 

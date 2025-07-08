@@ -94,7 +94,7 @@ export default function TravelSummariesCard() {
           <div className="text-[#333] text-sm mb-2 text-center">
             {formatDate(trip.data_inicio || trip.dataInicio)} - {formatDate(trip.data_fim || trip.dataFim)}
           </div>
-          <button className="bg-[#0F2976] text-white text-xs font-semibold rounded-lg px-4 py-2 w-[50%] mx-auto">
+          <button className="bg-[#0F2976] text-white text-xs font-semibold rounded-lg px-4 py-2 w-[50%] mx-auto cursor-pointer hover:transform hover:scale-105 transition duration-200">
             Ver Detalhes
           </button>
         </div>

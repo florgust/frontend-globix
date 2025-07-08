@@ -59,7 +59,7 @@ export default function TravelLocation() {
 
         const viagemStr = localStorage.getItem("viagemEmCriacao");
         if (!viagemStr) {
-            alert("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
+            setAlertMessage("Viagem não encontrada. Por favor, crie uma viagem primeiro.");
             return;
         }
         const viagem = JSON.parse(viagemStr);

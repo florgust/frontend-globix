@@ -9,6 +9,7 @@ import api from "@/utils/axios";
 import RequireAuth from "@/components/auth/RequireAuth";
 import WhiteBackground from "@/components/create_trip/whiteBackground";
 import { Check } from "lucide-react";
+import { Alert } from "@/components/common/Alert";
 
 interface Activity {
   time: string;
@@ -35,6 +36,7 @@ export default function TripItinerary() {
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const router = useRouter();
 
   // Form state
@@ -89,7 +91,7 @@ export default function TripItinerary() {
             (a) => getComparableTime(a.time) === getComparableTime(time)
           );
           if (exists) {
-            alert("Já existe um evento neste horário para este dia.");
+            setAlertMessage("Já existe um evento neste horário para este dia.");
             return it;
           }
           // Adiciona atividade e ordena por hora
@@ -145,9 +147,9 @@ export default function TripItinerary() {
       prev.map((it, idx) =>
         idx === currentPage
           ? {
-              ...it,
-              activities: it.activities.filter((_, i) => i !== activityIdx),
-            }
+            ...it,
+            activities: it.activities.filter((_, i) => i !== activityIdx),
+          }
           : it
       )
     );
@@ -176,7 +178,7 @@ export default function TripItinerary() {
   const handleSaveItinerary = async () => {
     const viagemStr = localStorage.getItem("viagemEmCriacao");
     if (!viagemStr) {
-      alert("Viagem não encontrada.");
+      setAlertMessage("Viagem não encontrada.");
       return;
     }
     const viagem = JSON.parse(viagemStr);
@@ -204,9 +206,16 @@ export default function TripItinerary() {
       setShowSuccess(true);
     } catch (error) {
       console.error(error);
-      alert("Erro ao salvar o itinerário.");
+      setAlertMessage("Erro ao salvar o itinerário.");
     }
   };
+
+  React.useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(""), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   const handleCloseModal = () => {
     setShowSuccess(false);
@@ -217,6 +226,13 @@ export default function TripItinerary() {
     <RequireAuth>
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
         <SidebarMenu />
+
+        {alertMessage && (
+          <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-50">
+            <Alert message={alertMessage} type="error" />
+          </div>
+        )}
+        
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
 
