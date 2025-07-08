@@ -4,7 +4,6 @@ import SidebarMenu from "../../components/common/SidebarMenu";
 import { HeaderPages } from "@/components/common/Header";
 import Card from "@/components/ui/community/CardPublicTrip";
 import BarraDePesquisa from "@/components/ui/community/SearchBar";
-import RequireAuth from "@/components/auth/RequireAuth";
 import api from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { getDefaultImage } from '@/utils/imageUtils';
@@ -119,7 +118,6 @@ export default function CommunityPage() {
   }, [viagens, search, creationOrder, startOrder, alphaOrder, activeSort]);
 
   return (
-    <RequireAuth>
       <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
         <SidebarMenu />
         <div className="flex flex-col w-full overflow-hidden">
@@ -175,6 +173,5 @@ export default function CommunityPage() {
           </main>
         </div>
       </div>
-    </RequireAuth>
   );
 }
