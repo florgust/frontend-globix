@@ -4,17 +4,18 @@ import { HeaderPages } from "@/components/common/Header";
 import SidebarMenu from "@/components/common/SidebarMenu";
 import React, { useState, useEffect } from "react";
 import { ImagePlus, Minus, Plus, X } from "lucide-react";
-import { useRouter } from "next/navigation"; 
-import api from "@/utils/axios"; 
+import { useRouter } from "next/navigation";
+import api, { apiUpload } from "@/utils/axios";
 import SuccessModal from "@/components/ui/modals/ModalSuccess";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 import { Alert } from "@/components/common/Alert";
 import RequireAuth from "@/components/auth/RequireAuth";
 import { Globe, Lock } from "lucide-react";
 import { MapPin, ArrowRight } from "lucide-react";
+import { isAxiosError } from "axios";
 
 export default function ExamplePage() {
-const [selectedOption, setSelectedOption] = useState("public");
+  const [selectedOption, setSelectedOption] = useState("public");
   const [count, setCount] = useState(0);
   const [tripName, setTripName] = useState("");
   const [tripDescription, setTripDescription] = useState("");
@@ -23,11 +24,10 @@ const [selectedOption, setSelectedOption] = useState("public");
   const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [, setSelectedImage] = useState<File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [cidadeOrigem, setCidadeOrigem] = useState("");
   const [cidadeDestino, setCidadeDestino] = useState("");
-
 
   // Função para calcular a duração em dias
   function calculateDuration(start: string, end: string): number {
@@ -72,7 +72,7 @@ const [selectedOption, setSelectedOption] = useState("public");
       descricao: tripDescription,
       dataInicio: startDate,
       dataFim: endDate,
-      criadorId, 
+      criadorId,
       tipo: selectedOption === "public" ? "publica" : "privada",
       quantidadeParticipante: count,
       cidadeOrigem: cidadeOrigem,
@@ -82,9 +82,32 @@ const [selectedOption, setSelectedOption] = useState("public");
     try {
       const response = await api.post("/viagem", payload);
       localStorage.setItem("viagemEmCriacao", JSON.stringify(response.data));
+      const idViagem = response.data.id;
 
-      const idViagem = response.data.id; // Ajuste conforme o nome do campo retornado
-      await api.post(`/solicitacao/criador/${criadorId}/${idViagem}`);
+      try {
+        await api.post(`/solicitacao/criador/${criadorId}/${idViagem}`);
+      } catch (solicitacaoError) {
+        console.error("Erro ao criar solicitação/criador:", solicitacaoError);
+        setAlertMessage("Erro ao criar solicitação do criador.");
+      }
+
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append("image", selectedImage);
+        console.log("Arquivo para upload:", selectedImage);
+        console.log("FormData.get('image'):", formData.get("image"));
+
+        try {
+          await apiUpload.post(`/foto/capa/${idViagem}`, formData);
+          console.log("Upload da imagem realizado com sucesso!");
+        } catch (fotoError) {
+          console.error("Erro ao enviar foto da viagem:", fotoError);
+          if (isAxiosError(fotoError) && fotoError.response) {
+            console.error("Resposta do backend:", fotoError.response.data);
+            alert(JSON.stringify(fotoError.response.data));
+          }
+        }
+      }
       setShowSuccess(true);
     } catch (error) {
       console.error("Erro ao criar viagem:", error);
@@ -99,6 +122,7 @@ const [selectedOption, setSelectedOption] = useState("public");
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log("Arquivo selecionado:", file);
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
@@ -254,19 +278,17 @@ const [selectedOption, setSelectedOption] = useState("public");
                       <button
                         type="button"
                         onClick={() => setSelectedOption("public")}
-                        className={`flex flex-col items-center justify-center w-40 h-36 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
-                          selectedOption === "public"
+                        className={`flex flex-col items-center justify-center w-40 h-36 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${selectedOption === "public"
                             ? "bg-[#0F2976] border-[#0F2976] text-white shadow-lg transform scale-105"
                             : "bg-white border-gray-300 text-[#3B4449] hover:border-[#0F2976] hover:shadow-md"
-                        }`}
+                          }`}
                       >
                         <Globe
                           size={45}
-                          className={`mb-3 ${
-                            selectedOption === "public"
+                          className={`mb-3 ${selectedOption === "public"
                               ? "text-[#00FF4D]"
                               : "text-[#0F2976]"
-                          }`}
+                            }`}
                         />
                         <span className="text-lg font-semibold">Pública</span>
                         <span className="text-sm opacity-75 mt-1">
@@ -277,19 +299,17 @@ const [selectedOption, setSelectedOption] = useState("public");
                       <button
                         type="button"
                         onClick={() => setSelectedOption("private")}
-                        className={`flex flex-col items-center justify-center w-40 h-36 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
-                          selectedOption === "private"
+                        className={`flex flex-col items-center justify-center w-40 h-36 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${selectedOption === "private"
                             ? "bg-[#0F2976] border-[#0F2976] text-white shadow-lg transform scale-105"
                             : "bg-white border-gray-300 text-[#3B4449] hover:border-[#0F2976] hover:shadow-md"
-                        }`}
+                          }`}
                       >
                         <Lock
                           size={45}
-                          className={`mb-3 ${
-                            selectedOption === "private"
+                          className={`mb-3 ${selectedOption === "private"
                               ? "text-[#00FF4D]"
                               : "text-[#0F2976]"
-                          }`}
+                            }`}
                         />
                         <span className="text-lg font-semibold">Privada</span>
                         <span className="text-sm opacity-75 mt-1">

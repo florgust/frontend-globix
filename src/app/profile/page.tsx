@@ -42,7 +42,7 @@ export default function Profile() {
                             }
                         })
                         .catch(() => {
-                            setProfileImageUrl(getDefaultImage("user")");
+                            setProfileImageUrl(getDefaultImage("user"));
                         });
 
                     api
