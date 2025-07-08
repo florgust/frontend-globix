@@ -5,7 +5,7 @@ import { ModalMoreDetailsTrip } from "@/utils/moreDetailsUtils";
 interface ModalMoreDetailsProps {
     isOpen: boolean;
     onClose: () => void;
-    onNavigate: (target: 'transport' | 'itinerary' | 'budget') => void;
+    onNavigate: (target: 'transport' | 'itinerary' | 'budget' | 'notifs') => void;
     trip?: ModalMoreDetailsTrip | null;
 }
 
@@ -129,13 +129,13 @@ const ModalMoreDetails: React.FC<ModalMoreDetailsProps> = ({ isOpen, onClose, on
                             onClick={() => onNavigate('budget')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Orçamento</p>
-                    </div>                    
+                    </div>
                     <div className="flex flex-col items-center">
                         <IconButton
                             icon={<img src="/images-travel/Icons/IconAlert.png" className="w-16 h-16 cursor-pointer" />}
                             size="lg"
                             shape="circle"
-                            onClick={() => alert("Avisos clicado!")}
+                            onClick={() => onNavigate('notifs')}
                         />
                         <p className="text-sm text-[#0F2976] mt-2">Avisos</p>
                     </div>
