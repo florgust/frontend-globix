@@ -430,7 +430,7 @@ export default function TripItinerary() {
                   }`}
                 >
                   <Calendar size={28} />
-                  Finalizar Itinerário
+                  Finalizar viagem!!
                   <ArrowRight size={28} />
                 </button>
               </div>
