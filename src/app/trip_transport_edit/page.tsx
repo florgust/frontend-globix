@@ -161,7 +161,7 @@ export default function TravelTransport() {
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
 
-          <WhiteBackground titulo="Escolher Transporte">
+          <WhiteBackground titulo="Atualizar Transporte">
             <div className="max-w-5xl mx-auto px-6 py-8">
               {/* Título principal */}
               <div className="text-center mb-12">

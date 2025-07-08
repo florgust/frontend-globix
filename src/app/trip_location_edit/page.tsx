@@ -159,7 +159,7 @@ export default function TravelLocation() {
         <div className="flex flex-col items-center w-full bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
           <HeaderPages />
 
-          <WhiteBackground titulo="Definir Pontos de Encontro">
+          <WhiteBackground titulo="Atualizar Pontos de Encontro">
             <div className="max-w-4xl mx-auto px-6 py-8">
               {/* Seção de Informações */}
               <div className="mb-8 p-6 bg-blue-50 rounded-xl border-l-4 border-[#0F2976]">
