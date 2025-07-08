@@ -39,7 +39,7 @@ const Footer = () => {
                         className="cursor-pointer"
                         onClick={() => window.location.href = "/initial"}
                     />
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex px-17 mt-5 w-full">
                         <button
                             onClick={scrollToTop}
                             className="bg-white text-[#0A2C82] p-2 rounded-full hover:scale-110 transition cursor-pointer"
