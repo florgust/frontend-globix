@@ -4,10 +4,9 @@ import SidebarMenu from "../../components/common/SidebarMenu";
 import { HeaderPages } from "@/components/common/Header";
 import Filters from "@/components/common/Filters";
 import TripList from "@/components/ui/TripList";
-import { useTrips } from "@/hooks/useTrips";
 import { Trip } from "@/types/trip";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import api from "@/utils/axios";
 import ModalProfileEdit from "@/components/ui/modals/ModalProfileEdit";
@@ -17,12 +16,11 @@ import { getDefaultImage } from "@/utils/imageUtils";
 
 export default function Profile() {
     const [trips, setTrips] = useState<Trip[]>([]);
-
-    const { sortOrder, setSortOrder, roleFilter, setRoleFilter } = useTrips({
-        initialTrips: trips,
-    });
-
+    const [sortOrder, setSortOrder] = useState("recentes");
+    const [roleFilter, setRoleFilter] = useState("");
     const [usuario, setUsuario] = useState<{nome: string;email: string;id?: number;} | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const [profileImageUrl, setProfileImageUrl] = useState<string>(getDefaultImage("user")
     );
 
@@ -50,7 +48,6 @@ export default function Profile() {
                     api
                         .get(`/solicitacoes/viagem/card/${usuarioObj.id}`)
                         .then((res) => {
-                            console.log("Viagens recebidas:", res.data);
                             setTrips(res.data);
                         })
                         .catch(() => setTrips([]));
@@ -62,9 +59,39 @@ export default function Profile() {
         }
     }, []);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // Função para normalizar papel para filtro
+    function papelParaFiltro(papel: string) {
+        if (!papel) return "";
+        const papelLower = papel.toLowerCase();
+        if (papelLower === "organizador" || papelLower === "organizadorpromovido") return "organizador";
+        if (papelLower === "participante") return "participante";
+        return papelLower;
+    }
 
-    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    // Filtro e ordenação das viagens
+    const filteredTrips = useMemo(() => {
+        let result = trips;
+
+        // Filtro por papel
+        if (roleFilter) {
+            result = result.filter(trip => papelParaFiltro(trip.papel) === roleFilter);
+        }
+
+        // Ordenação
+        if (sortOrder === "recentes") {
+            result = [...result].sort((a, b) => {                
+                const dataA = a.dataCriacao ?? a.dataInicio;
+                const dataB = b.dataCriacao ?? b.dataInicio;
+                return (dataB || "").localeCompare(dataA || "");
+            });
+        } else if (sortOrder === "a-z") {
+            result = [...result].sort((a, b) => a.nome.localeCompare(b.nome));
+        } else if (sortOrder === "z-a") {
+            result = [...result].sort((a, b) => b.nome.localeCompare(a.nome));
+        }
+
+        return result;
+    }, [trips, roleFilter, sortOrder]);
 
     const handleOpenPasswordModal = () => setIsPasswordModalOpen(true);
     const handleClosePasswordModal = () => setIsPasswordModalOpen(false);
@@ -158,7 +185,7 @@ export default function Profile() {
                             </div>
                             <hr className="mt-2 mb-6 w-full border-t-3 border-white/30 mx-auto" />
                             <div className="px-40 h-[calc(100vh-450px)] overflow-y-auto scrollbar-thin">
-                                <TripList trips={trips} />
+                                <TripList trips={filteredTrips} />
                             </div>
                         </div>
                     </div>
