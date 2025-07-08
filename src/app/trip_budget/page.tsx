@@ -41,37 +41,43 @@ export default function TripBudget() {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const initialCategories: Category[] = [
-    { id: 1, name: "Transporte", icon: Car, color: "bg-blue-500", value: "0" },
+    {
+      id: 1,
+      name: "Transporte",
+      icon: Car,
+      color: "bg-emerald-400",
+      value: "0",
+    },
     {
       id: 2,
       name: "Hospedagem",
       icon: Home,
-      color: "bg-green-500",
+      color: "bg-emerald-600",
       value: "0",
     },
     {
       id: 3,
       name: "Alimentação",
       icon: Coffee,
-      color: "bg-orange-500",
+      color: "bg-green-600",
       value: "0",
     },
     {
       id: 4,
       name: "Entretenimento",
       icon: Camera,
-      color: "bg-purple-500",
+      color: "bg-teal-500",
       value: "0",
     },
     {
       id: 5,
       name: "Compras",
       icon: ShoppingBag,
-      color: "bg-pink-500",
+      color: "bg-blue-500",
       value: "0",
     },
   ];
-
+  
   const [categories, setCategories] = useState<Category[]>(initialCategories);
 
   // Carregar dados salvos quando a tela abrir

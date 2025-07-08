@@ -35,7 +35,8 @@ interface ItineraryItem {
 
 export default function TripItinerary() {
   const router = useRouter();
-  const { state, updateItineraryInfo, setCurrentStep, createTrip } = useTripCreation();
+  const { state, updateItineraryInfo, setCurrentStep, createTrip } =
+    useTripCreation();
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -46,14 +47,14 @@ export default function TripItinerary() {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const eventTypes = [
-    { value: "Turismo", icon: Camera, color: "bg-blue-500" },
-    { value: "Alimentação", icon: Coffee, color: "bg-orange-500" },
-    { value: "Transporte", icon: Car, color: "bg-green-500" },
-    { value: "Hospedagem", icon: MapPin, color: "bg-purple-500" },
-    { value: "Entretenimento", icon: Star, color: "bg-pink-500" },
-    { value: "Reunião", icon: Users, color: "bg-indigo-500" },
+    { value: "Turismo", icon: Camera, color: "bg-emerald-400" },
+    { value: "Alimentação", icon: Coffee, color: "bg-emerald-600" },
+    { value: "Transporte", icon: Car, color: "bg-green-600" },
+    { value: "Hospedagem", icon: MapPin, color: "bg-teal-500" },
+    { value: "Entretenimento", icon: Star, color: "bg-cyan-500" },
+    { value: "Reunião", icon: Users, color: "bg-blue-500" },
   ];
-
+  
   // Carregar dados salvos quando a tela abrir
   useEffect(() => {
     if (state.tripData.itineraryInfo && !dataLoaded) {
