@@ -2,27 +2,50 @@
 import React, { useEffect, useState, useMemo } from "react";
 import SidebarMenu from "../../components/common/SidebarMenu";
 import { HeaderPages } from "@/components/common/Header";
+import { Header } from "@/components/common/Header";
 import Card from "@/components/ui/community/CardPublicTrip";
 import BarraDePesquisa from "@/components/ui/community/SearchBar";
 import api from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { getDefaultImage } from '@/utils/imageUtils';
+import Cookies from "js-cookie";
 
-interface Organizador {
-  id: number;
-  nome: string;
-  foto?: string;
-}
 interface Viagem {
   id: number;
   nome: string;
   destino: string;
+  cidadeOrigem: string;
+  cidadeDestino: string;
   dataInicio: string;
   dataFim: string;
   tipo: string;
   foto?: string;
-  organizador?: Organizador;
   dataCriacao?: string;
+}
+
+function LoginModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const router = useRouter();
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full flex flex-col items-center">
+        <h2 className="text-2xl font-bold text-[#0F2976] mb-4 text-center">Você precisa estar logado</h2>
+        <p className="text-gray-600 mb-6 text-center">Faça login para acessar esta funcionalidade.</p>
+        <button
+          className="bg-[#00FF4D] text-[#0F2976] px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-[#1C4CDC] hover:text-white transition cursor-pointer"
+          onClick={() => router.push("/login")}
+        >
+          Ir para Login
+        </button>
+        <button
+          className="mt-4 text-[#0F2976] underline cursor-pointer"
+          onClick={onClose}
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function CommunityPage() {
@@ -33,7 +56,19 @@ export default function CommunityPage() {
   const [startOrder, setStartOrder] = useState<"inicio-mais-perto" | "inicio-mais-distante">("inicio-mais-perto");
   const [alphaOrder, setAlphaOrder] = useState<"a-z" | "z-a">("a-z");
   const [activeSort, setActiveSort] = useState<"criacao" | "inicio" | "alfabetica">("criacao");
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [pendentes, setPendentes] = useState<number[]>([]);
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const router = useRouter();
+
+  // Pega o id do usuário logado do cookie
+  const usuarioCookie = typeof window !== "undefined" ? Cookies.get("usuario") : null;
+  const usuarioObj = usuarioCookie ? JSON.parse(usuarioCookie) : null;
+  const userId = usuarioObj?.id;
+
+  // Checa se está logado
+  const isLoggedIn = !!userId;
 
   // Buscar viagens públicas
   const buscarViagensPublicas = async () => {
@@ -54,6 +89,17 @@ export default function CommunityPage() {
   useEffect(() => {
     buscarViagensPublicas();
   }, []);
+
+  // Carrega pendentes do localStorage ao montar, por usuário
+  useEffect(() => {
+    if (!userId) return;
+    const pendentesStorage = localStorage.getItem(`viagensPendentes_${userId}`);
+    if (pendentesStorage) {
+      setPendentes(JSON.parse(pendentesStorage));
+    } else {
+      setPendentes([]);
+    }
+  }, [userId]);
 
   // Função para calcular duração
   const calcularDuracao = (dataInicio: string, dataFim: string) => {
@@ -77,13 +123,40 @@ export default function CommunityPage() {
     return `há ${Math.floor(diffDays / 30)} mes${Math.floor(diffDays / 30) > 1 ? 'es' : ''}`;
   };
 
-  const handleVerDetalhes = (viagemId: number) => {
-    const viagemSelecionada = viagens.find(v => v.id === viagemId);
-    if (viagemSelecionada) {
-      localStorage.setItem('selectedTrip', JSON.stringify(viagemSelecionada));
+  // Handler para qualquer ação que exija login
+  const handleProtectedAction = (callback: () => void) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
     }
-    router.push('/travels');
+    callback();
   };
+
+  // Handler para participar da viagem (faz POST e salva por usuário)
+  const handleParticipar = async (viagemId: number) => {
+    handleProtectedAction(async () => {
+      if (pendentes.includes(viagemId)) return;
+      try {
+        await api.post(`/solicitacao/${userId}/${viagemId}`);
+        const updated = [...pendentes, viagemId];
+        setPendentes(updated);
+        if (userId) {
+          localStorage.setItem(`viagensPendentes_${userId}`, JSON.stringify(updated));
+        }
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 2000);
+      } catch (error: any) {
+        setAlertMessage("Erro ao solicitar participação. Tente novamente.");
+        setTimeout(() => setAlertMessage(""), 3000);
+      }
+    });
+  };
+
+  function parseDateLocal(dateStr: string): Date {
+    // Espera "yyyy-mm-dd"
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
 
   // Filtragem e ordenação
   const viagensFiltradas = useMemo(() => {
@@ -118,60 +191,81 @@ export default function CommunityPage() {
   }, [viagens, search, creationOrder, startOrder, alphaOrder, activeSort]);
 
   return (
-      <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
-        <SidebarMenu />
-        <div className="flex flex-col w-full overflow-hidden">
-          <HeaderPages />
-          <main className="flex flex-col items-center w-full max-w-[90%] mx-auto pt-10 px-5 gap-8">
-            <div className="flex flex-col items-center justify-center">
-              <h1 className="text-white text-4xl font-bold ">
-                Comunidade Globix
-              </h1>
-            </div>
-            <div>
-              <h2 className="text-white text-lg">
-                Participe de Excursões criados por outros viajantes{" "}
-              </h2>
-            </div>
-            <BarraDePesquisa
-              search={search}
-              setSearch={setSearch}
-              creationOrder={creationOrder}
-              setCreationOrder={setCreationOrder}
-              startOrder={startOrder}
-              setStartOrder={setStartOrder}
-              alphaOrder={alphaOrder}
-              setAlphaOrder={setAlphaOrder}
-              activeSort={activeSort}
-              setActiveSort={setActiveSort}
-            />
-            {loading ? (
-              <div className="text-white text-xl">Carregando viagens...</div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {viagensFiltradas.length > 0 ? (
-                  viagensFiltradas.map((viagem) => (
-                    <Card
-                      key={viagem.id}
-                      topImage={viagem.foto || getDefaultImage('trip')}
-                      userImage={viagem.organizador?.foto || getDefaultImage('user')}
-                      tripName={viagem.nome}
-                      location={viagem.destino}
-                      createdAt={calcularTempoDecorrido(viagem.dataInicio)}
-                      duration={calcularDuracao(viagem.dataInicio, viagem.dataFim)}
-                      onVerDetalhes={() => handleVerDetalhes(viagem.id)}
-                    />
-                  ))
-                ) : (
-                  <div className="col-span-full text-white text-center text-xl">
-                    Nenhuma viagem pública encontrada
-                  </div>
-                )}
+    <div className="flex min-h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
+      {isLoggedIn && <SidebarMenu />}
+      <div className="flex flex-col w-full overflow-hidden">
+        {isLoggedIn ? <HeaderPages /> : <Header />}
+        <main className="flex flex-col items-center w-full max-w-[90%] mx-auto pt-10 px-5 gap-8">
+          <div className="flex flex-col items-center justify-center">
+            <h1 className="text-white text-4xl font-bold ">
+              Comunidade Globix
+            </h1>
+          </div>
+          <div>
+            <h2 className="text-white text-lg">
+              Participe de Excursões criados por outros viajantes{" "}
+            </h2>
+          </div>
+          <BarraDePesquisa
+            search={search}
+            setSearch={setSearch}
+            creationOrder={creationOrder}
+            setCreationOrder={setCreationOrder}
+            startOrder={startOrder}
+            setStartOrder={setStartOrder}
+            alphaOrder={alphaOrder}
+            setAlphaOrder={setAlphaOrder}
+            activeSort={activeSort}
+            setActiveSort={setActiveSort}
+          />
+          {alertMessage && (
+            <div className="w-full flex justify-center">
+              <div className="bg-red-500 text-white px-6 py-3 rounded-lg mb-4 text-center text-lg font-medium">
+                {alertMessage}
               </div>
-            )}
-            <div className="mb-20" />
-          </main>
-        </div>
+            </div>
+          )}
+          {loading ? (
+            <div className="text-white text-xl">Carregando viagens...</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {viagensFiltradas.length > 0 ? (
+                viagensFiltradas.map((viagem) => (
+                  <Card
+                    key={viagem.id}
+                    topImage={viagem.foto || getDefaultImage('trip')}
+                    userImage={getDefaultImage('user')}
+                    tripName={viagem.nome}
+                    location={viagem.destino}
+                    cidadeOrigem={viagem.cidadeOrigem}
+                    cidadeDestino={viagem.cidadeDestino}
+                    createdAt={calcularTempoDecorrido(viagem.dataInicio)}
+                    duration={calcularDuracao(viagem.dataInicio, viagem.dataFim)}
+                    startDate={parseDateLocal(viagem.dataInicio).toLocaleDateString("pt-BR")}
+                    endDate={parseDateLocal(viagem.dataFim).toLocaleDateString("pt-BR")}
+                    isPendente={pendentes.includes(viagem.id)}
+                    onParticipar={() => handleParticipar(viagem.id)}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-white text-center text-xl">
+                  Nenhuma viagem pública encontrada
+                </div>
+              )}
+            </div>
+          )}
+          <div className="mb-20" />
+        </main>
       </div>
+      <LoginModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      {showSuccess && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white rounded-2xl shadow-lg px-12 py-10 flex flex-col items-center min-w-[24rem]">
+            <span className="text-3xl text-[#00FF4D] font-bold mb-2">Sucesso!</span>
+            <span className="text-[#0F2976] text-xl text-center">Solicitação enviada.</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
