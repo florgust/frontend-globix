@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "@/utils/axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface TripApiResponse {
   id: number;
@@ -11,6 +12,8 @@ interface TripApiResponse {
   data_fim?: string;
   dataFim?: string;
   imagem?: string;
+  organizadorId?: number; // Adicione se não existir
+  usuarioOrganizadorId?: number; // Caso venha com outro nome
 }
 
 function parseDate(dateStr?: string): Date | null {
@@ -32,6 +35,7 @@ function formatDate(dateStr?: string) {
 export default function TravelSummariesCard() {
   const [trips, setTrips] = useState<TripApiResponse[]>([]);
   const [current, setCurrent] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -75,7 +79,23 @@ export default function TravelSummariesCard() {
     );
   }
 
+  const usuarioCookie = Cookies.get("usuario");
+  const usuarioObj = usuarioCookie ? JSON.parse(usuarioCookie) : null;
+  const userId = usuarioObj?.id;
+
   const trip = trips[current];
+
+  const handleDetailsClick = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedTrip", JSON.stringify(trip));
+    }
+    const organizadorId = trip.organizadorId ?? trip.usuarioOrganizadorId;
+    if (organizadorId && userId && organizadorId === userId) {
+      router.push("/travels");
+    } else {
+      router.push("/trip"); 
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-lg px-0 py-0 w-[100%] h-[30vh] flex flex-col">
@@ -94,7 +114,10 @@ export default function TravelSummariesCard() {
           <div className="text-[#333] text-sm mb-2 text-center">
             {formatDate(trip.data_inicio || trip.dataInicio)} - {formatDate(trip.data_fim || trip.dataFim)}
           </div>
-          <button className="bg-[#0F2976] text-white text-xs font-semibold rounded-lg px-4 py-2 w-[50%] mx-auto cursor-pointer hover:transform hover:scale-105 transition duration-200">
+          <button
+            className="bg-[#0F2976] text-white text-xs font-semibold rounded-lg px-4 py-2 w-[50%] mx-auto cursor-pointer hover:transform hover:scale-105 transition duration-200"
+            onClick={handleDetailsClick}
+          >
             Ver Detalhes
           </button>
         </div>
