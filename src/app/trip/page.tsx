@@ -424,7 +424,7 @@ export default function DetailsPage() {
             <div className="flex flex-col bg-white rounded-lg shadow-lg w-4/5 h-210 mt-25 mb-30">
               {/* capa */}
               <img
-                src={"/images-travel/capa.png"}
+                src={trip?.imagem}
                 alt={trip?.nome || "Capa da viagem"}
                 className="w-full h-80"
               />
