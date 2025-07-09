@@ -1,15 +1,14 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:3001', // URL base do back-end
+    baseURL: 'https://globix-afaea8fe15ce.herokuapp.com', // URL base do back-end
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 const apiUpload = axios.create({
-    baseURL: 'http://localhost:3001',
-    // Não defina headers aqui!
+    baseURL: 'https://globix-afaea8fe15ce.herokuapp.com',
 });
 
 export { axios, apiUpload }; // Exporta o axios base para uso de isAxiosError
