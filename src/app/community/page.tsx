@@ -204,7 +204,8 @@ export default function CommunityPage() {
         }
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 2000);
-      } catch (error) {
+      } catch (error: unknown) {
+        console.error("Erro ao solicitar participação:", error);
         setAlertMessage("Erro ao solicitar participação. Tente novamente.");
         setTimeout(() => setAlertMessage(""), 3000);
         console.error(error);
