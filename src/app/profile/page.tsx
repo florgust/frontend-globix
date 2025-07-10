@@ -12,14 +12,17 @@ import api from "@/utils/axios";
 import ModalProfileEdit from "@/components/ui/modals/ModalProfileEdit";
 import ModalPasswordEdit from "@/components/ui/modals/ModalPasswordEdit";
 import RequireAuth from "@/components/auth/RequireAuth";
+import { getDefaultImage } from "@/utils/imageUtils";
 
 export default function Profile() {
     const [trips, setTrips] = useState<Trip[]>([]);
     const [sortOrder, setSortOrder] = useState("recentes");
     const [roleFilter, setRoleFilter] = useState("");
-    const [usuario, setUsuario] = useState<{ nome: string; email: string; id?: number } | null>(null);
+    const [usuario, setUsuario] = useState<{nome: string;email: string;id?: number;} | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const [profileImageUrl, setProfileImageUrl] = useState<string>(getDefaultImage("user")
+    );
 
     useEffect(() => {
         const usuarioCookie = Cookies.get("usuario");
@@ -30,7 +33,20 @@ export default function Profile() {
 
                 // Buscar viagens do usuário
                 if (usuarioObj.id) {
-                    api.get(`/solicitacoes/viagem/card/${usuarioObj.id}`)
+                    api
+                        .get(`/usuarios/${usuarioObj.id}/foto`)
+                        .then((res) => {
+                            const userData = res.data;
+                            if (userData.url) {
+                                setProfileImageUrl(userData.url);
+                            }
+                        })
+                        .catch(() => {
+                            setProfileImageUrl(getDefaultImage("user"));
+                        });
+
+                    api
+                        .get(`/solicitacoes/viagem/card/${usuarioObj.id}`)
                         .then((res) => {
                             setTrips(res.data);
                         })
@@ -80,6 +96,31 @@ export default function Profile() {
     const handleOpenPasswordModal = () => setIsPasswordModalOpen(true);
     const handleClosePasswordModal = () => setIsPasswordModalOpen(false);
 
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+
+        const usuarioCookie = Cookies.get("usuario");
+        if (usuarioCookie) {
+            try {
+                const usuarioObj = JSON.parse(usuarioCookie);
+                if (usuarioObj.id) {
+                    api
+                        .get(`/usuarios/${usuarioObj.id}/foto`)
+                        .then((res) => {
+                            const userData = res.data;
+                            if (userData.url) {
+                                setProfileImageUrl(userData.url);
+                            } else {
+                                setProfileImageUrl(getDefaultImage("user"));
+                            }
+                        })
+                }
+            } catch (error) {
+                console.error("Erro ao carregar imagem do menu do usuário:", error);
+                setProfileImageUrl(getDefaultImage("user"));
+            }
+        }
+    };
     return (
         <RequireAuth>
             <div className="flex h-screen bg-gradient-to-b from-[#1C4CDC] to-[#0F2976]">
@@ -92,19 +133,25 @@ export default function Profile() {
 
                     <div className="flex flex-col w-full h-full px-15 overflow-y-auto">
                         {/* Perfil */}
-                        <h1 className="font-bold text-4xl text-left text-white mt-6">Meu perfil</h1>
+                        <h1 className="font-bold text-4xl text-left text-white mt-6">
+                            Meu perfil
+                        </h1>
                         <div className="relative bg-[#0F2976] rounded-lg shadow-lg h-72 flex items-center justify-between px-8 mt-6">
                             <div className="flex items-center">
                                 <Image
-                                    src="/images-profile/mauro.svg"
+                                    src={profileImageUrl}
                                     alt="Profile"
                                     width={160}
                                     height={160}
                                     className="w-40 h-40 rounded-full object-cover object-center mt-10 mb-10"
                                 />
                                 <div className="ml-6 text-[#FFFFFF]">
-                                    <h2 className="text-2xl font-bold">{usuario?.nome ?? "Nome do usuario"}</h2>
-                                    <p className="text-sm opacity-50">{usuario?.email ?? "Email do usuario"}</p>
+                                    <h2 className="text-2xl font-bold">
+                                        {usuario?.nome ?? "Nome do usuario"}
+                                    </h2>
+                                    <p className="text-sm opacity-50">
+                                        {usuario?.email ?? "Email do usuario"}
+                                    </p>
                                 </div>
                             </div>
                             <button
@@ -118,7 +165,9 @@ export default function Profile() {
                         {/* Minhas Viagens */}
                         <div className="mt-10">
                             <div className="flex justify-between items-center">
-                                <h2 className="font-bold text-3xl text-white">Minhas Viagens</h2>
+                                <h2 className="font-bold text-3xl text-white">
+                                    Minhas Viagens
+                                </h2>
                                 <div className="flex items-center gap-4">
                                     <Filters
                                         sortOrder={sortOrder}
@@ -145,7 +194,7 @@ export default function Profile() {
                 {/* Modal de editar perfil */}
                 <ModalProfileEdit
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={handleModalClose}
                     onOpenPassword={handleOpenPasswordModal}
                 />
 

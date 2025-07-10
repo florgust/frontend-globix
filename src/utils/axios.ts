@@ -7,5 +7,9 @@ const api = axios.create({
     },
 });
 
-export { axios }; // Exporta o axios base para uso de isAxiosError
+const apiUpload = axios.create({
+    baseURL: 'https://api.globix.app.br',
+});
+
+export { axios, apiUpload }; // Exporta o axios base para uso de isAxiosError
 export default api;

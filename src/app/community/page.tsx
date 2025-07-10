@@ -10,17 +10,43 @@ import { useRouter } from "next/navigation";
 import { getDefaultImage } from '@/utils/imageUtils';
 import Cookies from "js-cookie";
 
+interface ViagemApi {
+  id: number;
+  nome: string;
+  descricao: string;
+  dataInicio: string;
+  dataFim: string;
+  criadorId: number;
+  codigoConvite: number;
+  status: number;
+  tipo: string;
+  quantidadeParticipante: number;
+  dataCriacao: string;
+  dataAtualizacao: string;
+  cidadeOrigem: string;
+  cidadeDestino: string;
+  fotoCapa?: { id: number; url: string } | null;
+  url?: string | null;
+}
+
+interface Organizador {
+  id: number;
+  nome: string;
+  foto?: string | null;
+}
+
 interface Viagem {
   id: number;
   nome: string;
-  destino: string;
+  destino?: string;
   cidadeOrigem: string;
   cidadeDestino: string;
   dataInicio: string;
   dataFim: string;
   tipo: string;
-  foto?: string;
+  foto?: string | null;
   dataCriacao?: string;
+  organizador: Organizador;
 }
 
 function LoginModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -73,11 +99,45 @@ export default function CommunityPage() {
   const buscarViagensPublicas = async () => {
     try {
       setLoading(true);
-      const { data: todasViagens } = await api.get('/viagens');
-      const viagensPublicas = todasViagens.filter((viagem: Viagem) =>
-        viagem.tipo?.toLowerCase() === 'publica'
+      const { data: todasViagens } = await api.get<ViagemApi[]>('/viagens/fotos');
+      const viagensPublicas: Viagem[] = todasViagens
+        .filter((viagem) => viagem.tipo?.toLowerCase() === 'publica')
+        .map((viagem) => ({
+          id: viagem.id,
+          nome: viagem.nome,
+          destino: viagem.cidadeDestino,
+          dataInicio: viagem.dataInicio,
+          dataFim: viagem.dataFim,
+          tipo: viagem.tipo,
+          foto: viagem.fotoCapa?.url || viagem.url || null,
+          dataCriacao: viagem.dataCriacao,
+          cidadeDestino: viagem.cidadeDestino,
+          cidadeOrigem: viagem.cidadeOrigem,
+          organizador: {
+            id: viagem.criadorId,
+            nome: "Organizador",
+            foto: null // será preenchido depois
+          }
+        }));
+
+      // Buscar as fotos de perfil dos organizadores
+      const viagensComFotoOrganizador = await Promise.all(
+        viagensPublicas.map(async (viagem) => {
+          try {
+            const { data } = await api.get<{ url: string }>(`/foto/perfil/${viagem.organizador.id}`);
+            return {
+              ...viagem,
+              organizador: {
+                ...viagem.organizador,
+                foto: data?.url || null
+              }
+            };
+          } catch {
+            return viagem;
+          }
+        })
       );
-      setViagens(viagensPublicas);
+      setViagens(viagensComFotoOrganizador);
     } catch (error) {
       console.error('Erro ao buscar viagens:', error);
     } finally {
@@ -148,6 +208,7 @@ export default function CommunityPage() {
         console.error("Erro ao solicitar participação:", error);
         setAlertMessage("Erro ao solicitar participação. Tente novamente.");
         setTimeout(() => setAlertMessage(""), 3000);
+        console.error(error);
       }
     });
   };
@@ -234,9 +295,9 @@ export default function CommunityPage() {
                   <Card
                     key={viagem.id}
                     topImage={viagem.foto || getDefaultImage('trip')}
-                    userImage={getDefaultImage('user')}
+                    userImage={viagem.organizador.foto || getDefaultImage('user')}
                     tripName={viagem.nome}
-                    location={viagem.destino}
+                    location={viagem.destino || ""}
                     cidadeOrigem={viagem.cidadeOrigem}
                     cidadeDestino={viagem.cidadeDestino}
                     createdAt={calcularTempoDecorrido(viagem.dataInicio)}

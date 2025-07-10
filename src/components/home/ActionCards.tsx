@@ -118,7 +118,7 @@ export default function ActionCards() {
           style={{
             background: "linear-gradient(90deg, #ACEBA2 18.27%, #3AB660 100%)"
           }}
-        // futuramente: onClick={() => router.push("/explorar_viagens")}
+          onClick={() => router.push("/community")}
         >
           <span className="flex items-center justify-center bg-white rounded-full w-16 h-14 ml-4">
             <Image
